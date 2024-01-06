@@ -24,6 +24,10 @@ const config: Config = {
       gray: 'rgb(176,176,176)',
       lightGray: 'rgb(245,245,245)',
     },
+    container: {
+      center: true,
+      padding: '1rem',
+    },
   },
   plugins: [],
 };
