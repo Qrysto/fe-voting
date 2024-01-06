@@ -1,5 +1,4 @@
-import Image from 'next/image';
-import logo from './full-logo@2x.png';
+import Header from '@/components/Header';
 
 export default function VoteLayout({
   children,
@@ -8,15 +7,7 @@ export default function VoteLayout({
 }) {
   return (
     <div>
-      <header className="py-2">
-        <Image
-          src={logo}
-          width={106}
-          height={50}
-          alt="Free & Equal"
-          className="mx-auto"
-        />
-      </header>
+      <Header />
       <main>{children}</main>
     </div>
   );
