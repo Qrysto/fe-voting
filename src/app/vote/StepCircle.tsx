@@ -1,7 +1,5 @@
 'use client';
 
-import { setStep } from './voteStep';
-
 export default function StepCircle({
   num,
   activeStep,
@@ -13,7 +11,7 @@ export default function StepCircle({
   const past = activeStep > num;
 
   return (
-    <button
+    <div
       className={
         'flex size-7 items-center justify-center rounded-full font-oswald text-lg ' +
         (active
@@ -22,11 +20,8 @@ export default function StepCircle({
             ? 'bg-lightBlue text-blue'
             : 'border border-solid border-gray bg-white text-gray')
       }
-      onClick={() => {
-        setStep(num);
-      }}
     >
       {num}
-    </button>
+    </div>
   );
 }
