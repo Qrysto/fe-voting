@@ -7,12 +7,7 @@ const config: Config = {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
-    extend: {
-      fontFamily: {
-        oswald: ['Oswald', 'sans-serif'],
-        mont: ['Montserrat', 'sans-serif'],
-      },
-    },
+    extend: {},
     colors: {
       transparent: 'transparent',
       current: 'currentColor',

@@ -1,5 +1,7 @@
 'use client';
 
+import { oswald } from '@/app/fonts';
+
 export default function StepCircle({
   num,
   activeStep,
@@ -12,14 +14,15 @@ export default function StepCircle({
 
   return (
     <div
-      className={
-        'flex size-7 items-center justify-center rounded-full font-oswald text-lg ' +
-        (active
+      className={`flex size-7 items-center justify-center rounded-full text-lg font-bold ${
+        oswald.className
+      } ${
+        active
           ? 'bg-blue text-white'
           : past
             ? 'bg-lightBlue text-blue'
-            : 'border border-solid border-gray bg-white text-gray')
-      }
+            : 'border border-solid border-gray bg-white text-gray'
+      }`}
     >
       {num}
     </div>
