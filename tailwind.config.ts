@@ -19,6 +19,8 @@ const config: Config = {
       almostBlack: 'rgb(54, 54, 54)',
       gray: 'rgb(176, 176, 176)',
       lightGray: 'rgb(245, 245, 245)',
+      green: 'rgb(40, 214, 0)',
+      red: 'rgb(188, 2, 25)',
     },
     container: {
       center: true,
