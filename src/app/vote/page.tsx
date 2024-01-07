@@ -1,3 +1,10 @@
+import EnterPhone from './EnterPhone';
+import { getStep } from './voteStep';
+
 export default function Vote() {
-  return <div></div>;
+  const step = getStep();
+
+  if (step === 1) {
+    return <EnterPhone />;
+  }
 }
