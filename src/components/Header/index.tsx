@@ -16,7 +16,7 @@ function IconButton({
   );
 }
 
-export default function Header({ back = true }: { back: boolean }) {
+export default function Header({ back = true }: { back?: boolean }) {
   return (
     <header className="relative py-2">
       <Image
@@ -25,6 +25,7 @@ export default function Header({ back = true }: { back: boolean }) {
         height={50}
         alt="Free & Equal"
         className="mx-auto"
+        priority
       />
       {back && (
         <div className="absolute inset-y-0 left-0 flex items-center object-right-top">
