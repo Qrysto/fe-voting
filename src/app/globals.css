@@ -6,3 +6,12 @@ body {
   color: rgb(var(--foreground-rgb));
   @apply bg-white;
 }
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: var(--font-oswald);
+  font-weight: bold;
+}
