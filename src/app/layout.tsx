@@ -17,7 +17,7 @@ export default function RootLayout({
       <body
         className={`font-medium ${oswald.variable} ${montserrat.variable} ${montserrat.className}`}
       >
-        <div className="container">{children}</div>
+        <div className="container md:max-w-3xl">{children}</div>
       </body>
     </html>
   );
