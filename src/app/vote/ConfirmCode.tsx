@@ -3,6 +3,7 @@
 import { useRef } from 'react';
 import DigitInput from '@/components/DigitInput';
 import BigButton from '@/components/BigButton';
+import LinkButton from '@/components/LinkButton';
 import { useStore } from '@/store';
 import { codeDigitCount } from '@/constants';
 
@@ -68,7 +69,7 @@ export default function ConfirmCode() {
   return (
     <div>
       <div className="">
-        <h2 className="px-8 text-center text-2xl uppercase">
+        <h2 className="px-4 text-center text-2xl uppercase">
           Please confirm your identity
         </h2>
         <CodeInput
@@ -76,6 +77,9 @@ export default function ConfirmCode() {
             confirmBtnRef.current?.focus();
           }}
         />
+        <div className="mt-8 text-center">
+          <LinkButton>Get a new code</LinkButton>
+        </div>
       </div>
 
       <div className="inset absolute bottom-0 left-0 right-0 px-8 pb-8 pt-2">
