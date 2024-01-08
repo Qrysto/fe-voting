@@ -1,13 +1,14 @@
 'use client';
 
-import { useState, useRef, Fragment } from 'react';
+import { useRef, Fragment } from 'react';
 import DigitInput from '@/components/DigitInput';
 import BigButton from '@/components/BigButton';
-
-const digitCount = 10;
+import { useStore } from '@/store';
+import { digitCount } from '@/constants';
 
 function PhoneInput() {
-  const [digits, setDigits] = useState(Array(digitCount).fill(''));
+  const digits = useStore((state) => state.phoneDigits);
+  const setDigit = useStore((state) => state.setPhoneDigit);
   const inputDivs: React.MutableRefObject<Array<HTMLDivElement>> = useRef(
     Array(digitCount).fill(null)
   );
@@ -23,9 +24,7 @@ function PhoneInput() {
             }}
             value={digit}
             setValue={(value) => {
-              const newDigits = [...digits];
-              newDigits.splice(i, 1, value);
-              setDigits(newDigits);
+              setDigit(i, value);
               if (value) {
                 if (i < digitCount - 1) {
                   inputDivs.current[i + 1]?.focus();
@@ -36,9 +35,7 @@ function PhoneInput() {
               if (i > 0) {
                 inputDivs.current[i - 1]?.focus();
                 if (digits[i - 1] !== '') {
-                  const newDigits = [...digits];
-                  newDigits.splice(i - 1, 1, '');
-                  setDigits(newDigits);
+                  setDigit(i - 1, '');
                 }
               }
             }}
@@ -52,6 +49,10 @@ function PhoneInput() {
 }
 
 export default function EnterPhone() {
+  const phoneFilled = useStore((state) =>
+    state.phoneDigits.every((digit) => digit)
+  );
+
   return (
     <div>
       <div className="">
@@ -67,7 +68,7 @@ export default function EnterPhone() {
           We sent you a text to your device. Please check and enter your code to
           confirm your identity.
         </p>
-        <BigButton primary className="mt-8">
+        <BigButton primary disabled={!phoneFilled} className="mt-8">
           submit and confirm code
         </BigButton>
       </div>
