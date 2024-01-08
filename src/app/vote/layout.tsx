@@ -17,7 +17,7 @@ function Steps() {
   const step = getStep();
 
   return (
-    <div className="mb-10 mt-8 flex items-center justify-center">
+    <div className="mb-16 mt-8 flex items-center justify-center">
       <StepCircle num={1} activeStep={step} />
       <Dash active={step >= 2} />
       <StepCircle num={2} activeStep={step} />
