@@ -1,9 +1,12 @@
+'use client';
+
 import { create } from 'zustand';
 import { digitCount } from '@/constants';
 
 type State = {
-  phoneNumber: string;
   phoneDigits: string[];
+  phoneNumber: string;
+  confirmedCode: boolean;
 };
 
 type Actions = {
@@ -13,8 +16,9 @@ type Actions = {
 };
 
 export const useStore = create<State & Actions>((set) => ({
-  phoneNumber: '',
   phoneDigits: Array(digitCount).fill(''),
+  phoneNumber: '',
+  confirmedCode: false,
   setPhoneDigit: (index: number, digit: string) =>
     set((state) => {
       const newDigits = [...state.phoneDigits];
@@ -27,3 +31,6 @@ export const useStore = create<State & Actions>((set) => ({
     })),
   resetPhoneNumber: () => set({ phoneNumber: '' }),
 }));
+
+export const useStep = () =>
+  useStore((state) => (!state.phoneNumber ? 1 : !state.confirmedCode ? 2 : 3));

@@ -1,6 +1,8 @@
+'use client';
+
 import Header from '@/components/Header';
 import StepCircle from './StepCircle';
-import { getStep } from './voteStep';
+import { useStep } from '@/store';
 
 function Dash({ active }: { active?: boolean }) {
   return (
@@ -14,7 +16,7 @@ function Dash({ active }: { active?: boolean }) {
 }
 
 function Steps() {
-  const step = getStep();
+  const step = useStep();
 
   return (
     <div className="mb-16 mt-8 flex items-center justify-center">
