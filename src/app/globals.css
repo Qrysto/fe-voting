@@ -3,8 +3,7 @@
 @tailwind utilities;
 
 body {
-  color: rgb(var(--foreground-rgb));
-  @apply bg-white;
+  @apply bg-white text-almostBlack;
 }
 
 h1,
