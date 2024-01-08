@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { useStore } from '@/store';
 import logo from './full-logo@2x.png';
 import backIcon from './arrow-left.svg';
 import searchIcon from './search.svg';
@@ -7,16 +8,21 @@ import shareIcon from './shareIcon.svg';
 function IconButton({
   children,
   className,
+  ...rest
 }: {
   children: React.ReactNode;
   className?: string;
-}) {
+} & React.ComponentPropsWithoutRef<'button'>) {
   return (
-    <button className={'px-1 py-1 ' + (className || '')}>{children}</button>
+    <button className={'px-1 py-1 ' + (className || '')} {...rest}>
+      {children}
+    </button>
   );
 }
 
 export default function Header({ back = true }: { back?: boolean }) {
+  const goBack = useStore((state) => state.goBack);
+
   return (
     <header className="relative py-2">
       <Image
@@ -29,7 +35,7 @@ export default function Header({ back = true }: { back?: boolean }) {
       />
       {back && (
         <div className="absolute inset-y-0 left-0 flex items-center object-right-top">
-          <IconButton>
+          <IconButton onClick={goBack}>
             <Image src={backIcon} height={18} alt="Back" />
           </IconButton>
         </div>

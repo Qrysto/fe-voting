@@ -17,9 +17,10 @@ type Actions = {
   resetPhoneNumber: () => void;
   confirmCode: () => void;
   unconfirmCode: () => void;
+  goBack: () => void;
 };
 
-export const useStore = create<State & Actions>((set) => ({
+export const useStore = create<State & Actions>((set, get) => ({
   phoneDigits: Array(phoneDigitCount).fill(''),
   codeDigits: Array(codeDigitCount).fill(''),
   phoneNumber: '',
@@ -43,6 +44,14 @@ export const useStore = create<State & Actions>((set) => ({
   resetPhoneNumber: () => set({ phoneNumber: '' }),
   confirmCode: () => set({ confirmedCode: true }),
   unconfirmCode: () => set({ confirmedCode: false }),
+  goBack: () => {
+    const state = get();
+    if (state.confirmedCode) {
+      set({ confirmedCode: false });
+    } else if (state.phoneNumber) {
+      set({ phoneNumber: '' });
+    }
+  },
 }));
 
 export const useStep = () =>
