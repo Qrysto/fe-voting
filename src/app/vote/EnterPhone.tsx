@@ -4,13 +4,13 @@ import { useRef, Fragment } from 'react';
 import DigitInput from '@/components/DigitInput';
 import BigButton from '@/components/BigButton';
 import { useStore } from '@/store';
-import { digitCount } from '@/constants';
+import { phoneDigitCount } from '@/constants';
 
 function PhoneInput({ focusConfirmBtn }: { focusConfirmBtn: () => void }) {
   const digits = useStore((state) => state.phoneDigits);
   const setDigit = useStore((state) => state.setPhoneDigit);
   const inputDivs: React.MutableRefObject<Array<HTMLDivElement>> = useRef(
-    Array(digitCount).fill(null)
+    Array(phoneDigitCount).fill(null)
   );
 
   return (
@@ -26,7 +26,7 @@ function PhoneInput({ focusConfirmBtn }: { focusConfirmBtn: () => void }) {
             setValue={(value) => {
               setDigit(i, value);
               if (value) {
-                if (i < digitCount - 1) {
+                if (i < phoneDigitCount - 1) {
                   inputDivs.current[i + 1]?.focus();
                 } else {
                   // After the last digit is entered
@@ -35,7 +35,7 @@ function PhoneInput({ focusConfirmBtn }: { focusConfirmBtn: () => void }) {
                   // The last digit hasn't been recorded so ignore it if it's the first one found
                   if (
                     firstEmptyIndex === -1 ||
-                    firstEmptyIndex === digitCount - 1
+                    firstEmptyIndex === phoneDigitCount - 1
                   ) {
                     focusConfirmBtn();
                   }
@@ -93,7 +93,7 @@ export default function EnterPhone() {
           ref={confirmBtnRef}
           onClick={confirmPhoneNumber}
         >
-          Submit and Confirm code
+          Send code to me
         </BigButton>
       </div>
     </div>
