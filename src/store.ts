@@ -7,20 +7,23 @@ type State = {
 };
 
 type Actions = {
-  setPhoneNumber: (phoneNumber: State['phoneNumber']) => void;
   setPhoneDigit: (index: number, digit: string) => void;
+  confirmPhoneNumber: () => void;
+  resetPhoneNumber: () => void;
 };
 
 export const useStore = create<State & Actions>((set) => ({
   phoneNumber: '',
   phoneDigits: Array(digitCount).fill(''),
-  setPhoneNumber: (phoneNumber: string) => {
-    set({ phoneNumber });
-  },
   setPhoneDigit: (index: number, digit: string) =>
     set((state) => {
       const newDigits = [...state.phoneDigits];
       newDigits.splice(index, 1, digit);
       return { phoneDigits: newDigits };
     }),
+  confirmPhoneNumber: () =>
+    set((state) => ({
+      phoneNumber: state.phoneDigits.join(''),
+    })),
+  resetPhoneNumber: () => set({ phoneNumber: '' }),
 }));

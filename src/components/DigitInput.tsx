@@ -15,8 +15,7 @@ export default function DigitInput({
   deletePreviousDigit: () => void;
   error?: boolean;
   passRef: (el: HTMLDivElement) => void;
-  [prop: string]: any;
-}) {
+} & React.ComponentPropsWithoutRef<'div'>) {
   return (
     <div
       ref={passRef}

@@ -6,7 +6,7 @@ import BigButton from '@/components/BigButton';
 import { useStore } from '@/store';
 import { digitCount } from '@/constants';
 
-function PhoneInput() {
+function PhoneInput({ focusConfirmBtn }: { focusConfirmBtn: () => void }) {
   const digits = useStore((state) => state.phoneDigits);
   const setDigit = useStore((state) => state.setPhoneDigit);
   const inputDivs: React.MutableRefObject<Array<HTMLDivElement>> = useRef(
@@ -28,6 +28,17 @@ function PhoneInput() {
               if (value) {
                 if (i < digitCount - 1) {
                   inputDivs.current[i + 1]?.focus();
+                } else {
+                  // After the last digit is entered
+                  // Check if there is any blank digit input
+                  const firstEmptyIndex = digits.findIndex((digit) => !digit);
+                  // The last digit hasn't been recorded so ignore it if it's the first one found
+                  if (
+                    firstEmptyIndex === -1 ||
+                    firstEmptyIndex === digitCount - 1
+                  ) {
+                    focusConfirmBtn();
+                  }
                 }
               }
             }}
@@ -52,6 +63,9 @@ export default function EnterPhone() {
   const phoneFilled = useStore((state) =>
     state.phoneDigits.every((digit) => digit)
   );
+  const confirmPhoneNumber = useStore((state) => state.confirmPhoneNumber);
+  const confirmBtnRef: React.MutableRefObject<HTMLButtonElement | null> =
+    useRef(null);
 
   return (
     <div>
@@ -59,7 +73,11 @@ export default function EnterPhone() {
         <h2 className="px-8 text-center text-2xl uppercase">
           Please enter your mobile phone number below
         </h2>
-        <PhoneInput />
+        <PhoneInput
+          focusConfirmBtn={() => {
+            confirmBtnRef.current?.focus();
+          }}
+        />
       </div>
 
       <div className="inset absolute bottom-0 left-0 right-0 px-8 pb-8 pt-2">
@@ -68,8 +86,14 @@ export default function EnterPhone() {
           We sent you a text to your device. Please check and enter your code to
           confirm your identity.
         </p>
-        <BigButton primary disabled={!phoneFilled} className="mt-8">
-          submit and confirm code
+        <BigButton
+          primary
+          disabled={!phoneFilled}
+          className="mt-8"
+          ref={confirmBtnRef}
+          onClick={confirmPhoneNumber}
+        >
+          Submit and Confirm code
         </BigButton>
       </div>
     </div>
