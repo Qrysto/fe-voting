@@ -10,9 +10,8 @@ import { codeDigitCount } from '@/constants';
 function CodeInput({ focusConfirmBtn }: { focusConfirmBtn: () => void }) {
   const digits = useStore((state) => state.codeDigits);
   const setDigit = useStore((state) => state.setCodeDigit);
-  const inputDivs: React.MutableRefObject<Array<HTMLDivElement>> = useRef(
-    Array(codeDigitCount).fill(null)
-  );
+  const inputDivs: React.MutableRefObject<Array<HTMLDivElement | null>> =
+    useRef(Array(codeDigitCount).fill(null));
 
   return (
     <div className="mx-auto mt-10 flex max-w-md items-center justify-between">

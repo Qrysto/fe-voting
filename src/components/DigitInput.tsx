@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { oswald } from '@/app/fonts';
 
 export default function DigitInput({
@@ -14,14 +15,23 @@ export default function DigitInput({
   setValue: (value: string) => void;
   deletePreviousDigit: () => void;
   error?: boolean;
-  passRef: (el: HTMLDivElement) => void;
+  passRef: (el: HTMLInputElement | null) => void;
 } & React.ComponentPropsWithoutRef<'div'>) {
+  const inputRef = useRef<HTMLInputElement | null>();
+
   return (
-    <div
-      ref={passRef}
+    <input
+      type="text"
+      value={value}
+      ref={(el) => {
+        inputRef.current = el;
+        passRef(el);
+      }}
       tabIndex={0}
-      onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-        switch (e.key) {
+      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+        const newVal = e.target.value;
+        const lastChar = newVal.charAt(newVal.length - 1);
+        switch (lastChar) {
           case '0':
           case '1':
           case '2':
@@ -32,8 +42,11 @@ export default function DigitInput({
           case '7':
           case '8':
           case '9':
-            setValue(e.key);
-            break;
+            setValue(lastChar);
+        }
+      }}
+      onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+        switch (e.key) {
           case 'Backspace':
             if (!value) deletePreviousDigit();
           case 'Delete':
@@ -42,14 +55,15 @@ export default function DigitInput({
             break;
         }
       }}
-      className={`flex h-[1.47em] w-[0.67em] items-center justify-center rounded-[3px] border-2 border-solid ${
+      onFocus={() => {
+        inputRef.current?.select();
+      }}
+      className={`flex h-[1.47em] w-[0.67em] items-center justify-center rounded-[3px] border-2 border-solid py-2 text-center ${
         error ? 'border-red bg-red/5' : value ? 'border-green' : 'border-gray'
       }  outline-none focus:border-blue ${
         oswald.className
       } font-medium ${className}  ${error ? 'text-red' : 'text-darkBlue'}`}
       {...rest}
-    >
-      {value}
-    </div>
+    />
   );
 }

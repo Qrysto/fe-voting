@@ -9,9 +9,8 @@ import { phoneDigitCount } from '@/constants';
 function PhoneInput({ focusConfirmBtn }: { focusConfirmBtn: () => void }) {
   const digits = useStore((state) => state.phoneDigits);
   const setDigit = useStore((state) => state.setPhoneDigit);
-  const inputDivs: React.MutableRefObject<Array<HTMLDivElement>> = useRef(
-    Array(phoneDigitCount).fill(null)
-  );
+  const inputDivs: React.MutableRefObject<Array<HTMLDivElement | null>> =
+    useRef(Array(phoneDigitCount).fill(null));
 
   return (
     <div className="mx-auto mt-10 flex max-w-md items-center justify-between">
