@@ -1,1 +1,3 @@
-export const digitCount = 10;
+export const phoneDigitCount = 10;
+
+export const codeDigitCount = 6;
