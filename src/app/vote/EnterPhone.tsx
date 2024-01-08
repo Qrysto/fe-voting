@@ -29,8 +29,6 @@ function PhoneInput() {
               if (value) {
                 if (i < digitCount - 1) {
                   inputDivs.current[i + 1]?.focus();
-                } else {
-                  inputDivs.current[i]?.blur();
                 }
               }
             }}
