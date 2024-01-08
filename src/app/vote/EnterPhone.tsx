@@ -17,6 +17,7 @@ function PhoneInput() {
       {digits.map((digit, i) => (
         <Fragment key={i}>
           <DigitInput
+            autoFocus={i === 0}
             passRef={(el) => {
               inputDivs.current[i] = el;
             }}
