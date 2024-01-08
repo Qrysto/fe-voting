@@ -6,6 +6,7 @@ export default function DigitInput({
   className,
   value,
   setValue,
+  deletePreviousDigit,
   error,
   passRef,
   ...rest
@@ -13,6 +14,7 @@ export default function DigitInput({
   className?: string;
   value: string;
   setValue: (value: string) => void;
+  deletePreviousDigit: () => void;
   error?: boolean;
   passRef: (el: HTMLDivElement) => void;
 }) {
@@ -23,12 +25,14 @@ export default function DigitInput({
       onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
         if (validDigits.includes(e.key)) {
           setValue(e.key);
-        } else if (
-          e.key === 'Backspace' ||
-          e.key === 'Delete' ||
-          e.key === 'Clear'
-        ) {
+        } else if (e.key === 'Delete' || e.key === 'Clear') {
           setValue('');
+        } else if (e.key === 'Backspace') {
+          if (value) {
+            setValue('');
+          } else {
+            deletePreviousDigit();
+          }
         }
       }}
       className={`flex h-[1.47em] w-[0.67em] items-center justify-center rounded-[3px] border-2 border-solid ${
