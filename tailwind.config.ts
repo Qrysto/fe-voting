@@ -20,7 +20,8 @@ const config: Config = {
       gray: 'rgb(176, 176, 176)',
       lightGray: 'rgb(245, 245, 245)',
       almostWhite: 'rgb(250, 250, 250)',
-      green: 'rgb(40, 214, 0)',
+      lightGreen: 'rgb(229, 250, 213)',
+      green: 'rgb(95, 216, 38)',
       red: 'rgb(188, 2, 25)',
     },
     container: {
