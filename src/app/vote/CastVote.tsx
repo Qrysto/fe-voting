@@ -28,7 +28,9 @@ function Candidate({ candidate }: { candidate: Candidate }) {
           >
             {candidate.party}
           </span>
-          <span className="ml-3 text-blue underline">Website</span>
+          <span className="ml-3 text-blue underline underline-offset-1">
+            Website
+          </span>
         </div>
       </div>
       <button
