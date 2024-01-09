@@ -21,8 +21,9 @@ function IconButton({
   );
 }
 
-export default function Header({ back = true }: { back?: boolean }) {
+export default function Header() {
   const goBack = useStore((state) => state.goBack);
+  const canGoBack = useStore((state) => !!state.phoneNumber);
 
   return (
     <header className="relative py-2">
@@ -36,7 +37,7 @@ export default function Header({ back = true }: { back?: boolean }) {
           priority
         />
       </Link>
-      {back && (
+      {canGoBack && (
         <div className="absolute inset-y-0 left-0 flex items-center object-right-top">
           <IconButton onClick={goBack}>
             <Image src={backIcon} height={18} alt="Back" />
