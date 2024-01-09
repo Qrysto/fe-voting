@@ -1,4 +1,4 @@
-import { oswald } from '@/app/fonts';
+import { oswald } from '@/fonts';
 import { forwardRef } from 'react';
 
 export default forwardRef(function LinkButton(

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { oswald, montserrat } from './fonts';
+import { oswald, montserrat } from '../fonts';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -17,7 +17,9 @@ export default function RootLayout({
       <body
         className={`fixed inset-0 font-medium ${oswald.variable} ${montserrat.variable} ${montserrat.className}`}
       >
-        <div className="container relative h-full md:max-w-3xl">{children}</div>
+        <div className="container relative h-full overflow-y-auto md:max-w-3xl">
+          {children}
+        </div>
       </body>
     </html>
   );

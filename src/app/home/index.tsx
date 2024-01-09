@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { oswald } from '../fonts';
+import { oswald } from '../../fonts';
 import backgroundImg from './bg@2x.jpg';
 import headingImg from './heading@2x.png';
 import iconImg from './icon@2x.png';

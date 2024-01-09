@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { oswald } from '@/app/fonts';
+import { oswald } from '@/fonts';
 
 export default function DigitInput({
   className,
