@@ -8,6 +8,7 @@ type State = {
   codeDigits: string[];
   phoneNumber: string;
   confirmedCode: boolean;
+  votes: string[];
 };
 
 type Actions = {
@@ -17,6 +18,9 @@ type Actions = {
   resetPhoneNumber: () => void;
   confirmCode: () => void;
   unconfirmCode: () => void;
+  addVote: (id: string) => void;
+  removeVote: (index: number) => void;
+  resetVote: () => void;
   goBack: () => void;
 };
 
@@ -25,6 +29,7 @@ export const useStore = create<State & Actions>((set, get) => ({
   codeDigits: Array(codeDigitCount).fill(''),
   phoneNumber: '',
   confirmedCode: false,
+  votes: [],
   setPhoneDigit: (index: number, digit: string) =>
     set((state) => {
       const newDigits = [...state.phoneDigits];
@@ -44,6 +49,17 @@ export const useStore = create<State & Actions>((set, get) => ({
   resetPhoneNumber: () => set({ phoneNumber: '' }),
   confirmCode: () => set({ confirmedCode: true }),
   unconfirmCode: () => set({ confirmedCode: false }),
+  addVote: (id: string) =>
+    set((state) => ({
+      votes: [...state.votes, id],
+    })),
+  removeVote: (index: number) =>
+    set((state) => {
+      const newVotes = [...state.votes];
+      newVotes.splice(index, 1);
+      return { votes: newVotes };
+    }),
+  resetVote: () => set({ votes: [] }),
   goBack: () => {
     const state = get();
     if (state.confirmedCode) {
