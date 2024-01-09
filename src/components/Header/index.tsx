@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import Image from 'next/image';
 import { useStore } from '@/store';
 import logo from './full-logo@2x.png';
@@ -25,14 +26,16 @@ export default function Header({ back = true }: { back?: boolean }) {
 
   return (
     <header className="relative py-2">
-      <Image
-        src={logo}
-        width={106}
-        height={50}
-        alt="Free & Equal"
-        className="mx-auto"
-        priority
-      />
+      <Link href="/">
+        <Image
+          src={logo}
+          width={106}
+          height={50}
+          alt="Free & Equal"
+          className="mx-auto"
+          priority
+        />
+      </Link>
       {back && (
         <div className="absolute inset-y-0 left-0 flex items-center object-right-top">
           <IconButton onClick={goBack}>
