@@ -58,7 +58,7 @@ export default function DigitInput({
       onFocus={() => {
         inputRef.current?.select();
       }}
-      className={`flex h-[1.47em] w-[0.67em] items-center justify-center rounded-[3px] border-2 border-solid py-2 text-center ${
+      className={`flex h-[1.47em] w-[0.67em] items-center justify-center rounded-[3px] border-2 border-solid py-2 text-center caret-transparent ${
         error ? 'border-red bg-red/5' : value ? 'border-green' : 'border-gray'
       }  outline-none focus:border-blue ${
         oswald.className
