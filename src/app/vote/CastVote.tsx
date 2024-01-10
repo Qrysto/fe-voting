@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import Image from 'next/image';
 import BigButton from '@/components/BigButton';
+import ConfirmVoteModal from './ConfirmVoteModal';
 import { oswald } from '@/fonts';
 import { candidates, Candidate } from '@/data';
 import { useStore } from '@/store';
@@ -111,8 +113,8 @@ function VotedCandidate({
 
 export default function CastVote() {
   const votes = useStore((state) => state.votes);
-  const addVote = useStore((state) => state.addVote);
   const resetVote = useStore((state) => state.resetVote);
+  const [confirmingVote, setConfirmingVote] = useState(false);
 
   return (
     <div className="pb-8">
@@ -129,7 +131,14 @@ export default function CastVote() {
         </ul>
         {votes.length > 0 && (
           <>
-            <BigButton className="mt-6" primary disabled={votes.length !== 6}>
+            <BigButton
+              className="mt-6"
+              primary
+              disabled={votes.length !== 6}
+              onClick={() => {
+                setConfirmingVote(true);
+              }}
+            >
               Submit my votes
               {votes.length < 6 ? ` (${6 - votes.length} more)` : ''}
             </BigButton>
@@ -147,6 +156,13 @@ export default function CastVote() {
             ))}
         </ul>
       </div>
+
+      <ConfirmVoteModal
+        open={confirmingVote}
+        close={() => {
+          setConfirmingVote(false);
+        }}
+      />
     </div>
   );
 }
