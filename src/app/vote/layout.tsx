@@ -1,6 +1,6 @@
 'use client';
 
-import Header from '@/components/Header';
+import Header from './Header';
 import StepCircle from './StepCircle';
 import { useStep } from '@/store';
 
