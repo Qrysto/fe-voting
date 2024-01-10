@@ -41,7 +41,7 @@ export default function HomePage() {
       <div className="flex flex-col items-center">
         <Link
           href="/vote"
-          className={`block h-12 w-44 rounded-md text-center leading-[48px] ${oswald.className} bg-lightBlue font-bold uppercase text-blue active:bg-lightBlue/60`}
+          className={`block h-12 w-44 rounded-md text-center leading-[48px] ${oswald.className} bg-lightBlue font-bold uppercase text-blue active:bg-lightBlue/90`}
         >
           Vote now
         </Link>
