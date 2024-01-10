@@ -106,7 +106,7 @@ function VotedCandidate({
           removeVote(candidate.id);
         }}
       >
-        🗙
+        ✖
       </button>
     </li>
   );
