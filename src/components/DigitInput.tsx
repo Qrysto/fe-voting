@@ -22,6 +22,7 @@ export default function DigitInput({
   return (
     <input
       type="text"
+      inputMode="numeric"
       value={value}
       ref={(el) => {
         inputRef.current = el;
