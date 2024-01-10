@@ -51,7 +51,7 @@ export const useStore = create<State & Actions>((set, get) => ({
   unconfirmCode: () => set({ confirmedCode: false }),
   addVote: (id: string) =>
     set((state) => ({
-      votes: [...state.votes, id],
+      votes: state.votes.length < 6 ? [...state.votes, id] : state.votes,
     })),
   removeVote: (index: number) =>
     set((state) => {

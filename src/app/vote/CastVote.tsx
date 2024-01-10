@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { oswald } from '@/fonts';
 import { candidates, Candidate } from '@/data';
 import { useStore } from '@/store';
@@ -8,17 +9,21 @@ function Candidate({ candidate }: { candidate: Candidate }) {
 
   return (
     <li className="flex items-center px-5 py-[10px]">
-      <Image
-        src={candidate.thumbnail}
-        width={40}
-        height={40}
-        alt={candidate.name}
-        className="rounded-md"
-      />
+      <Link href={`/candidate/${candidate.id}`}>
+        <Image
+          src={candidate.thumbnail}
+          width={40}
+          height={40}
+          alt={candidate.name}
+          className="rounded-md"
+        />
+      </Link>
       <div className="shrink grow px-4">
-        <div className="text-[17px] font-bold text-darkBlue">
-          {candidate.name}
-        </div>
+        <Link href={`/candidate/${candidate.id}`}>
+          <div className="text-[17px] font-bold text-darkBlue">
+            {candidate.name}
+          </div>
+        </Link>
         <div className={`text-[11px] font-bold uppercase ${oswald.className}`}>
           <span
             className={
@@ -79,7 +84,7 @@ function VotedCandidate({
                 ? 'text-blue'
                 : candidate.party === 'REPUBLICAN'
                   ? 'text-red'
-                  : 'text-gray'
+                  : 'text-black'
             }
           >
             {candidate.party}
@@ -90,7 +95,7 @@ function VotedCandidate({
         </div>
       </div>
       <div
-        className={`bg-lightGreen relative h-[45px] w-[45px] rounded-full text-center text-[25px] font-semibold leading-[45px] text-green ${oswald.className}`}
+        className={`relative h-[45px] w-[45px] rounded-full bg-lightGreen text-center text-[25px] font-semibold leading-[45px] text-green ${oswald.className}`}
       >
         <span>{rank}</span>
         <span className="absolute top-[-5px] text-[10px]">{superscript}</span>
@@ -105,7 +110,7 @@ export default function CastVote() {
   return (
     <div className="pb-8">
       <h2 className="mb-3 px-5 text-2xl uppercase">Candidates</h2>
-      <div className="bg-almostWhite rounded-md py-[10px]">
+      <div className="rounded-md bg-almostWhite py-[10px]">
         <ul>
           {votes.map((id, i) => (
             <VotedCandidate
