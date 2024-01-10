@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { useStore } from '@/store';
 import logo from './full-logo@2x.png';
 import backIcon from './arrow-left.svg';
-import searchIcon from './search.svg';
+// import searchIcon from './search.svg';
 import shareIcon from './shareIcon.svg';
 
 function IconButton({
@@ -45,9 +45,9 @@ export default function Header() {
         </div>
       )}
       <div className="absolute inset-y-0 right-0 flex items-center object-right-top">
-        <IconButton>
+        {/* <IconButton>
           <Image src={searchIcon} height={23} alt="Search" />
-        </IconButton>
+        </IconButton> */}
         <IconButton className="ml-4">
           <Image src={shareIcon} height={23} alt="Share" />
         </IconButton>
