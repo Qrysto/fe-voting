@@ -80,11 +80,6 @@ export default function EnterPhone() {
       </div>
 
       <div className="inset absolute bottom-0 left-0 right-0 px-8 pb-8 pt-2">
-        <h2 className="mb-3 text-4xl uppercase">Look for your Code</h2>
-        <p className="text-lg leading-6">
-          We sent you a text to your device. Please check and enter your code to
-          confirm your identity.
-        </p>
         <BigButton
           primary
           disabled={!phoneFilled}
