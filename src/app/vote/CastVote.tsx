@@ -41,7 +41,7 @@ function Candidate({ candidate }: { candidate: Candidate }) {
         </div>
       </div>
       <button
-        className={`${oswald.className} h-11 rounded-md bg-lightBlue px-3 font-bold uppercase text-blue`}
+        className={`${oswald.className} h-11 rounded-md bg-lightBlue px-3 font-bold uppercase text-blue active:bg-lightBlue/60`}
         onClick={() => {
           addVote(candidate.id);
         }}

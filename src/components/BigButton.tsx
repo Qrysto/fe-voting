@@ -25,8 +25,8 @@ export default forwardRef(function BigButton(
         disabled
           ? 'bg-gray text-white'
           : primary
-            ? 'bg-blue text-white'
-            : 'bg-lightBlue text-blue'
+            ? 'bg-blue text-white active:bg-blue/90'
+            : 'bg-lightBlue text-blue active:bg-lightBlue/60'
       } ${className || ''}`}
       {...rest}
     >

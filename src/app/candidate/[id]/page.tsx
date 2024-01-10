@@ -55,7 +55,7 @@ export default function CandidateDetails({
             </div>
             <Link
               href={'https://nexus.io/'}
-              className={`${oswald.className} h-12 rounded-md bg-lightBlue px-5 font-bold uppercase leading-[48px] text-blue`}
+              className={`${oswald.className} h-12 rounded-md bg-lightBlue px-5 font-bold uppercase leading-[48px] text-blue active:bg-lightBlue/60`}
             >
               Website
             </Link>

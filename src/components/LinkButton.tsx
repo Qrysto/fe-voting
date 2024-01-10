@@ -17,7 +17,7 @@ export default forwardRef(function LinkButton(
   return (
     <button
       ref={ref}
-      className={`font-bold uppercase text-blue underline ${
+      className={`font-bold uppercase text-blue underline active:text-blue/90 ${
         oswald.className
       }  ${className || ''}`}
       {...rest}
