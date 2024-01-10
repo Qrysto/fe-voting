@@ -20,7 +20,7 @@ export default function VoteConfirmedModal({
         </div>
         <h1 className="text-4xl uppercase">Vote confirmed</h1>
         <p className="mt-[10px]">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          Your vote has been submitted, thank you for your vote!
         </p>
         <BigButton
           className="mt-8"

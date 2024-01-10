@@ -120,7 +120,11 @@ export default function CastVote() {
 
   return (
     <div className="pb-8">
-      <h2 className="mb-3 px-5 text-2xl uppercase">Candidates</h2>
+      <h2 className="px-5 text-4xl uppercase">Vote</h2>
+      <p className="mt-[10px] px-5 text-lg leading-6">
+        Please rank your top six candidates for the upcoming independent debate.
+      </p>
+      <h2 className="mb-3 mt-8 px-5 text-2xl uppercase">Candidates</h2>
       <div className="rounded-md bg-almostWhite py-[10px]">
         <ul>
           {votes.map((id, i) => (

@@ -74,7 +74,7 @@ export default function ConfirmVoteModal({
         />
         <h1 className="mt-14 text-4xl uppercase">Confirm vote</h1>
         <p className="mt-[10px]">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          Please confirm you rank selection is correct below.
         </p>
         <ul className="mb-7 mt-4 shrink grow overflow-y-auto rounded-[46px] bg-almostWhite py-4">
           {votes.map((id, i) => (

@@ -67,7 +67,7 @@ export default function ConfirmCode() {
 
   return (
     <div>
-      <div className="">
+      <div className="pt-8">
         <h2 className="px-4 text-center text-2xl uppercase">
           Please confirm your identity
         </h2>
