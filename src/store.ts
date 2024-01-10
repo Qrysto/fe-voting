@@ -24,9 +24,11 @@ type Actions = {
   goBack: () => void;
 };
 
+const defaultCodeDigits = Array(codeDigitCount).fill('');
+
 export const useStore = create<State & Actions>((set, get) => ({
   phoneDigits: Array(phoneDigitCount).fill(''),
-  codeDigits: Array(codeDigitCount).fill(''),
+  codeDigits: defaultCodeDigits,
   phoneNumber: '',
   confirmedCode: false,
   votes: [],
@@ -45,6 +47,7 @@ export const useStore = create<State & Actions>((set, get) => ({
   confirmPhoneNumber: () =>
     set((state) => ({
       phoneNumber: state.phoneDigits.join(''),
+      codeDigits: defaultCodeDigits,
     })),
   resetPhoneNumber: () => set({ phoneNumber: '' }),
   confirmCode: () => set({ confirmedCode: true }),
@@ -59,7 +62,7 @@ export const useStore = create<State & Actions>((set, get) => ({
   goBack: () => {
     const state = get();
     if (state.confirmedCode) {
-      set({ confirmedCode: false });
+      set({ confirmedCode: false, codeDigits: defaultCodeDigits });
     } else if (state.phoneNumber) {
       set({ phoneNumber: '' });
     }
