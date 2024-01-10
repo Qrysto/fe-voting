@@ -19,7 +19,7 @@ type Actions = {
   confirmCode: () => void;
   unconfirmCode: () => void;
   addVote: (id: string) => void;
-  removeVote: (index: number) => void;
+  removeVote: (id: string) => void;
   resetVote: () => void;
   goBack: () => void;
 };
@@ -53,12 +53,8 @@ export const useStore = create<State & Actions>((set, get) => ({
     set((state) => ({
       votes: state.votes.length < 6 ? [...state.votes, id] : state.votes,
     })),
-  removeVote: (index: number) =>
-    set((state) => {
-      const newVotes = [...state.votes];
-      newVotes.splice(index, 1);
-      return { votes: newVotes };
-    }),
+  removeVote: (id: string) =>
+    set((state) => ({ votes: state.votes.filter((cid) => cid !== id) })),
   resetVote: () => set({ votes: [] }),
   goBack: () => {
     const state = get();

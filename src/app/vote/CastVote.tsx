@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import BigButton from '@/components/BigButton';
 import { oswald } from '@/fonts';
 import { candidates, Candidate } from '@/data';
 import { useStore } from '@/store';
@@ -55,12 +56,19 @@ function VotedCandidate({
   candidate: Candidate | undefined;
   rank: number;
 }) {
+  const removeVote = useStore((state) => state.removeVote);
   if (!candidate) return null;
   const superscript =
     rank === 1 ? 'ST' : rank === 2 ? 'ND' : rank === 3 ? 'RD' : 'TH';
 
   return (
     <li className="flex items-center px-5 py-[10px]">
+      <div
+        className={`relative mr-3 h-[45px] w-[45px] rounded-full bg-lightGreen pr-1 text-center text-[25px] font-semibold leading-[45px] text-green ${oswald.className}`}
+      >
+        <span>{rank}</span>
+        <span className="absolute top-[-5px] text-[10px]">{superscript}</span>
+      </div>
       <Image
         src={candidate.thumbnail}
         width={40}
@@ -89,18 +97,22 @@ function VotedCandidate({
           </span>
         </div>
       </div>
-      <div
-        className={`relative h-[45px] w-[45px] rounded-full bg-lightGreen text-center text-[25px] font-semibold leading-[45px] text-green ${oswald.className}`}
+      <button
+        className={`${oswald.className} h-10 rounded-md px-3 font-bold uppercase text-gray/50`}
+        onClick={() => {
+          removeVote(candidate.id);
+        }}
       >
-        <span>{rank}</span>
-        <span className="absolute top-[-5px] text-[10px]">{superscript}</span>
-      </div>
+        🗙
+      </button>
     </li>
   );
 }
 
 export default function CastVote() {
   const votes = useStore((state) => state.votes);
+  const addVote = useStore((state) => state.addVote);
+  const resetVote = useStore((state) => state.resetVote);
 
   return (
     <div className="pb-8">
@@ -116,7 +128,16 @@ export default function CastVote() {
           ))}
         </ul>
         {votes.length > 0 && (
-          <div className="my-[10px] border-t border-solid border-gray"></div>
+          <>
+            <BigButton className="mt-6" primary disabled={votes.length !== 6}>
+              Submit my votes
+              {votes.length < 6 ? ` (${6 - votes.length} more)` : ''}
+            </BigButton>
+            <BigButton className="mb-6 mt-4" onClick={resetVote}>
+              Reset all my votes
+            </BigButton>
+            <div className="my-[10px] border-t border-solid border-gray"></div>
+          </>
         )}
         <ul>
           {candidates
