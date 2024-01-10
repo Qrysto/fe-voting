@@ -115,8 +115,8 @@ function VotedCandidate({
 export default function CastVote() {
   const votes = useStore((state) => state.votes);
   const resetVote = useStore((state) => state.resetVote);
-  const [confirmingVote, setConfirmingVote] = useState(false);
-  const [showConfirmed, setShowConfirmed] = useState(false);
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+  const [confirmedModalOpen, setConfirmedModalOpen] = useState(false);
 
   return (
     <div className="pb-8">
@@ -138,7 +138,7 @@ export default function CastVote() {
               primary
               disabled={votes.length !== 6}
               onClick={() => {
-                setConfirmingVote(true);
+                setConfirmModalOpen(true);
               }}
             >
               Submit my votes
@@ -153,26 +153,26 @@ export default function CastVote() {
         <ul>
           {candidates
             .filter((c) => !votes.includes(c.id))
-            .map((candidate, i) => (
+            .map((candidate) => (
               <Candidate key={candidate.id} candidate={candidate} />
             ))}
         </ul>
       </div>
 
       <ConfirmVoteModal
-        open={confirmingVote}
+        open={confirmModalOpen}
         close={() => {
-          setConfirmingVote(false);
+          setConfirmModalOpen(false);
         }}
         confirmVote={() => {
-          setConfirmingVote(false);
-          setShowConfirmed(true);
+          setConfirmModalOpen(false);
+          setConfirmedModalOpen(true);
         }}
       />
       <VoteConfirmedModal
-        open={showConfirmed}
+        open={confirmedModalOpen}
         close={() => {
-          setShowConfirmed(false);
+          setConfirmedModalOpen(false);
         }}
       />
     </div>

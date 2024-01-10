@@ -78,7 +78,7 @@ export default function ConfirmVoteModal({
         </p>
         <ul className="mb-7 mt-4 shrink grow overflow-y-auto rounded-[46px] bg-almostWhite py-4">
           {votes.map((id, i) => (
-            <VotedCandidate id={id} rank={i + 1} />
+            <VotedCandidate key={id} id={id} rank={i + 1} />
           ))}
         </ul>
         <BigButton
@@ -87,7 +87,7 @@ export default function ConfirmVoteModal({
           disabled={votes.length !== 6}
           onClick={confirmVote}
         >
-          Submit my votes
+          Confirm my votes
           {votes.length < 6 ? ` (${6 - votes.length} more)` : ''}
         </BigButton>
         <BigButton
