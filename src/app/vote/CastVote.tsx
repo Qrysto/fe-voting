@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import BigButton from '@/components/BigButton';
 import ConfirmVoteModal from './ConfirmVoteModal';
+import VoteConfirmedModal from './VoteConfirmedModal';
 import { oswald } from '@/fonts';
 import { candidates, Candidate } from '@/data';
 import { useStore } from '@/store';
@@ -115,6 +116,7 @@ export default function CastVote() {
   const votes = useStore((state) => state.votes);
   const resetVote = useStore((state) => state.resetVote);
   const [confirmingVote, setConfirmingVote] = useState(false);
+  const [showConfirmed, setShowConfirmed] = useState(false);
 
   return (
     <div className="pb-8">
@@ -161,6 +163,16 @@ export default function CastVote() {
         open={confirmingVote}
         close={() => {
           setConfirmingVote(false);
+        }}
+        confirmVote={() => {
+          setConfirmingVote(false);
+          setShowConfirmed(true);
+        }}
+      />
+      <VoteConfirmedModal
+        open={showConfirmed}
+        close={() => {
+          setShowConfirmed(false);
         }}
       />
     </div>

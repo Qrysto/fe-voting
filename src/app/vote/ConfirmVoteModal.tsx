@@ -55,9 +55,11 @@ function VotedCandidate({ id, rank }: { id: string; rank: number }) {
 export default function ConfirmVoteModal({
   open,
   close,
+  confirmVote,
 }: {
   open?: boolean;
   close: () => void;
+  confirmVote: () => void;
 }) {
   const votes = useStore((state) => state.votes);
   const resetVote = useStore((state) => state.resetVote);
@@ -71,9 +73,9 @@ export default function ConfirmVoteModal({
           className="absolute right-4 top-4 w-[112px]"
         />
         <h1 className="mt-14 text-4xl uppercase">Confirm vote</h1>
-        {/* <p className="mt-[10px]">
+        <p className="mt-[10px]">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-        </p> */}
+        </p>
         <ul className="mb-7 mt-4 shrink grow overflow-y-auto rounded-[46px] bg-almostWhite py-4">
           {votes.map((id, i) => (
             <VotedCandidate id={id} rank={i + 1} />
@@ -83,7 +85,7 @@ export default function ConfirmVoteModal({
           className="mt-4"
           primary
           disabled={votes.length !== 6}
-          onClick={() => {}}
+          onClick={confirmVote}
         >
           Submit my votes
           {votes.length < 6 ? ` (${6 - votes.length} more)` : ''}
