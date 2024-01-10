@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import Link from 'next/link';
 import { oswald } from '@/fonts';
 import { candidates, Candidate } from '@/data';
 import { useStore } from '@/store';
@@ -9,21 +8,17 @@ function Candidate({ candidate }: { candidate: Candidate }) {
 
   return (
     <li className="flex items-center px-5 py-[10px]">
-      <Link href={`/candidate/${candidate.id}`}>
-        <Image
-          src={candidate.thumbnail}
-          width={40}
-          height={40}
-          alt={candidate.name}
-          className="rounded-md"
-        />
-      </Link>
+      <Image
+        src={candidate.thumbnail}
+        width={40}
+        height={40}
+        alt={candidate.name}
+        className="rounded-md"
+      />
       <div className="shrink grow px-4">
-        <Link href={`/candidate/${candidate.id}`}>
-          <div className="text-[17px] font-bold text-darkBlue">
-            {candidate.name}
-          </div>
-        </Link>
+        <div className="text-[17px] font-bold text-darkBlue">
+          {candidate.name}
+        </div>
         <div className={`text-[11px] font-bold uppercase ${oswald.className}`}>
           <span
             className={
