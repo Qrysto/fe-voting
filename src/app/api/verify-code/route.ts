@@ -26,12 +26,20 @@ export async function POST(request: NextRequest) {
     to: '+1' + phoneNumber,
     code,
   });
+
   if (verification.status === 'approved') {
-    jwt.sign(
-      { sid: verification.sid, phoneNumber, code, timestamp: Date.now() },
-      jwtSecret
-    );
-    return Response.json({ ok: true });
+    try {
+      const token = jwt.sign(
+        { sid: verification.sid, phoneNumber, code },
+        jwtSecret,
+        {
+          expiresIn: '1 day',
+        }
+      );
+      return Response.json({ ok: true, token, verification });
+    } catch (err) {
+      return Response.json({ message: JSON.stringify(err) }, { status: 500 });
+    }
   } else {
     return Response.json({ message: 'Invalid code!' }, { status: 400 });
   }
