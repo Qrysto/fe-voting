@@ -26,7 +26,6 @@ function CodeInput({ focusConfirmBtn }: { focusConfirmBtn: () => void }) {
           value={digit}
           setValue={(value) => {
             const newIndex = setDigits(i, value);
-            console.log('newIndex', newIndex);
             if (value) {
               if (newIndex < codeDigitCount) {
                 inputDivs.current[newIndex]?.focus();
@@ -34,10 +33,8 @@ function CodeInput({ focusConfirmBtn }: { focusConfirmBtn: () => void }) {
                 // After the last digit is entered
                 // Check if there is any blank digit input
                 const firstEmptyIndex = digits.findIndex((digit) => !digit);
-                console.log('firstEmptyIndex', firstEmptyIndex);
                 // The newly entered digits haven't been updated so ignore it if it's the first one found
                 if (firstEmptyIndex === -1 || firstEmptyIndex === i) {
-                  console.log('focus confirm');
                   focusConfirmBtn();
                 }
               }
