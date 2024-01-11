@@ -10,7 +10,7 @@ type State = {
   codeDigits: string[];
   codeError: string | null;
   phoneNumber: string;
-  confirmedCode: boolean;
+  jwtToken: string | null;
   votes: string[];
 };
 
@@ -35,7 +35,7 @@ export const useStore = create<State & Actions>((set, get) => ({
   codeDigits: defaultCodeDigits,
   codeError: null,
   phoneNumber: '',
-  confirmedCode: false,
+  jwtToken: null,
   votes: [],
   setPhoneDigit: (index: number, digit: string) =>
     set((state) => {
@@ -58,6 +58,7 @@ export const useStore = create<State & Actions>((set, get) => ({
         phoneNumber,
         phoneError: null,
         codeDigits: defaultCodeDigits,
+        codeError: null,
       });
     } catch (err: any) {
       set({
@@ -66,8 +67,26 @@ export const useStore = create<State & Actions>((set, get) => ({
     }
   },
   resetPhoneNumber: () => set({ phoneNumber: '', phoneError: null }),
-  confirmCode: () => set({ confirmedCode: true }),
-  unconfirmCode: () => set({ confirmedCode: false }),
+  confirmCode: async () => {
+    const code = get().codeDigits.join('');
+    try {
+      const { data } = await axios.post('/api/verify-code', {
+        phoneNumber: get().phoneNumber,
+        code,
+      });
+      console.log('verfication', data.verfication);
+      console.log('token', data.token);
+      set({
+        jwtToken: data.token,
+        codeError: null,
+      });
+    } catch (err: any) {
+      set({
+        codeError: err?.message || err?.error?.message || 'Unknown error',
+      });
+    }
+  },
+  unconfirmCode: () => set({ jwtToken: null }),
   addVote: (id: string) =>
     set((state) => ({
       votes: state.votes.length < 6 ? [...state.votes, id] : state.votes,
@@ -77,9 +96,9 @@ export const useStore = create<State & Actions>((set, get) => ({
   resetVote: () => set({ votes: [] }),
   goBack: () => {
     const state = get();
-    if (state.confirmedCode) {
+    if (state.jwtToken) {
       set({
-        confirmedCode: false,
+        jwtToken: null,
         codeDigits: defaultCodeDigits,
         codeError: null,
       });
@@ -90,4 +109,4 @@ export const useStore = create<State & Actions>((set, get) => ({
 }));
 
 export const useStep = () =>
-  useStore((state) => (!state.phoneNumber ? 1 : !state.confirmedCode ? 2 : 3));
+  useStore((state) => (!state.phoneNumber ? 1 : !state.jwtToken ? 2 : 3));
