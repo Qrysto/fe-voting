@@ -85,7 +85,7 @@ export default function EnterPhone() {
           disabled={!phoneFilled}
           className="mt-8"
           ref={confirmBtnRef}
-          onClick={confirmPhoneNumber}
+          action={confirmPhoneNumber}
         >
           Send code to me
         </BigButton>

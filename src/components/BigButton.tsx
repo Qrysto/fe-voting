@@ -1,5 +1,6 @@
 import { oswald } from '@/fonts';
-import { forwardRef } from 'react';
+import Spinner from './Spinner';
+import { useState, forwardRef } from 'react';
 
 export default forwardRef(function BigButton(
   {
@@ -7,15 +8,19 @@ export default forwardRef(function BigButton(
     children,
     className,
     disabled = false,
+    action,
     ...rest
   }: {
     primary?: boolean;
     children?: React.ReactNode;
     className?: string;
     disabled?: boolean;
+    action?: (...args: any[]) => Promise<any>;
   } & React.ComponentPropsWithoutRef<'button'>,
   ref: React.ForwardedRef<HTMLButtonElement>
 ) {
+  const [busy, setBusy] = useState(false);
+
   return (
     <button
       ref={ref}
@@ -28,8 +33,22 @@ export default forwardRef(function BigButton(
             ? 'bg-blue text-white active:bg-blue/90'
             : 'bg-lightBlue text-blue active:bg-lightBlue/60'
       } ${className || ''}`}
+      disabled={disabled || busy}
+      {...(action
+        ? {
+            onClick: async (...args) => {
+              try {
+                setBusy(true);
+                return await action(...args);
+              } finally {
+                setBusy(false);
+              }
+            },
+          }
+        : null)}
       {...rest}
     >
+      {busy && <Spinner className="mr-2" />}
       {children}
     </button>
   );

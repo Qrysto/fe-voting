@@ -1,11 +1,14 @@
 'use client';
 
 import { create } from 'zustand';
+import axios from 'axios';
 import { phoneDigitCount, codeDigitCount } from '@/constants';
 
 type State = {
   phoneDigits: string[];
+  phoneError: string | null;
   codeDigits: string[];
+  codeError: string | null;
   phoneNumber: string;
   confirmedCode: boolean;
   votes: string[];
@@ -14,9 +17,9 @@ type State = {
 type Actions = {
   setPhoneDigit: (index: number, digit: string) => void;
   setCodeDigit: (index: number, digit: string) => void;
-  confirmPhoneNumber: () => void;
+  confirmPhoneNumber: () => Promise<void>;
   resetPhoneNumber: () => void;
-  confirmCode: () => void;
+  confirmCode: () => Promise<void>;
   unconfirmCode: () => void;
   addVote: (id: string) => void;
   removeVote: (id: string) => void;
@@ -28,7 +31,9 @@ const defaultCodeDigits = Array(codeDigitCount).fill('');
 
 export const useStore = create<State & Actions>((set, get) => ({
   phoneDigits: Array(phoneDigitCount).fill(''),
+  phoneError: null,
   codeDigits: defaultCodeDigits,
+  codeError: null,
   phoneNumber: '',
   confirmedCode: false,
   votes: [],
@@ -36,20 +41,31 @@ export const useStore = create<State & Actions>((set, get) => ({
     set((state) => {
       const newDigits = [...state.phoneDigits];
       newDigits.splice(index, 1, digit);
-      return { phoneDigits: newDigits };
+      return { phoneDigits: newDigits, phoneError: null };
     }),
   setCodeDigit: (index: number, digit: string) =>
     set((state) => {
       const newDigits = [...state.codeDigits];
       newDigits.splice(index, 1, digit);
-      return { codeDigits: newDigits };
+      return { codeDigits: newDigits, codeError: null };
     }),
-  confirmPhoneNumber: () =>
-    set((state) => ({
-      phoneNumber: state.phoneDigits.join(''),
-      codeDigits: defaultCodeDigits,
-    })),
-  resetPhoneNumber: () => set({ phoneNumber: '' }),
+  confirmPhoneNumber: async () => {
+    const phoneNumber = get().phoneDigits.join('');
+    try {
+      const { data } = await axios.post('/api/verify-phone', { phoneNumber });
+      console.log('verfication', data.verfication);
+      set({
+        phoneNumber,
+        phoneError: null,
+        codeDigits: defaultCodeDigits,
+      });
+    } catch (err: any) {
+      set({
+        phoneError: err?.message || err?.error?.message || 'Unknown error',
+      });
+    }
+  },
+  resetPhoneNumber: () => set({ phoneNumber: '', phoneError: null }),
   confirmCode: () => set({ confirmedCode: true }),
   unconfirmCode: () => set({ confirmedCode: false }),
   addVote: (id: string) =>
@@ -62,9 +78,13 @@ export const useStore = create<State & Actions>((set, get) => ({
   goBack: () => {
     const state = get();
     if (state.confirmedCode) {
-      set({ confirmedCode: false, codeDigits: defaultCodeDigits });
+      set({
+        confirmedCode: false,
+        codeDigits: defaultCodeDigits,
+        codeError: null,
+      });
     } else if (state.phoneNumber) {
-      set({ phoneNumber: '' });
+      set({ phoneNumber: '', phoneError: null });
     }
   },
 }));
