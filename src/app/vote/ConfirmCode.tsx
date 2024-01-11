@@ -9,7 +9,7 @@ import { codeDigitCount } from '@/constants';
 
 function CodeInput({ focusConfirmBtn }: { focusConfirmBtn: () => void }) {
   const digits = useStore((state) => state.codeDigits);
-  const setDigit = useStore((state) => state.setCodeDigit);
+  const setDigits = useStore((state) => state.setCodeDigits);
   const codeError = useStore((state) => state.codeError);
   const inputDivs: React.MutableRefObject<Array<HTMLDivElement | null>> =
     useRef(Array(codeDigitCount).fill(null));
@@ -25,19 +25,19 @@ function CodeInput({ focusConfirmBtn }: { focusConfirmBtn: () => void }) {
           }}
           value={digit}
           setValue={(value) => {
-            setDigit(i, value);
+            const newIndex = setDigits(i, value);
+            console.log('newIndex', newIndex);
             if (value) {
-              if (i < codeDigitCount - 1) {
-                inputDivs.current[i + 1]?.focus();
+              if (newIndex < codeDigitCount) {
+                inputDivs.current[newIndex]?.focus();
               } else {
                 // After the last digit is entered
                 // Check if there is any blank digit input
                 const firstEmptyIndex = digits.findIndex((digit) => !digit);
-                // The last digit hasn't been recorded so ignore it if it's the first one found
-                if (
-                  firstEmptyIndex === -1 ||
-                  firstEmptyIndex === codeDigitCount - 1
-                ) {
+                console.log('firstEmptyIndex', firstEmptyIndex);
+                // The newly entered digits haven't been updated so ignore it if it's the first one found
+                if (firstEmptyIndex === -1 || firstEmptyIndex === i) {
+                  console.log('focus confirm');
                   focusConfirmBtn();
                 }
               }
@@ -47,7 +47,7 @@ function CodeInput({ focusConfirmBtn }: { focusConfirmBtn: () => void }) {
             if (i > 0) {
               inputDivs.current[i - 1]?.focus();
               if (digits[i - 1] !== '') {
-                setDigit(i - 1, '');
+                setDigits(i - 1, '');
               }
             }
           }}

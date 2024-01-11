@@ -25,6 +25,7 @@ function PhoneInput({ focusConfirmBtn }: { focusConfirmBtn: () => void }) {
             value={digit}
             setValue={(value) => {
               const newIndex = setDigits(i, value);
+              console.log('newIndex', newIndex);
               if (value) {
                 if (newIndex < phoneDigitCount) {
                   inputDivs.current[newIndex]?.focus();
@@ -32,11 +33,10 @@ function PhoneInput({ focusConfirmBtn }: { focusConfirmBtn: () => void }) {
                   // After the last digit is entered
                   // Check if there is any blank digit input
                   const firstEmptyIndex = digits.findIndex((digit) => !digit);
-                  // The last digit hasn't been recorded so ignore it if it's the first one found
-                  if (
-                    firstEmptyIndex === -1 ||
-                    firstEmptyIndex === phoneDigitCount - 1
-                  ) {
+                  console.log('firstEmptyIndex', firstEmptyIndex);
+                  // The newly entered digits haven't been updated so ignore it if it's the first one found
+                  if (firstEmptyIndex === -1 || firstEmptyIndex === i) {
+                    console.log('focus confirm');
                     focusConfirmBtn();
                   }
                 }
@@ -81,6 +81,7 @@ export default function EnterPhone() {
         </h2>
         <PhoneInput
           focusConfirmBtn={() => {
+            console.log(confirmBtnRef.current);
             confirmBtnRef.current?.focus();
           }}
         />

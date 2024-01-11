@@ -16,7 +16,7 @@ type State = {
 
 type Actions = {
   setPhoneDigits: (index: number, digit: string) => number;
-  setCodeDigit: (index: number, digit: string) => void;
+  setCodeDigits: (index: number, digit: string) => number;
   confirmPhoneNumber: () => Promise<void>;
   resetPhoneNumber: () => void;
   confirmCode: () => Promise<void>;
@@ -37,6 +37,7 @@ export const useStore = create<State & Actions>((set, get) => ({
   phoneNumber: '',
   jwtToken: null,
   votes: [],
+
   setPhoneDigits: (index: number, digits: string) => {
     const trimmedDigits =
       index + digits.length > phoneDigitCount
@@ -57,12 +58,28 @@ export const useStore = create<State & Actions>((set, get) => ({
     });
     return index + trimmedDigits.length;
   },
-  setCodeDigit: (index: number, digit: string) =>
+
+  setCodeDigits: (index: number, digits: string) => {
+    const trimmedDigits =
+      index + digits.length > phoneDigitCount
+        ? digits.substring(0, phoneDigitCount - index)
+        : digits;
     set((state) => {
       const newDigits = [...state.codeDigits];
-      newDigits.splice(index, 1, digit);
+      if (!digits) {
+        newDigits.splice(index, 1, '');
+      } else {
+        newDigits.splice(
+          index,
+          trimmedDigits.length,
+          ...trimmedDigits.split('')
+        );
+      }
       return { codeDigits: newDigits, codeError: null };
-    }),
+    });
+    return index + trimmedDigits.length;
+  },
+
   confirmPhoneNumber: async () => {
     const phoneNumber = get().phoneDigits.join('');
     try {
@@ -80,7 +97,9 @@ export const useStore = create<State & Actions>((set, get) => ({
       });
     }
   },
+
   resetPhoneNumber: () => set({ phoneNumber: '', phoneError: null }),
+
   confirmCode: async () => {
     const code = get().codeDigits.join('');
     try {
@@ -99,6 +118,7 @@ export const useStore = create<State & Actions>((set, get) => ({
       });
     }
   },
+
   unconfirmCode: () => set({ jwtToken: null }),
   addVote: (id: string) =>
     set((state) => ({
