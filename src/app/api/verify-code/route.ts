@@ -10,16 +10,10 @@ export async function POST(request: NextRequest) {
   const phoneNumber = body?.phoneNumber;
   const code = body?.code;
   if (!phoneNumber) {
-    return Response.json(
-      { error: { message: 'Missing phone number' } },
-      { status: 400 }
-    );
+    return Response.json({ message: 'Missing phone number' }, { status: 400 });
   }
   if (!isValidPhoneNumber(phoneNumber)) {
-    return Response.json(
-      { erroor: { message: 'Invalid phone number' } },
-      { status: 400 }
-    );
+    return Response.json({ message: 'Invalid phone number' }, { status: 400 });
   }
   if (!code) {
     return Response.json(
@@ -39,9 +33,6 @@ export async function POST(request: NextRequest) {
     );
     return Response.json({ ok: true });
   } else {
-    return Response.json(
-      { error: { message: 'Invalid code!' } },
-      { status: 400 }
-    );
+    return Response.json({ message: 'Invalid code!' }, { status: 400 });
   }
 }
