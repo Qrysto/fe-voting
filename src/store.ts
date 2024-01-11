@@ -15,7 +15,7 @@ type State = {
 };
 
 type Actions = {
-  setPhoneDigit: (index: number, digit: string) => void;
+  setPhoneDigits: (index: number, digit: string) => number;
   setCodeDigit: (index: number, digit: string) => void;
   confirmPhoneNumber: () => Promise<void>;
   resetPhoneNumber: () => void;
@@ -37,12 +37,26 @@ export const useStore = create<State & Actions>((set, get) => ({
   phoneNumber: '',
   jwtToken: null,
   votes: [],
-  setPhoneDigit: (index: number, digit: string) =>
+  setPhoneDigits: (index: number, digits: string) => {
+    const trimmedDigits =
+      index + digits.length > phoneDigitCount
+        ? digits.substring(0, phoneDigitCount - index)
+        : digits;
     set((state) => {
       const newDigits = [...state.phoneDigits];
-      newDigits.splice(index, 1, digit);
+      if (!digits) {
+        newDigits.splice(index, 1, '');
+      } else {
+        newDigits.splice(
+          index,
+          trimmedDigits.length,
+          ...trimmedDigits.split('')
+        );
+      }
       return { phoneDigits: newDigits, phoneError: null };
-    }),
+    });
+    return index + trimmedDigits.length;
+  },
   setCodeDigit: (index: number, digit: string) =>
     set((state) => {
       const newDigits = [...state.codeDigits];
@@ -53,7 +67,7 @@ export const useStore = create<State & Actions>((set, get) => ({
     const phoneNumber = get().phoneDigits.join('');
     try {
       const { data } = await axios.post('/api/verify-phone', { phoneNumber });
-      console.log('verfication', data.verfication);
+      console.log('data', data);
       set({
         phoneNumber,
         phoneError: null,
@@ -74,8 +88,7 @@ export const useStore = create<State & Actions>((set, get) => ({
         phoneNumber: get().phoneNumber,
         code,
       });
-      console.log('verfication', data.verfication);
-      console.log('token', data.token);
+      console.log('data', data);
       set({
         jwtToken: data.token,
         codeError: null,

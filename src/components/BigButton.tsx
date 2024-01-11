@@ -48,8 +48,8 @@ export default forwardRef(function BigButton(
         : null)}
       {...rest}
     >
-      {busy && <Spinner className="mr-2" />}
-      {children}
+      {busy && <Spinner className="mr-2 inline-block" />}
+      <span>{children}</span>
     </button>
   );
 });

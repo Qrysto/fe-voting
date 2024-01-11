@@ -1,6 +1,8 @@
 import { useRef } from 'react';
 import { oswald } from '@/fonts';
 
+const digitRegex = /\d/;
+
 export default function DigitInput({
   className,
   value,
@@ -30,20 +32,12 @@ export default function DigitInput({
       }}
       tabIndex={0}
       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-        const newVal = e.target.value;
-        const lastChar = newVal.charAt(newVal.length - 1);
-        switch (lastChar) {
-          case '0':
-          case '1':
-          case '2':
-          case '3':
-          case '4':
-          case '5':
-          case '6':
-          case '7':
-          case '8':
-          case '9':
-            setValue(lastChar);
+        const newVal = e.target.value
+          ?.split('')
+          .filter((char) => digitRegex.test(char))
+          .join('');
+        if (newVal.length) {
+          setValue(newVal);
         }
       }}
       onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {

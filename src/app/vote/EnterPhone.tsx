@@ -9,7 +9,7 @@ import { phoneDigitCount } from '@/constants';
 function PhoneInput({ focusConfirmBtn }: { focusConfirmBtn: () => void }) {
   const digits = useStore((state) => state.phoneDigits);
   const phoneError = useStore((state) => state.phoneError);
-  const setDigit = useStore((state) => state.setPhoneDigit);
+  const setDigits = useStore((state) => state.setPhoneDigits);
   const inputDivs: React.MutableRefObject<Array<HTMLDivElement | null>> =
     useRef(Array(phoneDigitCount).fill(null));
 
@@ -24,10 +24,10 @@ function PhoneInput({ focusConfirmBtn }: { focusConfirmBtn: () => void }) {
             }}
             value={digit}
             setValue={(value) => {
-              setDigit(i, value);
+              const newIndex = setDigits(i, value);
               if (value) {
-                if (i < phoneDigitCount - 1) {
-                  inputDivs.current[i + 1]?.focus();
+                if (newIndex < phoneDigitCount) {
+                  inputDivs.current[newIndex]?.focus();
                 } else {
                   // After the last digit is entered
                   // Check if there is any blank digit input
@@ -46,7 +46,7 @@ function PhoneInput({ focusConfirmBtn }: { focusConfirmBtn: () => void }) {
               if (i > 0) {
                 inputDivs.current[i - 1]?.focus();
                 if (digits[i - 1] !== '') {
-                  setDigit(i - 1, '');
+                  setDigits(i - 1, '');
                 }
               }
             }}
