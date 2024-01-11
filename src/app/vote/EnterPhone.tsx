@@ -8,6 +8,7 @@ import { phoneDigitCount } from '@/constants';
 
 function PhoneInput({ focusConfirmBtn }: { focusConfirmBtn: () => void }) {
   const digits = useStore((state) => state.phoneDigits);
+  const phoneError = useStore((state) => state.phoneError);
   const setDigit = useStore((state) => state.setPhoneDigit);
   const inputDivs: React.MutableRefObject<Array<HTMLDivElement | null>> =
     useRef(Array(phoneDigitCount).fill(null));
@@ -50,6 +51,7 @@ function PhoneInput({ focusConfirmBtn }: { focusConfirmBtn: () => void }) {
               }
             }}
             className="text-5xl"
+            error={!!phoneError}
           />
           {(i === 2 || i === 5) && <div className="w-1"></div>}
         </Fragment>
@@ -62,6 +64,7 @@ export default function EnterPhone() {
   const phoneFilled = useStore((state) =>
     state.phoneDigits.every((digit) => digit)
   );
+  const phoneError = useStore((state) => state.phoneError);
   const confirmPhoneNumber = useStore((state) => state.confirmPhoneNumber);
   const confirmBtnRef: React.MutableRefObject<HTMLButtonElement | null> =
     useRef(null);
@@ -69,8 +72,12 @@ export default function EnterPhone() {
   return (
     <div>
       <div className="pt-8">
-        <h2 className="px-8 text-center text-2xl uppercase">
-          Please enter your mobile phone number below
+        <h2
+          className={`px-8 text-center text-2xl uppercase ${
+            phoneError ? 'text-red' : ''
+          }`}
+        >
+          {phoneError || 'Please enter your mobile phone number below'}
         </h2>
         <PhoneInput
           focusConfirmBtn={() => {

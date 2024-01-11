@@ -10,6 +10,7 @@ import { codeDigitCount } from '@/constants';
 function CodeInput({ focusConfirmBtn }: { focusConfirmBtn: () => void }) {
   const digits = useStore((state) => state.codeDigits);
   const setDigit = useStore((state) => state.setCodeDigit);
+  const codeError = useStore((state) => state.codeError);
   const inputDivs: React.MutableRefObject<Array<HTMLDivElement | null>> =
     useRef(Array(codeDigitCount).fill(null));
 
@@ -51,6 +52,7 @@ function CodeInput({ focusConfirmBtn }: { focusConfirmBtn: () => void }) {
             }
           }}
           className="text-[78px]"
+          error={!!codeError}
         />
       ))}
     </div>
@@ -61,6 +63,7 @@ export default function ConfirmCode() {
   const codeFilled = useStore((state) =>
     state.codeDigits.every((digit) => digit)
   );
+  const codeError = useStore((state) => state.codeError);
   const confirmCode = useStore((state) => state.confirmCode);
   const confirmBtnRef: React.MutableRefObject<HTMLButtonElement | null> =
     useRef(null);
@@ -68,8 +71,12 @@ export default function ConfirmCode() {
   return (
     <div>
       <div className="pt-8">
-        <h2 className="px-4 text-center text-2xl uppercase">
-          Please confirm your identity
+        <h2
+          className={`px-4 text-center text-2xl uppercase ${
+            codeError ? 'text-red' : ''
+          }`}
+        >
+          {codeError || 'Please confirm your identity'}
         </h2>
         <CodeInput
           focusConfirmBtn={() => {
