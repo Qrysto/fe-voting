@@ -48,7 +48,7 @@ export default forwardRef(function BigButton(
         : null)}
       {...rest}
     >
-      {true && <Spinner className="mr-2 inline-block" />}
+      {busy && <Spinner className="mr-2 inline-block" />}
       <span className="align-middle">{children}</span>
     </button>
   );
