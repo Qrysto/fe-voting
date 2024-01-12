@@ -12,14 +12,15 @@ export async function POST(request: NextRequest) {
     return Response.json({ message: 'Invalid phone number' }, { status: 400 });
   }
 
-  const verification = await verifyService.verifications.create({
-    to: toE164US(phoneNumber),
-    channel: 'sms',
-  });
-  console.log('verify phone', phoneNumber);
-  console.log(verification);
-  if (verification.status === 'pending') {
-    // TODO: handle other statuses
-    return Response.json({ ok: true, verification });
+  const fullPhoneNumber = toE164US(phoneNumber);
+  try {
+    const verification = await verifyService.verifications.create({
+      to: fullPhoneNumber,
+      channel: 'sms',
+    });
+    console.log('Verify phone', fullPhoneNumber, verification);
+  } catch (error: any) {
+    return Response.json({ message: error?.message, error }, { status: 400 });
   }
+  return Response.json({ ok: true, phoneNumber: fullPhoneNumber });
 }

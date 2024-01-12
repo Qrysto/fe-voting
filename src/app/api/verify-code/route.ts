@@ -22,27 +22,34 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const verification = await verifyService.verificationChecks.create({
-    to: '+1' + phoneNumber,
-    code,
-  });
-  console.log('verify code', code, 'phone', phoneNumber)
-  console.log(verification)
+  try {
+    const verification = await verifyService.verificationChecks.create({
+      to: '+1' + phoneNumber,
+      code,
+    });
+    console.log('verify code', code, 'phone', phoneNumber);
+    console.log(verification);
 
-  if (verification.status === 'approved') {
-    try {
-      const token = jwt.sign(
-        { sid: verification.sid, phoneNumber, code },
-        jwtSecret,
-        {
-          expiresIn: '1 day',
-        }
-      );
-      return Response.json({ ok: true, token, verification });
-    } catch (err) {
-      return Response.json({ message: JSON.stringify(err) }, { status: 500 });
+    if (verification.status === 'approved') {
+      try {
+        const token = jwt.sign(
+          { sid: verification.sid, phoneNumber, code },
+          jwtSecret,
+          {
+            expiresIn: '1 day',
+          }
+        );
+        return Response.json({ ok: true, token, verification });
+      } catch (err) {
+        return Response.json({ message: JSON.stringify(err) }, { status: 500 });
+      }
+    } else {
+      return Response.json({ message: 'Invalid code!' }, { status: 400 });
     }
-  } else {
-    return Response.json({ message: 'Invalid code!' }, { status: 400 });
+  } catch (err: any) {
+    console.log('verify code error', code, 'phone', phoneNumber);
+    console.error(err);
+    console.log(JSON.stringify(err, null, 2));
+    return Response.json({ message: err?.message, err }, { status: 400 });
   }
 }
