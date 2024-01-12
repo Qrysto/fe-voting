@@ -12,13 +12,13 @@ function Candidate({ candidate }: { candidate: Candidate }) {
   const addVote = useStore((state) => state.addVote);
 
   return (
-    <li className="flex items-center px-5 py-[10px]">
+    <li className="flex items-center px-4 py-[10px]">
       <Image
         src={defaultAvatar}
         width={40}
         height={40}
         alt={candidate.Name}
-        className="rounded-md"
+        className="shrink-0 grow-0 rounded-md"
       />
       <div className="shrink grow px-4">
         <div className="text-[17px] font-bold text-darkBlue">
@@ -46,7 +46,7 @@ function Candidate({ candidate }: { candidate: Candidate }) {
         </div>
       </div>
       <button
-        className={`${oswald.className} h-11 rounded-md bg-lightBlue px-3 font-bold uppercase text-blue active:bg-lightBlue/60`}
+        className={`${oswald.className} h-11 shrink-0 grow-0 rounded-md bg-lightBlue px-3 font-bold uppercase text-blue active:bg-lightBlue/60`}
         onClick={() => {
           addVote(candidate.address);
         }}
@@ -70,9 +70,9 @@ function VotedCandidate({
     rank === 1 ? 'ST' : rank === 2 ? 'ND' : rank === 3 ? 'RD' : 'TH';
 
   return (
-    <li className="flex items-center px-5 py-[10px]">
+    <li className="flex items-center px-4 py-[10px]">
       <div
-        className={`relative mr-3 h-[45px] w-[45px] rounded-full bg-lightGreen pr-1 text-center text-[25px] font-semibold leading-[45px] text-green ${oswald.className}`}
+        className={`relative mr-3 h-[45px] w-[45px] shrink-0 grow-0 rounded-full bg-lightGreen pr-1 text-center text-[25px] font-semibold leading-[45px] text-green ${oswald.className}`}
       >
         <span>{rank}</span>
         <span className="absolute top-[-5px] text-[10px]">{superscript}</span>
@@ -82,7 +82,7 @@ function VotedCandidate({
         width={40}
         height={40}
         alt={candidate.Name}
-        className="rounded-md"
+        className="shrink-0 grow-0 rounded-md"
       />
       <div className="shrink grow px-4">
         <div className="text-[17px] font-bold text-darkBlue">
@@ -110,7 +110,7 @@ function VotedCandidate({
         </div>
       </div>
       <button
-        className={`${oswald.className} h-10 rounded-md px-3 font-bold uppercase text-gray/50`}
+        className={`${oswald.className} h-10 shrink-0 grow-0 rounded-md px-3 font-bold uppercase text-gray/50`}
         onClick={() => {
           removeVote(candidate.address);
         }}
@@ -130,11 +130,11 @@ export default function CastVote() {
 
   return (
     <div className="pb-8">
-      <h2 className="px-5 text-4xl uppercase">Vote</h2>
-      <p className="mt-[10px] px-5 text-lg leading-6">
+      <h2 className="px-4 text-4xl uppercase">Vote</h2>
+      <p className="mt-[10px] px-4 text-lg leading-6">
         Please rank your top six candidates for the upcoming independent debate.
       </p>
-      <h2 className="mb-3 mt-8 px-5 text-2xl uppercase">Candidates</h2>
+      <h2 className="mb-3 mt-8 px-4 text-2xl uppercase">Candidates</h2>
       <div className="rounded-md bg-almostWhite py-[10px]">
         <ul>
           {votes.map((address, i) => (
