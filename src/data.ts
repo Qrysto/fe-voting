@@ -19,6 +19,8 @@ export interface Candidate {
   balance: number;
   token: string;
   address: string;
+  // Added
+  percentage: number;
 }
 
 export const candidates: CandidateOld[] = [

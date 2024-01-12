@@ -2,7 +2,6 @@ import Steps from './Steps';
 import { Candidate } from '@/data';
 
 export default async function VotePage() {
-  let allCandidates = null;
   const res = await fetch('http://node5.nexus.io:7080/assets/list/accounts', {
     next: { revalidate: 60, tags: ['allCandidates'] },
   });
@@ -13,7 +12,7 @@ export default async function VotePage() {
   }
 
   const result = await res.json();
-  allCandidates = result?.result?.filter((c: Candidate) => c.active);
+  const allCandidates = result?.result?.filter((c: Candidate) => c.active);
 
   return <Steps allCandidates={allCandidates} />;
 }
