@@ -17,6 +17,8 @@ type State = {
 type Actions = {
   setPhoneDigit: (index: number, digit: string) => void;
   setCodeDigit: (index: number, digit: string) => void;
+  setPhoneDigits: (startIndex: number, digits: string) => number;
+  setCodeDigits: (startIndex: number, digits: string) => number;
   confirmPhoneNumber: () => Promise<void>;
   requestCode: (params: { phoneNumber: string }) => Promise<void>;
   resetPhoneNumber: () => void;
@@ -44,12 +46,42 @@ export const useStore = create<State & Actions>((set, get) => ({
       newDigits.splice(index, 1, digit);
       return { phoneDigits: newDigits, phoneError: null };
     }),
+
   setCodeDigit: (index: number, digit: string) =>
     set((state) => {
       const newDigits = [...state.codeDigits];
       newDigits.splice(index, 1, digit);
       return { codeDigits: newDigits, codeError: null };
     }),
+
+  setPhoneDigits: (index: number, digits: string) => {
+    const trimmedDigits =
+      index + digits.length > phoneDigitCount
+        ? digits.substring(0, phoneDigitCount - index)
+        : digits;
+    if (trimmedDigits) {
+      const newDigits = [...get().phoneDigits];
+      newDigits.splice(index, trimmedDigits.length, ...trimmedDigits.split(''));
+      set({ phoneDigits: newDigits, phoneError: null });
+    }
+    const newIndex = index + trimmedDigits.length;
+    return newIndex;
+  },
+
+  setCodeDigits: (index: number, digits: string) => {
+    const trimmedDigits =
+      index + digits.length > codeDigitCount
+        ? digits.substring(0, codeDigitCount - index)
+        : digits;
+    if (trimmedDigits) {
+      const newDigits = [...get().codeDigits];
+      newDigits.splice(index, trimmedDigits.length, ...trimmedDigits.split(''));
+      set({ codeDigits: newDigits, codeError: null });
+    }
+    const newIndex = index + trimmedDigits.length;
+    return newIndex;
+  },
+
   confirmPhoneNumber: async () => {
     const phoneNumber = get().phoneDigits.join('');
     return await get().requestCode({ phoneNumber });

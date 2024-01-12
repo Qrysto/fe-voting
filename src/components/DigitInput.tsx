@@ -1,10 +1,13 @@
 import { useRef } from 'react';
 import { oswald } from '@/fonts';
 
+const digitRegex = /\d/;
+
 export default function DigitInput({
   className,
   value,
   setValue,
+  paste,
   deletePreviousDigit,
   error,
   passRef,
@@ -13,6 +16,7 @@ export default function DigitInput({
   className?: string;
   value: string;
   setValue: (value: string) => void;
+  paste: (value: string) => void;
   deletePreviousDigit: () => void;
   error?: boolean;
   passRef: (el: HTMLInputElement | null) => void;
@@ -53,7 +57,12 @@ export default function DigitInput({
         }
       }}
       onPaste={(e: React.ClipboardEvent<HTMLInputElement>) => {
-        e.clipboardData.getData('text/plain');
+        const text = e.clipboardData.getData('text/plain');
+        const numericText = text
+          ?.split('')
+          .filter((char) => digitRegex.test(char))
+          .join('');
+        paste(numericText);
       }}
       onFocus={() => {
         inputRef.current?.select();

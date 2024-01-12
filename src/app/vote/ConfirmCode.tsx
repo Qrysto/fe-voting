@@ -10,6 +10,7 @@ import { codeDigitCount } from '@/constants';
 function CodeInput({ focusConfirmBtn }: { focusConfirmBtn: () => void }) {
   const digits = useStore((state) => state.codeDigits);
   const setDigit = useStore((state) => state.setCodeDigit);
+  const setDigits = useStore((state) => state.setCodeDigits);
   const codeError = useStore((state) => state.codeError);
   const inputDivs: React.MutableRefObject<Array<HTMLDivElement | null>> =
     useRef(Array(codeDigitCount).fill(null));
@@ -38,6 +39,22 @@ function CodeInput({ focusConfirmBtn }: { focusConfirmBtn: () => void }) {
                   firstEmptyIndex === -1 ||
                   firstEmptyIndex === codeDigitCount - 1
                 ) {
+                  focusConfirmBtn();
+                }
+              }
+            }
+          }}
+          paste={(value) => {
+            const newIndex = setDigits(i, value);
+            if (value) {
+              if (newIndex < codeDigitCount) {
+                inputDivs.current[newIndex]?.focus();
+              } else {
+                // After the last digit is entered
+                // Check if there is any blank digit input
+                const firstEmptyIndex = digits.findIndex((digit) => !digit);
+                // The newly pasted digits haven't been updated so ignore it if it's the first one found
+                if (firstEmptyIndex === -1 || firstEmptyIndex === i) {
                   focusConfirmBtn();
                 }
               }
