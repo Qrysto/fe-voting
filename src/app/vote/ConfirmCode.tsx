@@ -62,6 +62,7 @@ export default function ConfirmCode() {
   );
   const codeError = useStore((state) => state.codeError);
   const confirmCode = useStore((state) => state.confirmCode);
+  const requestCode = useStore((state) => state.requestCode);
   const confirmBtnRef: React.MutableRefObject<HTMLButtonElement | null> =
     useRef(null);
 
@@ -81,7 +82,7 @@ export default function ConfirmCode() {
           }}
         />
         <div className="mt-8 text-center">
-          <LinkButton>Get a new code</LinkButton>
+          <LinkButton action={requestCode}>Get a new code</LinkButton>
         </div>
       </div>
 

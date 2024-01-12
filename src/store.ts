@@ -18,6 +18,7 @@ type Actions = {
   setPhoneDigits: (index: number, digit: string) => number;
   setCodeDigits: (index: number, digit: string) => number;
   confirmPhoneNumber: () => Promise<void>;
+  requestCode: (params: { phoneNumber: string }) => Promise<void>;
   resetPhoneNumber: () => void;
   confirmCode: () => Promise<void>;
   unconfirmCode: () => void;
@@ -82,6 +83,11 @@ export const useStore = create<State & Actions>((set, get) => ({
 
   confirmPhoneNumber: async () => {
     const phoneNumber = get().phoneDigits.join('');
+    return await get().requestCode({ phoneNumber });
+  },
+
+  requestCode: async ({ phoneNumber }: { phoneNumber: string }) => {
+    phoneNumber = phoneNumber || get().phoneNumber;
     try {
       const { data } = await axios.post('/api/verify-phone', { phoneNumber });
       console.log('data', data);
@@ -93,7 +99,7 @@ export const useStore = create<State & Actions>((set, get) => ({
       });
     } catch (err: any) {
       set({
-        phoneError: err?.message || err?.error?.message || 'Unknown error',
+        codeError: err?.message || err?.error?.message || 'Unknown error',
       });
     }
   },
