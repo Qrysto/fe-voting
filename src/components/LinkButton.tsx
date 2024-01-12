@@ -23,9 +23,9 @@ export default forwardRef(function LinkButton(
     <button
       ref={ref}
       disabled={disabled || busy}
-      className={`font-bold uppercase  underline ${oswald.className}  ${
-        className || ''
-      } ${disabled ? 'text-gray' : 'text-blue active:text-blue/90'}`}
+      className={`font-bold uppercase ${oswald.className}  ${className || ''} ${
+        disabled ? 'text-gray' : 'text-blue active:text-blue/90'
+      }`}
       {...(action
         ? {
             onClick: async (...args) => {
@@ -41,7 +41,9 @@ export default forwardRef(function LinkButton(
       {...rest}
     >
       {busy && <Spinner className="mr-2 inline-block" />}
-      <span className="align-middle">{children}</span>
+      <span className="align-middle underline underline-offset-1">
+        {children}
+      </span>
     </button>
   );
 });
