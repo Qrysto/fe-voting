@@ -61,8 +61,8 @@ export const useStore = create<State & Actions>((set, get) => ({
 
   setCodeDigits: (index: number, digits: string) => {
     const trimmedDigits =
-      index + digits.length > phoneDigitCount
-        ? digits.substring(0, phoneDigitCount - index)
+      index + digits.length > codeDigitCount
+        ? digits.substring(0, codeDigitCount - index)
         : digits;
     set((state) => {
       const newDigits = [...state.codeDigits];
