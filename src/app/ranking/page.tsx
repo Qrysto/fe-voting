@@ -31,13 +31,13 @@ function RankedCandidate({ rank }: { rank: Rank }) {
   if (!candidate) return null;
 
   return (
-    <li className="flex items-center px-5 py-[10px]">
+    <li className="flex items-center px-4 py-[10px]">
       <Image
         src={candidate.thumbnail}
         width={40}
         height={40}
         alt={candidate.name}
-        className="rounded-md"
+        className="shrink-0 grow-0 rounded-md"
       />
       <div className="shrink grow px-4">
         <div>
@@ -53,7 +53,9 @@ function RankedCandidate({ rank }: { rank: Rank }) {
           ></div>
         </div>
       </div>
-      <div className={`rounded-full font-bold ${oswald.className}`}>
+      <div
+        className={`shrink-0 grow-0 rounded-full font-bold ${oswald.className}`}
+      >
         {rank.percentage}%
       </div>
     </li>
@@ -63,7 +65,7 @@ function RankedCandidate({ rank }: { rank: Rank }) {
 export default function RankingPage() {
   return (
     <div className="mt-10">
-      <h2 className="mb-3 px-5 text-2xl uppercase">Current ranking</h2>
+      <h2 className="mb-3 px-4 text-2xl uppercase">Current ranking</h2>
       <div className="rounded-md bg-almostWhite py-[10px]">
         <ul>
           {ranks.map((rank, i) => (

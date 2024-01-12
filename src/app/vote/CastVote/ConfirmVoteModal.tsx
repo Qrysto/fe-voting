@@ -15,13 +15,13 @@ function VotedCandidate({ address, rank }: { address: string; rank: number }) {
     rank === 1 ? 'ST' : rank === 2 ? 'ND' : rank === 3 ? 'RD' : 'TH';
 
   return (
-    <li className="flex items-center px-6 py-[10px]">
+    <li className="flex items-center px-4 py-[10px]">
       <Image
         src={defaultAvatar}
         width={40}
         height={40}
         alt={candidate.Name}
-        className="rounded-md"
+        className="shrink-0 grow-0 rounded-md"
       />
       <div className="shrink grow px-4">
         <div className="text-[17px] font-bold text-darkBlue">
@@ -49,7 +49,7 @@ function VotedCandidate({ address, rank }: { address: string; rank: number }) {
         </div>
       </div>
       <div
-        className={`relative h-[45px] w-[45px] rounded-full bg-lightGreen pr-1 text-center text-[25px] font-semibold leading-[45px] text-green ${oswald.className}`}
+        className={`relative h-[45px] w-[45px] shrink-0 grow-0 rounded-full bg-lightGreen pr-1 text-center text-[25px] font-semibold leading-[45px] text-green ${oswald.className}`}
       >
         <span>{rank}</span>
         <span className="absolute top-[-5px] text-[10px]">{superscript}</span>
