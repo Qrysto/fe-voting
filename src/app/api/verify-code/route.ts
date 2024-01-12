@@ -26,6 +26,8 @@ export async function POST(request: NextRequest) {
     to: '+1' + phoneNumber,
     code,
   });
+  console.log('verify code', code, 'phone', phoneNumber)
+  console.log(verification)
 
   if (verification.status === 'approved') {
     try {

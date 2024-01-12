@@ -16,6 +16,8 @@ export async function POST(request: NextRequest) {
     to: toE164US(phoneNumber),
     channel: 'sms',
   });
+  console.log('verify phone', phoneNumber);
+  console.log(verification);
   if (verification.status === 'pending') {
     // TODO: handle other statuses
     return Response.json({ ok: true, verification });
