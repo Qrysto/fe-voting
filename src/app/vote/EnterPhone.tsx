@@ -9,7 +9,7 @@ import { phoneDigitCount } from '@/constants';
 function PhoneInput({ focusConfirmBtn }: { focusConfirmBtn: () => void }) {
   const digits = useStore((state) => state.phoneDigits);
   const phoneError = useStore((state) => state.phoneError);
-  const setDigits = useStore((state) => state.setPhoneDigits);
+  const setDigit = useStore((state) => state.setPhoneDigit);
   const inputDivs: React.MutableRefObject<Array<HTMLDivElement | null>> =
     useRef(Array(phoneDigitCount).fill(null));
 
@@ -24,16 +24,19 @@ function PhoneInput({ focusConfirmBtn }: { focusConfirmBtn: () => void }) {
             }}
             value={digit}
             setValue={(value) => {
-              const newIndex = setDigits(i, value);
+              setDigit(i, value);
               if (value) {
-                if (newIndex < phoneDigitCount) {
-                  inputDivs.current[newIndex]?.focus();
+                if (i < phoneDigitCount - 1) {
+                  inputDivs.current[i + 1]?.focus();
                 } else {
                   // After the last digit is entered
                   // Check if there is any blank digit input
                   const firstEmptyIndex = digits.findIndex((digit) => !digit);
-                  // The newly entered digits haven't been updated so ignore it if it's the first one found
-                  if (firstEmptyIndex === -1 || firstEmptyIndex === i) {
+                  // The last digit hasn't been recorded so ignore it if it's the first one found
+                  if (
+                    firstEmptyIndex === -1 ||
+                    firstEmptyIndex === phoneDigitCount - 1
+                  ) {
                     focusConfirmBtn();
                   }
                 }
@@ -43,7 +46,7 @@ function PhoneInput({ focusConfirmBtn }: { focusConfirmBtn: () => void }) {
               if (i > 0) {
                 inputDivs.current[i - 1]?.focus();
                 if (digits[i - 1] !== '') {
-                  setDigits(i - 1, '');
+                  setDigit(i - 1, '');
                 }
               }
             }}

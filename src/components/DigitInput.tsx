@@ -1,8 +1,6 @@
 import { useRef } from 'react';
 import { oswald } from '@/fonts';
 
-const digitRegex = /\d/;
-
 export default function DigitInput({
   className,
   value,
@@ -31,17 +29,21 @@ export default function DigitInput({
         passRef(el);
       }}
       tabIndex={0}
-      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-        const newVal = e.target.value
-          ?.split('')
-          .filter((char) => digitRegex.test(char))
-          .join('');
-        if (newVal.length) {
-          setValue(newVal);
-        }
-      }}
+      onChange={() => {}}
       onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
         switch (e.key) {
+          case '0':
+          case '1':
+          case '2':
+          case '3':
+          case '4':
+          case '5':
+          case '6':
+          case '7':
+          case '8':
+          case '9':
+            setValue(e.key);
+            break;
           case 'Backspace':
             if (!value) deletePreviousDigit();
           case 'Delete':
@@ -49,6 +51,9 @@ export default function DigitInput({
             if (value) setValue('');
             break;
         }
+      }}
+      onPaste={(e: React.ClipboardEvent<HTMLInputElement>) => {
+        e.clipboardData.getData('text/plain');
       }}
       onFocus={() => {
         inputRef.current?.select();

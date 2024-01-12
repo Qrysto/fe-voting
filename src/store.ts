@@ -15,8 +15,8 @@ type State = {
 };
 
 type Actions = {
-  setPhoneDigits: (index: number, digit: string) => number;
-  setCodeDigits: (index: number, digit: string) => number;
+  setPhoneDigit: (index: number, digit: string) => void;
+  setCodeDigit: (index: number, digit: string) => void;
   confirmPhoneNumber: () => Promise<void>;
   requestCode: (params: { phoneNumber: string }) => Promise<void>;
   resetPhoneNumber: () => void;
@@ -38,49 +38,18 @@ export const useStore = create<State & Actions>((set, get) => ({
   phoneNumber: '',
   jwtToken: null,
   votes: [],
-
-  setPhoneDigits: (index: number, digits: string) => {
-    const trimmedDigits =
-      index + digits.length > phoneDigitCount
-        ? digits.substring(0, phoneDigitCount - index)
-        : digits;
+  setPhoneDigit: (index: number, digit: string) =>
     set((state) => {
       const newDigits = [...state.phoneDigits];
-      if (!digits) {
-        newDigits.splice(index, 1, '');
-      } else {
-        newDigits.splice(
-          index,
-          trimmedDigits.length,
-          ...trimmedDigits.split('')
-        );
-      }
+      newDigits.splice(index, 1, digit);
       return { phoneDigits: newDigits, phoneError: null };
-    });
-    return index + trimmedDigits.length;
-  },
-
-  setCodeDigits: (index: number, digits: string) => {
-    const trimmedDigits =
-      index + digits.length > codeDigitCount
-        ? digits.substring(0, codeDigitCount - index)
-        : digits;
+    }),
+  setCodeDigit: (index: number, digit: string) =>
     set((state) => {
       const newDigits = [...state.codeDigits];
-      if (!digits) {
-        newDigits.splice(index, 1, '');
-      } else {
-        newDigits.splice(
-          index,
-          trimmedDigits.length,
-          ...trimmedDigits.split('')
-        );
-      }
+      newDigits.splice(index, 1, digit);
       return { codeDigits: newDigits, codeError: null };
-    });
-    return index + trimmedDigits.length;
-  },
-
+    }),
   confirmPhoneNumber: async () => {
     const phoneNumber = get().phoneDigits.join('');
     return await get().requestCode({ phoneNumber });
