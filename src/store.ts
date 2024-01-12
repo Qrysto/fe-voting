@@ -98,8 +98,10 @@ export const useStore = create<State & Actions>((set, get) => ({
         codeError: null,
       });
     } catch (err: any) {
+      console.error(err);
       set({
-        codeError: err?.message || err?.error?.message || 'Unknown error',
+        phoneError:
+          err?.response?.data?.message || err?.message || 'Unknown error',
       });
     }
   },
@@ -119,8 +121,10 @@ export const useStore = create<State & Actions>((set, get) => ({
         codeError: null,
       });
     } catch (err: any) {
+      console.error(err);
       set({
-        codeError: err?.message || err?.error?.message || 'Unknown error',
+        codeError:
+          err?.response?.data?.message || err?.message || 'Unknown error',
       });
     }
   },
