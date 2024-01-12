@@ -1,28 +1,47 @@
 import { oswald } from '@/fonts';
-import { forwardRef } from 'react';
+import { forwardRef, useState } from 'react';
+import Spinner from './Spinner';
 
 export default forwardRef(function LinkButton(
   {
     children,
     className,
     disabled = false,
+    action,
     ...rest
   }: {
     children?: React.ReactNode;
     className?: string;
     disabled?: boolean;
+    action?: (...args: any[]) => Promise<any>;
   } & React.ComponentPropsWithoutRef<'button'>,
   ref: React.ForwardedRef<HTMLButtonElement>
 ) {
+  const [busy, setBusy] = useState(false);
+
   return (
     <button
       ref={ref}
-      className={`font-bold uppercase text-blue underline active:text-blue/90 ${
-        oswald.className
-      }  ${className || ''}`}
+      disabled={disabled || busy}
+      className={`font-bold uppercase  underline ${oswald.className}  ${
+        className || ''
+      } ${disabled ? 'text-gray' : 'text-blue active:text-blue/90'}`}
+      {...(action
+        ? {
+            onClick: async (...args) => {
+              try {
+                setBusy(true);
+                return await action(...args);
+              } finally {
+                setBusy(false);
+              }
+            },
+          }
+        : null)}
       {...rest}
     >
-      {children}
+      {busy && <Spinner className="mr-2 inline-block" />}
+      <span className="align-middle">{children}</span>
     </button>
   );
 });
