@@ -3,6 +3,7 @@
 import { create } from 'zustand';
 import axios from 'axios';
 import { phoneDigitCount, codeDigitCount } from '@/constants';
+import { Candidate } from './data';
 
 type State = {
   phoneDigits: string[];
@@ -12,6 +13,7 @@ type State = {
   phoneNumber: string;
   jwtToken: string | null;
   votes: string[];
+  allCandidates: Candidate[];
 };
 
 type Actions = {
@@ -28,6 +30,7 @@ type Actions = {
   removeVote: (id: string) => void;
   resetVote: () => void;
   goBack: () => void;
+  loadCandidates: (allCandidates: Candidate[]) => void;
 };
 
 const defaultCodeDigits = Array(codeDigitCount).fill('');
@@ -40,6 +43,8 @@ export const useStore = create<State & Actions>((set, get) => ({
   phoneNumber: '',
   jwtToken: null,
   votes: [],
+  allCandidates: [],
+
   setPhoneDigit: (index: number, digit: string) =>
     set((state) => {
       const newDigits = [...state.phoneDigits];
@@ -150,6 +155,8 @@ export const useStore = create<State & Actions>((set, get) => ({
       set({ phoneNumber: '', phoneError: null });
     }
   },
+
+  loadCandidates: (allCandidates) => set({ allCandidates }),
 }));
 
 export const useStep = () =>

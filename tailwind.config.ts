@@ -23,6 +23,7 @@ const config: Config = {
       lightGreen: 'rgb(229, 250, 213)',
       green: 'rgb(95, 216, 38)',
       red: 'rgb(188, 2, 25)',
+      orange: 'rgb(254, 166, 33)',
     },
     container: {
       center: true,

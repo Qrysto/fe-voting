@@ -27,11 +27,11 @@ export default function CandidateDetails({
           <h1 className="text-4xl uppercase">{candidate.name}</h1>
           <label
             className={`uppercase ${
-              candidate.party === 'DEMOCRAT'
+              candidate.party === 'DEMOCRATIC PARTY'
                 ? 'text-blue'
-                : candidate.party === 'REPUBLICAN'
+                : candidate.party === 'REPUBLICAN PARTY'
                   ? 'text-red'
-                  : 'text-black'
+                  : 'text-orange'
             } ${oswald.className} font-bold`}
           >
             {candidate.party}

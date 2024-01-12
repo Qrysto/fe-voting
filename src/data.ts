@@ -1,11 +1,27 @@
-export interface Candidate {
+export interface CandidateOld {
   id: string;
   name: string;
   party: 'DEMOCRAT' | 'REPUBLICAN';
   thumbnail: string;
 }
 
-export const candidates: Candidate[] = [
+export interface Candidate {
+  owner: string;
+  version: number;
+  created: number;
+  modified: number;
+  type: string;
+  form: string;
+  Name: string;
+  Party: string;
+  Website: string;
+  active: number;
+  balance: number;
+  token: string;
+  address: string;
+}
+
+export const candidates: CandidateOld[] = [
   {
     id: '1',
     name: 'Jane Smith',
