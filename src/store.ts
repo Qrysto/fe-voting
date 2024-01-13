@@ -11,7 +11,7 @@ type State = {
   codeDigits: string[];
   codeError: string | null;
   phoneNumber: string;
-  jwtToken: string | null;
+  jwToken: string | null;
   votes: string[];
   allCandidates: Candidate[];
 };
@@ -41,7 +41,7 @@ export const useStore = create<State & Actions>((set, get) => ({
   codeDigits: defaultCodeDigits,
   codeError: null,
   phoneNumber: '',
-  jwtToken: null,
+  jwToken: null,
   votes: [],
   allCandidates: [],
 
@@ -123,7 +123,7 @@ export const useStore = create<State & Actions>((set, get) => ({
       });
       console.log('data', data);
       set({
-        jwtToken: data.token,
+        jwToken: data.token,
         codeError: null,
       });
     } catch (err: any) {
@@ -135,7 +135,7 @@ export const useStore = create<State & Actions>((set, get) => ({
     }
   },
 
-  unconfirmCode: () => set({ jwtToken: null }),
+  unconfirmCode: () => set({ jwToken: null }),
   addVote: (id: string) =>
     set((state) => ({
       votes: state.votes.length < 6 ? [...state.votes, id] : state.votes,
@@ -145,9 +145,9 @@ export const useStore = create<State & Actions>((set, get) => ({
   resetVote: () => set({ votes: [] }),
   goBack: () => {
     const state = get();
-    if (state.jwtToken) {
+    if (state.jwToken) {
       set({
-        jwtToken: null,
+        jwToken: null,
         codeDigits: defaultCodeDigits,
         codeError: null,
       });
@@ -160,4 +160,4 @@ export const useStore = create<State & Actions>((set, get) => ({
 }));
 
 export const useStep = () =>
-  useStore((state) => (!state.phoneNumber ? 1 : !state.jwtToken ? 2 : 3));
+  useStore((state) => (!state.phoneNumber ? 1 : !state.jwToken ? 2 : 3));

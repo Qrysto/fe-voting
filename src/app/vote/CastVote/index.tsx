@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
 import BigButton from '@/components/BigButton';
 import ConfirmVoteModal from './ConfirmVoteModal';
 import VoteConfirmedModal from './VoteConfirmedModal';
@@ -123,10 +125,12 @@ function VotedCandidate({
 
 export default function CastVote() {
   const allCandidates = useStore((state) => state.allCandidates);
+  const jwToken = useStore((state) => state.jwToken);
   const votes = useStore((state) => state.votes);
   const resetVote = useStore((state) => state.resetVote);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const [confirmedModalOpen, setConfirmedModalOpen] = useState(false);
+  const router = useRouter();
 
   return (
     <div className="pb-8">
@@ -178,7 +182,14 @@ export default function CastVote() {
         close={() => {
           setConfirmModalOpen(false);
         }}
-        confirmVote={() => {
+        confirmVote={async () => {
+          try {
+            await axios.post('/api/vote', { jwToken, addresses: votes });
+          } catch (err: any) {
+            console.error(err);
+            alert('ERROR! ' + err?.message);
+            return;
+          }
           setConfirmModalOpen(false);
           setConfirmedModalOpen(true);
         }}
@@ -187,6 +198,7 @@ export default function CastVote() {
         open={confirmedModalOpen}
         close={() => {
           setConfirmedModalOpen(false);
+          router.push('/ranking');
         }}
       />
     </div>
