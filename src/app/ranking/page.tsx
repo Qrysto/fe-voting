@@ -42,7 +42,7 @@ function RankedCandidate({ candidate }: { candidate: Candidate }) {
           <span className="text-[17px] font-bold text-darkBlue">
             {candidate.Name} -{' '}
           </span>
-          <span>{candidate.balance} Votes</span>
+          <span className="whitespace-nowrap">{candidate.balance} Votes</span>
         </div>
         <div className="relative h-4 rounded-[4px] bg-gray/15">
           <div
