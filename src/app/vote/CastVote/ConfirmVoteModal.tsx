@@ -34,7 +34,7 @@ function VotedCandidate({ address, rank }: { address: string; rank: number }) {
                 ? 'text-blue'
                 : candidate.Party === 'REPUBLICAN PARTY'
                   ? 'text-red'
-                  : 'text-black'
+                  : 'text-orange'
             }
           >
             {candidate.Party}
@@ -82,7 +82,7 @@ export default function ConfirmVoteModal({
         <p className="mt-[10px]">
           Please confirm you rank selection is correct below.
         </p>
-        <ul className="mb-7 mt-4 shrink grow overflow-y-auto rounded-[46px] bg-almostWhite py-4">
+        <ul className="my-4 shrink grow overflow-y-auto rounded-[46px] bg-almostWhite py-4">
           {votes.map((address, i) => (
             <VotedCandidate key={address} address={address} rank={i + 1} />
           ))}
