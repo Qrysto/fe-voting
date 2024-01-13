@@ -72,7 +72,7 @@ export default function ConfirmVoteModal({
 
   return (
     <Modal open={open} close={close}>
-      <div className="absolute inset-0 flex flex-col items-stretch px-6 py-7">
+      <div className="absolute bottom-0 left-0 right-0 top-0 flex flex-col items-stretch px-6 py-7">
         <Image
           src={thumbsupImg}
           alt=""

@@ -13,7 +13,7 @@ export default function Modal({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/70">
+    <div className="fixed bottom-0 left-0 right-0 top-0 bg-black/70">
       <div className="absolute inset-x-5 inset-y-9 rounded-[28px] bg-white">
         <div>{children}</div>
         <button

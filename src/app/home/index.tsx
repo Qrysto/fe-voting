@@ -11,7 +11,7 @@ export default function HomePage() {
   return (
     <main
       style={{ backgroundImage: `url('${backgroundImg.src}')` }}
-      className="mx-[-1rem] flex h-full flex-col items-stretch bg-cover py-8"
+      className="absolute bottom-0 left-0 right-0 top-0 mx-[-1rem] flex flex-col items-stretch bg-cover py-8"
     >
       <div className="flex grow items-center">
         <div className="relative h-[480px] w-full">
