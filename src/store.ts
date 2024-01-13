@@ -98,7 +98,7 @@ export const useStore = create<State & Actions>((set, get) => ({
       const { data } = await axios.post('/api/verify-phone', { phoneNumber });
       console.log('data', data);
       set({
-        phoneNumber,
+        phoneNumber: data.phoneNumber,
         phoneError: null,
         codeDigits: defaultCodeDigits,
         codeError: null,
@@ -159,5 +159,4 @@ export const useStore = create<State & Actions>((set, get) => ({
   loadCandidates: (allCandidates) => set({ allCandidates }),
 }));
 
-export const useStep = () =>
-  useStore((state) => (!state.phoneNumber ? 1 : !state.jwToken ? 2 : 3));
+export const useStep = () => useStore((state) => 3); //(!state.phoneNumber ? 1 : !state.jwToken ? 2 : 3));
