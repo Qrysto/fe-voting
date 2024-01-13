@@ -184,7 +184,7 @@ export default function CastVote() {
         }}
         confirmVote={async () => {
           try {
-            await axios.post('/api/vote', { jwToken, addresses: votes });
+            await axios.post('/api/vote', { jwToken, votes });
           } catch (err: any) {
             console.error(err);
             alert('ERROR! ' + err?.message);
@@ -197,7 +197,6 @@ export default function CastVote() {
       <VoteConfirmedModal
         open={confirmedModalOpen}
         close={() => {
-          setConfirmedModalOpen(false);
           router.push('/ranking');
         }}
       />
