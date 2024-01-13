@@ -27,6 +27,14 @@ export async function POST(request: NextRequest) {
   }
 
   try {
+    const body = JSON.stringify({
+      from: '8D6e96n4LTbSASuU7M1dZVJPpEyDFwSETVh8VGYR7WQVCVLJnBj',
+      recipients: votes.map((candidateAddress, i) => ({
+        to: candidateAddress,
+        amount: 6 - i,
+      })),
+      pin: process.env.SIGCHAIN_PIN,
+    });
     const response = await fetch(
       'http://node5.nexus.io:7080/finance/debit/token',
       {
@@ -35,14 +43,7 @@ export async function POST(request: NextRequest) {
           Authorization: `Basic ${process.env.API_BASIC_AUTH}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          from: '8D6e96n4LTbSASuU7M1dZVJPpEyDFwSETVh8VGYR7WQVCVLJnBj',
-          recipients: votes.map((candidateAddress, i) => ({
-            to: candidateAddress,
-            amount: 6 - i,
-          })),
-          pin: process.env.SIGCHAIN_PIN,
-        }),
+        body,
       }
     );
     const result = await response.json();
@@ -53,6 +54,7 @@ export async function POST(request: NextRequest) {
       );
     } else {
       console.log('Debit result', result);
+      console.log('Body', body);
       return Response.json({ ok: true });
     }
   } catch (err: any) {
