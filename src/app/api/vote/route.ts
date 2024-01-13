@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-import axios from 'axios';
 import { type NextRequest } from 'next/server';
 
 const jwtSecret = process.env.JWT_SECRET || 'secret';
@@ -14,7 +13,7 @@ export async function POST(request: NextRequest) {
       { status: 401 }
     );
   }
-  if (!votes.every((a) => a)) {
+  if (!votes?.every((a) => a)) {
     return Response.json({ message: 'Missing some votes' }, { status: 400 });
   }
 
@@ -23,27 +22,39 @@ export async function POST(request: NextRequest) {
   } catch (err: any) {
     return Response.json(
       { message: err?.message, error: err },
-      { status: 400 }
+      { status: 401 }
     );
   }
 
   try {
-    await axios.post(
+    const response = await fetch(
       'http://node5.nexus.io:7080/finance/debit/token',
       {
-        from: '8D6e96n4LTbSASuU7M1dZVJPpEyDFwSETVh8VGYR7WQVCVLJnBj',
-        recipients: votes.map((candidateAddress, i) => ({
-          to: candidateAddress,
-          amount: 6 - i,
-        })),
-      },
-      {
+        method: 'POST',
         headers: {
           Authorization: `Basic ${process.env.API_BASIC_AUTH}`,
+          'Content-Type': 'application/json',
         },
+        body: JSON.stringify({
+          from: '8D6e96n4LTbSASuU7M1dZVJPpEyDFwSETVh8VGYR7WQVCVLJnBj',
+          recipients: votes.map((candidateAddress, i) => ({
+            to: candidateAddress,
+            amount: 6 - i,
+          })),
+          pin: process.env.SIGCHAIN_PIN,
+        }),
       }
     );
-    return Response.json({ ok: true });
+    const result = await response.json();
+    if (result.error) {
+      return Response.json(
+        { message: result.error.message, result },
+        { status: 500 }
+      );
+    } else {
+      console.log('Debit result', result);
+      return Response.json({ ok: true });
+    }
   } catch (err: any) {
     console.error(err);
     return Response.json(
