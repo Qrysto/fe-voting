@@ -6,7 +6,7 @@ import BigButton from '@/components/BigButton';
 import ConfirmVoteModal from './ConfirmVoteModal';
 import VoteConfirmedModal from './VoteConfirmedModal';
 import { oswald } from '@/fonts';
-import { Candidate } from '@/data';
+import { Candidate } from '@/types';
 import { useStore } from '@/store';
 import defaultAvatar from '@/default-avatar.jpg';
 

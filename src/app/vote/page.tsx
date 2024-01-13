@@ -1,5 +1,5 @@
 import Steps from './Steps';
-import { Candidate } from '@/data';
+import { Candidate } from '@/types';
 
 export default async function VotePage() {
   const res = await fetch('http://node5.nexus.io:7080/assets/list/accounts', {

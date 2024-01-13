@@ -5,7 +5,7 @@ import EnterPhone from './EnterPhone';
 import ConfirmCode from './ConfirmCode';
 import CastVote from './CastVote';
 import { useStep, useStore } from '@/store';
-import { Candidate } from '@/data';
+import { Candidate } from '@/types';
 
 export default function Steps({
   allCandidates,

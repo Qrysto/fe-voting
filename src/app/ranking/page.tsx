@@ -1,31 +1,7 @@
 import Image from 'next/image';
 import { oswald } from '@/fonts';
-import { Candidate } from '@/data';
+import { Candidate } from '@/types';
 import defaultAvatar from '@/default-avatar.jpg';
-
-interface Rank {
-  id: string;
-  voteCount: string;
-  percentage: number;
-}
-
-const ranks: Rank[] = [
-  {
-    id: '4',
-    voteCount: '48M',
-    percentage: 56,
-  },
-  {
-    id: '2',
-    voteCount: '3M',
-    percentage: 24,
-  },
-  {
-    id: '5',
-    voteCount: '125K',
-    percentage: 6,
-  },
-];
 
 function RankedCandidate({ candidate }: { candidate: Candidate }) {
   return (

@@ -1,4 +1,4 @@
-import { Candidate } from '@/data';
+import { Candidate } from '@/types';
 import { useStore } from '@/store';
 import Modal from '@/components/Modal';
 import BigButton from '@/components/BigButton';

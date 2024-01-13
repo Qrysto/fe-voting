@@ -3,7 +3,7 @@
 import { create } from 'zustand';
 import axios from 'axios';
 import { phoneDigitCount, codeDigitCount } from '@/constants';
-import { Candidate } from './data';
+import { Candidate } from './types';
 
 type State = {
   phoneDigits: string[];
