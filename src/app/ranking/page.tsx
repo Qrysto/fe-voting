@@ -71,9 +71,9 @@ export default async function RankingPage() {
   }
 
   const result = await res.json();
-  const allCandidates: Candidate[] = result?.result?.filter(
-    (c: Candidate) => c.active
-  );
+  const allCandidates: Candidate[] = result?.result
+    ?.filter((c: Candidate) => c.active)
+    .sort((c1: Candidate, c2: Candidate) => c2.balance - c1.balance);
   const totalVotes = allCandidates.reduce(
     (total, candidate) => total + candidate.balance,
     0
