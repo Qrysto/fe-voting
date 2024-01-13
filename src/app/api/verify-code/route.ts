@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { type NextRequest } from 'next/server';
 import verifyService from '../verifyService';
-import { isValidPhoneNumber, toE164US } from '../phone';
+import { isValidPhoneNumber } from '../phone';
 
 const jwtSecret = process.env.JWT_SECRET || 'secret';
 
@@ -50,6 +50,9 @@ export async function POST(request: NextRequest) {
     console.log('verify code error', code, 'phone', phoneNumber);
     console.error(err);
     console.log(JSON.stringify(err, null, 2));
-    return Response.json({ message: err?.message, err }, { status: 400 });
+    return Response.json(
+      { message: err?.message, error: err },
+      { status: 400 }
+    );
   }
 }
