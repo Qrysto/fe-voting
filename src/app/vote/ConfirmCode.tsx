@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import DigitInput from '@/components/DigitInput';
 import BigButton from '@/components/BigButton';
 import LinkButton from '@/components/LinkButton';
@@ -87,9 +87,23 @@ export default function ConfirmCode() {
   const confirmBtnRef: React.MutableRefObject<HTMLButtonElement | null> =
     useRef(null);
 
+  const part1Ref = useRef<HTMLDivElement>(null);
+  const part2Ref = useRef<HTMLDivElement>(null);
+  const [smallScreen, setSmallScreen] = useState(false);
+  useEffect(() => {
+    if (part1Ref.current && part2Ref.current) {
+      if (
+        part1Ref.current.getBoundingClientRect().bottom >
+        part2Ref.current.getBoundingClientRect().top
+      ) {
+        setSmallScreen(true);
+      }
+    }
+  }, []);
+
   return (
     <div>
-      <div className="pt-8">
+      <div className="pt-8" ref={part1Ref}>
         <h2
           className={`px-4 text-center text-2xl uppercase ${
             codeError ? 'text-red' : ''
@@ -107,7 +121,12 @@ export default function ConfirmCode() {
         </div>
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 px-8 pb-8 pt-2">
+      <div
+        className={`py-8 ${
+          smallScreen ? 'px-4' : 'absolute bottom-0 left-0 right-0 px-8'
+        }`}
+        ref={part2Ref}
+      >
         <h2 className="mb-3 text-4xl uppercase">Look for your Code</h2>
         <p className="text-lg leading-6">
           We sent you a text to your phone number {phoneNumber}. Please check
