@@ -11,7 +11,7 @@ export default function HomePage() {
   return (
     <main
       style={{ backgroundImage: `url('${backgroundImg.src}')` }}
-      className="absolute bottom-0 left-0 right-0 top-0 mx-[-1rem] flex flex-col items-stretch bg-cover py-8"
+      className="absolute left-0 right-0 top-0 mx-[-1rem] flex min-h-full flex-col items-stretch bg-cover py-8"
     >
       <div className="flex grow items-center">
         <div className="relative h-[480px] w-full">
@@ -38,7 +38,7 @@ export default function HomePage() {
           />
         </div>
       </div>
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center pt-8">
         <Link
           href="/vote"
           className={`block h-12 w-44 rounded-md text-center leading-[48px] ${oswald.className} bg-lightBlue font-bold uppercase text-blue active:bg-lightBlue/90`}
