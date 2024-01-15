@@ -37,9 +37,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = JSON.stringify({
-      from:
-        process.env.TOKEN_ADDRESS ||
-        '8DM69c2KnP9bzha6BuErrG1sZ7Xe4Eoi5DR4qm5QzhCu2bF3jsk',
+      from: '8DtGoRc7GFXWV3xUEjgnbbcd23yjeiszteiTimT3RjVjn8H2Sfs',
       recipients: votes.map((candidateAddress, i) => ({
         to: candidateAddress,
         amount: 6 - i,
