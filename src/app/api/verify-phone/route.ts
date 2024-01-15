@@ -1,6 +1,6 @@
 import { type NextRequest } from 'next/server';
 import verifyService from '../verifyService';
-import { isValidPhoneNumber, toE164US } from '../phone';
+import { isValidPhoneNumber, toE164US, isVoted } from '../phone';
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
@@ -10,6 +10,12 @@ export async function POST(request: NextRequest) {
   }
   if (!isValidPhoneNumber(phoneNumber)) {
     return Response.json({ message: 'Invalid phone number' }, { status: 400 });
+  }
+  if (await isVoted(phoneNumber)) {
+    return Response.json(
+      { message: 'This phone number has already voted' },
+      { status: 400 }
+    );
   }
 
   const fullPhoneNumber = toE164US(phoneNumber);

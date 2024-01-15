@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { type NextRequest } from 'next/server';
+import { isVoted, addVoted } from '../phone';
 
 const jwtSecret = process.env.JWT_SECRET || 'secret';
 
@@ -17,8 +18,16 @@ export async function POST(request: NextRequest) {
     return Response.json({ message: 'Missing some votes' }, { status: 400 });
   }
 
+  let phoneNumber;
   try {
-    const decoded = jwt.verify(jwToken, jwtSecret);
+    const decoded: any = jwt.verify(jwToken, jwtSecret);
+    phoneNumber = decoded.phoneNumber;
+    if (await isVoted(phoneNumber)) {
+      return Response.json(
+        { message: 'This phone number has already voted' },
+        { status: 400 }
+      );
+    }
   } catch (err: any) {
     return Response.json(
       { message: err?.message, error: err },
@@ -55,6 +64,13 @@ export async function POST(request: NextRequest) {
     } else {
       console.log('Debit result', result);
       console.log('Body', body);
+      const err = await addVoted(phoneNumber);
+      if (err) {
+        return Response.json(
+          { message: err?.message || 'Unknown error', error: err },
+          { status: 400 }
+        );
+      }
       return Response.json({ ok: true });
     }
   } catch (err: any) {
