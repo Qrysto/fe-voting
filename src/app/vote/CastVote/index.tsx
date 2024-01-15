@@ -22,9 +22,9 @@ function Candidate({ candidate }: { candidate: Candidate }) {
         <div className={`text-[11px] font-bold uppercase ${oswald.className}`}>
           <span
             className={
-              candidate.Party === 'DEMOCRATIC PARTY'
+              candidate.Party === 'DEMOCRAT'
                 ? 'text-blue'
-                : candidate.Party === 'REPUBLICAN PARTY'
+                : candidate.Party === 'REPUBLICAN'
                   ? 'text-red'
                   : 'text-orange'
             }
