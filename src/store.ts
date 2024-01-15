@@ -98,7 +98,7 @@ export const useStore = create<State & Actions>((set, get) => ({
       const { data } = await axios.post('/api/verify-phone', { phoneNumber });
       console.log('data', data);
       set({
-        phoneNumber: data.phoneNumber,
+        phoneNumber,
         phoneError: null,
         codeDigits: defaultCodeDigits,
         codeError: null,

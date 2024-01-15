@@ -129,7 +129,7 @@ export default function ConfirmCode() {
       >
         <h2 className="mb-3 text-4xl uppercase">Look for your Code</h2>
         <p className="text-lg leading-6">
-          We sent you a text to your phone number {phoneNumber}. Please check
+          We sent you a text to your phone number +1{phoneNumber}. Please check
           and enter your code to confirm your identity.
         </p>
         <BigButton
