@@ -123,31 +123,31 @@ function VotedCandidate({
   );
 }
 
-function shuffle<T>(array: T[]) {
-  let currentIndex = array.length,
-    randomIndex;
+// function shuffle<T>(array: T[]) {
+//   let currentIndex = array.length,
+//     randomIndex;
 
-  // While there remain elements to shuffle.
-  while (currentIndex > 0) {
-    // Pick a remaining element.
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex--;
-    // And swap it with the current element.
-    [array[currentIndex], array[randomIndex]] = [
-      array[randomIndex],
-      array[currentIndex],
-    ];
-  }
+//   // While there remain elements to shuffle.
+//   while (currentIndex > 0) {
+//     // Pick a remaining element.
+//     randomIndex = Math.floor(Math.random() * currentIndex);
+//     currentIndex--;
+//     // And swap it with the current element.
+//     [array[currentIndex], array[randomIndex]] = [
+//       array[randomIndex],
+//       array[currentIndex],
+//     ];
+//   }
 
-  return array;
-}
+//   return array;
+// }
 
 export default function CastVote() {
   const allCandidates = useStore((state) => state.allCandidates);
-  const shuffledCandidates = useMemo(
-    () => shuffle([...allCandidates]),
-    [allCandidates]
-  );
+  // const shuffledCandidates = useMemo(
+  //   () => shuffle([...allCandidates]),
+  //   [allCandidates]
+  // );
   const jwToken = useStore((state) => state.jwToken);
   const votes = useStore((state) => state.votes);
   const resetVote = useStore((state) => state.resetVote);
@@ -192,7 +192,7 @@ export default function CastVote() {
           </>
         )}
         <ul>
-          {shuffledCandidates
+          {allCandidates
             .filter((c) => !votes.includes(c.address))
             .map((candidate) => (
               <Candidate key={candidate.address} candidate={candidate} />

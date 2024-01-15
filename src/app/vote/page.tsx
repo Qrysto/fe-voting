@@ -15,7 +15,9 @@ export default async function VotePage() {
   }
 
   const result = await res.json();
-  const allCandidates = result?.result?.filter((c: Candidate) => c.active);
+  const allCandidates = result?.result
+    ?.filter((c: Candidate) => c.active)
+    .sort((c1: Candidate, c2: Candidate) => c1.Name.localeCompare(c2.Name));
 
   return <Steps allCandidates={allCandidates} />;
 }
