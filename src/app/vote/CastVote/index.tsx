@@ -31,13 +31,19 @@ function Candidate({ candidate }: { candidate: Candidate }) {
           >
             {candidate.Party}
           </span>
-          <a
-            href={candidate.Website}
-            target="_blank"
-            className="ml-3 text-blue underline underline-offset-1"
-          >
-            Website
-          </a>
+          {candidate.Website === 'NONE' ? (
+            <span className="ml-3 text-gray underline underline-offset-1">
+              Website
+            </span>
+          ) : (
+            <a
+              href={candidate.Website}
+              target="_blank"
+              className="ml-3 text-blue underline underline-offset-1"
+            >
+              Website
+            </a>
+          )}
         </div>
       </div>
       <button
@@ -80,22 +86,28 @@ function VotedCandidate({
         <div className={`text-[11px] font-bold uppercase ${oswald.className}`}>
           <span
             className={
-              candidate.Party === 'DEMOCRATIC PARTY'
+              candidate.Party === 'DEMOCRAT'
                 ? 'text-blue'
-                : candidate.Party === 'REPUBLICAN PARTY'
+                : candidate.Party === 'REPUBLICAN'
                   ? 'text-red'
                   : 'text-orange'
             }
           >
             {candidate.Party}
           </span>
-          <a
-            href={candidate.Website}
-            target="_blank"
-            className="ml-3 text-blue underline underline-offset-1"
-          >
-            Website
-          </a>
+          {candidate.Website === 'NONE' ? (
+            <span className="ml-3 text-gray underline underline-offset-1">
+              Website
+            </span>
+          ) : (
+            <a
+              href={candidate.Website}
+              target="_blank"
+              className="ml-3 text-blue underline underline-offset-1"
+            >
+              Website
+            </a>
+          )}
         </div>
       </div>
       <button

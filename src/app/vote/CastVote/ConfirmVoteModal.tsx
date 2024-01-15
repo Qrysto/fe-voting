@@ -32,13 +32,19 @@ function VotedCandidate({ address, rank }: { address: string; rank: number }) {
           >
             {candidate.Party}
           </span>
-          <a
-            href={candidate.Website}
-            target="_blank"
-            className="ml-3 text-blue underline underline-offset-1"
-          >
-            Website
-          </a>
+          {candidate.Website === 'NONE' ? (
+            <span className="ml-3 text-gray underline underline-offset-1">
+              Website
+            </span>
+          ) : (
+            <a
+              href={candidate.Website}
+              target="_blank"
+              className="ml-3 text-blue underline underline-offset-1"
+            >
+              Website
+            </a>
+          )}
         </div>
       </div>
       <div
