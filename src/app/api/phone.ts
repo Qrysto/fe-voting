@@ -9,7 +9,7 @@ export const toE164US = (phoneNo: string) => '+1' + phoneNo;
 export const addVoted = async (phoneNo: string) => {
   const body = JSON.stringify({
     name: phoneNo,
-    register: '8EVUvzYSmgfqBf2qBHQwVkj1n1qhA9E4Mh6fpBM2EHqey71eFeW',
+    register: '8EXtmKjyoYY8zarUBp5jDYH8HrL4B5oBrsyF7QumjnJMu6wBGHZ',
     pin: process.env.SIGCHAIN_PIN,
   });
   const res = await fetch('http://node5.nexus.io:7080/names/create/name', {
