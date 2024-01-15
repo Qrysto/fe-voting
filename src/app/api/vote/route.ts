@@ -66,14 +66,15 @@ export async function POST(request: NextRequest) {
     } else {
       console.log('Debit result', result);
       console.log('Body', body);
-      const err = await addVoted(phoneNumber);
-      if (err) {
+      try {
+        await addVoted(phoneNumber);
+        return Response.json({ ok: true });
+      } catch (err) {
         return Response.json(
-          { message: err?.message || 'Unknown error', error: err },
+          { message: 'This phone number has already voted', error: err },
           { status: 400 }
         );
       }
-      return Response.json({ ok: true });
     }
   } catch (err: any) {
     console.error(err);

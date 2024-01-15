@@ -1,4 +1,5 @@
 const regex = /^\d{10}$/;
+const table = 'votes';
 
 export function isValidPhoneNumber(phoneNo: string) {
   return regex.test(phoneNo);
@@ -8,13 +9,11 @@ export const toE164US = (phoneNo: string) => '+1' + phoneNo;
 
 export const addVoted = async (phoneNo: string) => {
   const body = JSON.stringify({
-    name: phoneNo,
-    register:
-      process.env.TOKEN_ADDRESS ||
-      '8EXtmKjyoYY8zarUBp5jDYH8HrL4B5oBrsyF7QumjnJMu6wBGHZ',
-    pin: process.env.SIGCHAIN_PIN,
+    table,
+    key: phoneNo,
+    value: 'voted',
   });
-  const res = await fetch('http://node5.nexus.io:7080/names/create/name', {
+  const res = await fetch('http://node5.nexus.io:7080/local/push/record', {
     method: 'POST',
     headers: {
       Authorization: `Basic ${process.env.API_BASIC_AUTH}`,
@@ -22,23 +21,26 @@ export const addVoted = async (phoneNo: string) => {
     },
     body,
   });
-  if (!res.ok) {
+  if (res.ok) {
     const json = await res.json();
-    console.error('Add vote error', json);
-    if (json?.error?.code === -32) {
-      return { message: 'This phone number has already voted' };
+    console.log('push/record json', json);
+    if (json?.result?.success) {
+      return;
     }
-    return json?.error;
   }
-  return null;
+
+  const json = await res.json();
+  console.error('push/record error', json);
+  throw json?.error || new Error('Unknown error');
 };
 
 export const isVoted = async (phoneNo: string) => {
   try {
     const body = JSON.stringify({
-      name: phoneNo,
+      table,
+      key: phoneNo,
     });
-    const res = await fetch('http://node5.nexus.io:7080/names/get/name', {
+    const res = await fetch('http://node5.nexus.io:7080/local/has/record', {
       method: 'POST',
       headers: {
         Authorization: `Basic ${process.env.API_BASIC_AUTH}`,
@@ -46,15 +48,14 @@ export const isVoted = async (phoneNo: string) => {
       },
       body,
     });
-    if (!res.ok) {
-      console.error('Check voted error', await res.json());
-      return false;
+    if (res.ok) {
+      const json = await res.json();
+      console.log('has/record json', json);
+      if (json?.result?.exists) {
+        return true;
+      }
     }
-    const json = await res.json();
-    console.log('name list json', json);
-    if (json?.result) {
-      return true;
-    }
+    console.error('has/record error', await res.json());
     return false;
   } catch (err) {
     return false;
