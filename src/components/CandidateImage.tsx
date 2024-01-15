@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import Image from 'next/image';
 import { Candidate } from '@/types';
@@ -11,7 +13,10 @@ export default function CandidateImage({
   className: string;
 }) {
   const [error, setError] = useState(false);
-  const src = `/${candidate.Name.toUpperCase().replaceAll(' ', '_')}.jpg`;
+  const src = `/candidates/${candidate.Name.toUpperCase().replaceAll(
+    ' ',
+    '_'
+  )}.jpg`;
 
   return (
     <Image
