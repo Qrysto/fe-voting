@@ -11,7 +11,7 @@ export default function HomePage() {
   return (
     <main
       style={{ backgroundImage: `url('${backgroundImg.src}')` }}
-      className="absolute left-0 right-0 top-0 mx-[-1rem] flex min-h-full flex-col items-stretch bg-cover py-8"
+      className="absolute left-0 right-0 top-0 mx-[-1rem] flex min-h-full flex-col items-stretch bg-cover pb-4 pt-8"
     >
       <div className="flex grow items-center">
         <div className="relative h-[480px] w-full">
@@ -58,6 +58,12 @@ export default function HomePage() {
           />
           <span>a friend</span>
         </button>
+        <div className="mt-5 text-sm">
+          <span className="text-white/70">Powered by </span>
+          <a href="https://nexus.io/" target="_blank" className="text-white">
+            Nexus.io
+          </a>
+        </div>
       </div>
     </main>
   );
