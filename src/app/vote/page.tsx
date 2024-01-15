@@ -1,5 +1,12 @@
+import type { Metadata } from 'next';
 import Steps from './Steps';
 import { Candidate } from '@/types';
+
+export const metadata: Metadata = {
+  title: 'Vote! | Free And Equal',
+  description:
+    'Vote for your top six candidates for the upcoming presidential debate!',
+};
 
 export default async function VotePage() {
   const res = await fetch('http://node5.nexus.io:7080/assets/list/accounts', {

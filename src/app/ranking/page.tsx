@@ -1,6 +1,12 @@
+import type { Metadata } from 'next';
 import { oswald } from '@/fonts';
 import { Candidate } from '@/types';
 import CandidateImage from '@/components/CandidateImage';
+
+export const metadata: Metadata = {
+  title: 'Results | Free And Equal',
+  description: 'View the results of the current vote!',
+};
 
 function RankedCandidate({ candidate }: { candidate: Candidate }) {
   return (
