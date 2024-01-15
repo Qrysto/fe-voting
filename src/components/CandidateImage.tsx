@@ -13,16 +13,15 @@ export default function CandidateImage({
   className: string;
 }) {
   const [error, setError] = useState(false);
-  const src = `/candidates/${candidate.Name.toUpperCase().replaceAll(
-    ' ',
-    '_'
-  )}.jpg`;
+  const src = `/candidates/${`${candidate.First} ${candidate.Last}`
+    .toUpperCase()
+    .replaceAll(' ', '_')}.jpg`;
 
   return (
     <Image
       width={40}
       height={40}
-      alt={candidate.Name}
+      alt={`${candidate.First} ${candidate.Last}`}
       className={'rounded-md ' + className}
       src={error ? defaultAvatar : src}
       onError={() => {

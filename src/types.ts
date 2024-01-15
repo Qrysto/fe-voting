@@ -6,6 +6,8 @@ export interface Candidate {
   type: string;
   form: string;
   Name: string;
+  First: string;
+  Last: string;
   Party: string;
   Website: string;
   active: number;

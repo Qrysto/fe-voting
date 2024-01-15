@@ -18,7 +18,7 @@ function VotedCandidate({ address, rank }: { address: string; rank: number }) {
       <CandidateImage candidate={candidate} className="shrink-0 grow-0" />
       <div className="shrink grow px-4">
         <div className="text-[17px] font-bold text-darkBlue">
-          {candidate.Name}
+          {`${candidate.First} ${candidate.Last}`}
         </div>
         <div className={`text-[11px] font-bold uppercase ${oswald.className}`}>
           <span

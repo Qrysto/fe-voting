@@ -9,7 +9,7 @@ function RankedCandidate({ candidate }: { candidate: Candidate }) {
       <div className="shrink grow px-4">
         <div>
           <span className="text-[17px] font-bold text-darkBlue">
-            {candidate.Name} -{' '}
+            {`${candidate.First} ${candidate.Last}`} -{' '}
           </span>
           <span className="whitespace-nowrap">{candidate.balance} Votes</span>
         </div>
