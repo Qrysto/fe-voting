@@ -1,18 +1,11 @@
-import Image from 'next/image';
 import { oswald } from '@/fonts';
 import { Candidate } from '@/types';
-import defaultAvatar from '@/default-avatar.jpg';
+import CandidateImage from '@/components/CandidateImage';
 
 function RankedCandidate({ candidate }: { candidate: Candidate }) {
   return (
     <li className="flex items-center px-4 py-[10px]">
-      <Image
-        src={defaultAvatar}
-        width={40}
-        height={40}
-        alt={candidate.Name}
-        className="shrink-0 grow-0 rounded-md"
-      />
+      <CandidateImage candidate={candidate} className="shrink-0 grow-0" />
       <div className="shrink grow px-4">
         <div>
           <span className="text-[17px] font-bold text-darkBlue">

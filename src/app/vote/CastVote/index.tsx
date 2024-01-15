@@ -1,27 +1,20 @@
-import { useState, useMemo } from 'react';
-import Image from 'next/image';
+import { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import BigButton from '@/components/BigButton';
+import CandidateImage from '@/components/CandidateImage';
 import ConfirmVoteModal from './ConfirmVoteModal';
 import VoteConfirmedModal from './VoteConfirmedModal';
 import { oswald } from '@/fonts';
 import { Candidate } from '@/types';
 import { useStore } from '@/store';
-import defaultAvatar from '@/default-avatar.jpg';
 
 function Candidate({ candidate }: { candidate: Candidate }) {
   const addVote = useStore((state) => state.addVote);
 
   return (
     <li className="flex items-center px-4 py-[10px]">
-      <Image
-        src={defaultAvatar}
-        width={40}
-        height={40}
-        alt={candidate.Name}
-        className="shrink-0 grow-0 rounded-md"
-      />
+      <CandidateImage candidate={candidate} className="shrink-0 grow-0" />
       <div className="shrink grow px-4">
         <div className="text-[17px] font-bold text-darkBlue">
           {candidate.Name}
@@ -79,13 +72,7 @@ function VotedCandidate({
         <span>{rank}</span>
         <span className="absolute top-[-5px] text-[10px]">{superscript}</span>
       </div>
-      <Image
-        src={defaultAvatar}
-        width={40}
-        height={40}
-        alt={candidate.Name}
-        className="shrink-0 grow-0 rounded-md"
-      />
+      <CandidateImage candidate={candidate} className="shrink-0 grow-0" />
       <div className="shrink grow px-4">
         <div className="text-[17px] font-bold text-darkBlue">
           {candidate.Name}

@@ -1,11 +1,10 @@
-import { Candidate } from '@/types';
 import { useStore } from '@/store';
 import Modal from '@/components/Modal';
 import BigButton from '@/components/BigButton';
+import CandidateImage from '@/components/CandidateImage';
 import Image from 'next/image';
 import { oswald } from '@/fonts';
 import thumbsupImg from './thumbsup-small.svg';
-import defaultAvatar from '@/default-avatar.jpg';
 
 function VotedCandidate({ address, rank }: { address: string; rank: number }) {
   const allCandidates = useStore((state) => state.allCandidates);
@@ -16,13 +15,7 @@ function VotedCandidate({ address, rank }: { address: string; rank: number }) {
 
   return (
     <li className="flex items-center px-4 py-[10px]">
-      <Image
-        src={defaultAvatar}
-        width={40}
-        height={40}
-        alt={candidate.Name}
-        className="shrink-0 grow-0 rounded-md"
-      />
+      <CandidateImage candidate={candidate} className="shrink-0 grow-0" />
       <div className="shrink grow px-4">
         <div className="text-[17px] font-bold text-darkBlue">
           {candidate.Name}
