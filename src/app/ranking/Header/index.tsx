@@ -10,11 +10,11 @@ function IconButton({
 }: {
   children: React.ReactNode;
   className?: string;
-} & React.ComponentPropsWithoutRef<'button'>) {
+} & React.ComponentPropsWithoutRef<'a'>) {
   return (
-    <button className={'px-1 py-1 ' + (className || '')} {...rest}>
+    <a className={'px-1 py-1 ' + (className || '')} {...rest}>
       {children}
-    </button>
+    </a>
   );
 }
 
@@ -32,7 +32,11 @@ export default function Header() {
         />
       </Link>
       <div className="absolute inset-y-0 right-0 flex items-center object-right-top">
-        <IconButton className="ml-4">
+        <IconButton
+          className="ml-4"
+          href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fvote.freeandequal.org%2Franking"
+          target="_blank"
+        >
           <Image src={shareIcon} height={23} alt="Share" />
         </IconButton>
       </div>

@@ -45,7 +45,9 @@ export default function HomePage() {
         >
           Vote now
         </Link>
-        <button
+        <a
+          href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fvote.freeandequal.org"
+          target="_blank"
           className={`${oswald.className} mt-10 font-bold uppercase text-white`}
         >
           <span>Share to</span>
@@ -57,7 +59,7 @@ export default function HomePage() {
             style={{ verticalAlign: -3 }}
           />
           <span>a friend</span>
-        </button>
+        </a>
         <div className="mt-5 text-sm">
           <span className="text-white/70">Powered by </span>
           <a href="https://nexus.io/" target="_blank" className="text-white">
