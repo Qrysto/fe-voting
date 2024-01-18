@@ -176,10 +176,10 @@ export default function CastVote() {
       <p className="mt-[10px] px-4 text-lg leading-6">
         Send an e-mail to{' '}
         <a
-          href="mailto:vote@freeandequal.org"
+          href="mailto:info@freeandequal.org"
           className="text-blue underline underline-offset-1"
         >
-          vote@freeandequal.org
+          info@freeandequal.org
         </a>{' '}
         if you are a candidate not included on this list and would like to be
         added.
