@@ -170,19 +170,17 @@ export default function CastVote() {
       <h2 className="px-4 text-4xl uppercase">Vote</h2>
       <p className="mt-[10px] px-4 text-lg leading-6">
         Please rank your top six candidates. This list contains candidates on
-        the ballot in at least four states and who received at least $1,000 in
-        campaign contribution OR received 2% in a national poll.
+        the ballot in at least four states or received 2% in a national poll.
       </p>
       <p className="mt-[10px] px-4 text-lg leading-6">
-        Send an e-mail to{' '}
+        E-mail{' '}
         <a
           href="mailto:info@freeandequal.org"
           className="text-blue underline underline-offset-1"
         >
           info@freeandequal.org
         </a>{' '}
-        if you are a candidate not included on this list and would like to be
-        added.
+        if you qualify and would like to be added.
       </p>
       <h2 className="mb-3 mt-8 px-4 text-2xl uppercase">Candidates</h2>
       <div className="rounded-md bg-almostWhite py-[10px]">
