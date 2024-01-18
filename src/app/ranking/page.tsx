@@ -5,7 +5,14 @@ import CandidateImage from '@/components/CandidateImage';
 
 export const metadata: Metadata = {
   title: 'Results | Free And Equal',
-  description: 'View the results of the current vote!',
+  description: 'View the results of the current vote! Powered by nexus.io.',
+  openGraph: {
+    title: 'Results | Free And Equal',
+    description: 'View the results of the current vote! Powered by nexus.io.',
+    url: 'https://vote.freeandequal.org/ranking',
+    type: 'website',
+    siteName: 'Free And Equal Voting App',
+  },
 };
 
 function RankedCandidate({ candidate }: { candidate: Candidate }) {

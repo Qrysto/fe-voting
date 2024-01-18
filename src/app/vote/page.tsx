@@ -5,7 +5,15 @@ import { Candidate } from '@/types';
 export const metadata: Metadata = {
   title: 'Vote! | Free And Equal',
   description:
-    'Vote for your top six candidates for the upcoming presidential debate!',
+    'Vote for your top six candidates for the upcoming presidential debate! Powered by nexus.io.',
+  openGraph: {
+    title: 'Vote! | Free And Equal',
+    description:
+      'Vote for your top six candidates for the upcoming presidential debate! Powered by nexus.io.',
+    url: 'https://vote.freeandequal.org/vote',
+    type: 'website',
+    siteName: 'Free And Equal Voting App',
+  },
 };
 
 export default async function VotePage() {

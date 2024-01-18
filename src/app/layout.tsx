@@ -3,8 +3,10 @@ import { oswald, montserrat } from '../fonts';
 import './globals.css';
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://vote.freeandequal.org/'),
   title: 'Free And Equal Voting App',
-  description: 'Free and Equal blockchain voting system powered by nexus.io.',
+  description:
+    'Free and Equal blockchain voting system powered by nexus.io. Powered by nexus.io.',
 };
 
 export default function RootLayout({
