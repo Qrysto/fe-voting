@@ -86,14 +86,8 @@ export default function ConfirmVoteModal({
             <VotedCandidate key={address} address={address} rank={i + 1} />
           ))}
         </ul>
-        <BigButton
-          className="mt-4"
-          primary
-          disabled={votes.length !== 6}
-          onClick={confirmVote}
-        >
+        <BigButton className="mt-4" primary onClick={confirmVote}>
           Confirm my votes
-          {votes.length < 6 ? ` (${6 - votes.length} more)` : ''}
         </BigButton>
         <BigButton
           className="mt-4"

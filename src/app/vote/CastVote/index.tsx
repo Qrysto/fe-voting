@@ -9,7 +9,13 @@ import { oswald } from '@/fonts';
 import { Candidate } from '@/types';
 import { useStore } from '@/store';
 
-function Candidate({ candidate }: { candidate: Candidate }) {
+function Candidate({
+  candidate,
+  disableVote,
+}: {
+  candidate: Candidate;
+  disableVote: boolean;
+}) {
   const addVote = useStore((state) => state.addVote);
 
   return (
@@ -47,10 +53,15 @@ function Candidate({ candidate }: { candidate: Candidate }) {
         </div>
       </div>
       <button
-        className={`${oswald.className} h-11 shrink-0 grow-0 rounded-md bg-lightBlue px-3 font-bold uppercase text-blue active:bg-lightBlue/60`}
+        className={`${oswald.className} ${
+          disableVote
+            ? 'bg-lightGray text-gray'
+            : 'bg-lightBlue text-blue active:bg-lightBlue/60'
+        } h-11 shrink-0 grow-0 rounded-md px-3 font-bold uppercase`}
         onClick={() => {
           addVote(candidate.address);
         }}
+        disabled={disableVote}
       >
         Vote
       </button>
@@ -189,13 +200,12 @@ export default function CastVote() {
             <BigButton
               className="mt-6"
               primary
-              disabled={votes.length !== 6}
+              disabled={votes.length > 6}
               onClick={() => {
                 setConfirmModalOpen(true);
               }}
             >
               Submit my votes
-              {votes.length < 6 ? ` (${6 - votes.length} more)` : ''}
             </BigButton>
             <BigButton className="mb-6 mt-4" onClick={resetVote}>
               Reset all my votes
@@ -207,7 +217,11 @@ export default function CastVote() {
           {allCandidates
             .filter((c) => !votes.includes(c.address))
             .map((candidate) => (
-              <Candidate key={candidate.address} candidate={candidate} />
+              <Candidate
+                key={candidate.address}
+                candidate={candidate}
+                disableVote={votes.length >= 6}
+              />
             ))}
         </ul>
       </div>

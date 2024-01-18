@@ -14,8 +14,14 @@ export async function POST(request: NextRequest) {
       { status: 401 }
     );
   }
-  if (!votes?.every((a) => a)) {
+  if (!votes?.length || !votes?.every((a) => a)) {
     return Response.json({ message: 'Missing some votes' }, { status: 400 });
+  }
+  if (votes?.length > 6) {
+    return Response.json(
+      { message: 'Voted for too many candidates' },
+      { status: 400 }
+    );
   }
 
   let phoneNumber;
