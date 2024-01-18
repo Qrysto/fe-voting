@@ -162,6 +162,17 @@ export default function CastVote() {
         the ballot in at least four states and who received at least $1,000 in
         campaign contribution OR received 2% in a national poll.
       </p>
+      <p className="mt-[10px] px-4 text-lg leading-6">
+        Send an e-mail to{' '}
+        <a
+          href="mailto:vote@freeandequal.org"
+          className="text-blue underline underline-offset-1"
+        >
+          vote@freeandequal.org
+        </a>{' '}
+        if you are a candidate not included on this list and would like to be
+        added.
+      </p>
       <h2 className="mb-3 mt-8 px-4 text-2xl uppercase">Candidates</h2>
       <div className="rounded-md bg-almostWhite py-[10px]">
         <ul>
