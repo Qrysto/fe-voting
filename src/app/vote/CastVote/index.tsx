@@ -28,9 +28,9 @@ function Candidate({
         <div className={`text-[11px] font-bold uppercase ${oswald.className}`}>
           <span
             className={
-              candidate.Party === 'DEMOCRAT'
+              candidate.Party.toUpperCase() === 'DEMOCRAT'
                 ? 'text-blue'
-                : candidate.Party === 'REPUBLICAN'
+                : candidate.Party.toUpperCase() === 'REPUBLICAN'
                   ? 'text-red'
                   : 'text-orange'
             }
@@ -97,9 +97,9 @@ function VotedCandidate({
         <div className={`text-[11px] font-bold uppercase ${oswald.className}`}>
           <span
             className={
-              candidate.Party === 'DEMOCRAT'
+              candidate.Party.toUpperCase() === 'DEMOCRAT'
                 ? 'text-blue'
-                : candidate.Party === 'REPUBLICAN'
+                : candidate.Party.toUpperCase() === 'REPUBLICAN'
                   ? 'text-red'
                   : 'text-orange'
             }
