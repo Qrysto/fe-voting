@@ -142,7 +142,7 @@ export function VotedCandidate({
     },
   });
 
-  const [{ isDragging }, drag] = useDrag({
+  const [{ isDragging }, drag, preview] = useDrag({
     type: 'candidate',
     item: () => {
       return candidate ? { address: candidate.address, rank } : null;
@@ -156,7 +156,7 @@ export function VotedCandidate({
   const superscript =
     rank === 1 ? 'ST' : rank === 2 ? 'ND' : rank === 3 ? 'RD' : 'TH';
 
-  drag(drop(ref));
+  preview(drop(ref));
   return (
     <li
       ref={ref}
@@ -167,6 +167,7 @@ export function VotedCandidate({
     >
       <div
         className={`relative mr-3 h-[45px] w-[45px] shrink-0 grow-0 rounded-full bg-lightGreen pr-1 text-center text-[25px] font-semibold leading-[45px] text-green ${oswald.className}`}
+        ref={drag}
       >
         <span>{rank}</span>
         <span className="absolute top-[-5px] text-[10px]">{superscript}</span>
@@ -272,6 +273,11 @@ export default function CastVote() {
           if you would like to be added.
         </p>
         <h2 className="mb-3 mt-8 px-4 text-2xl uppercase">Candidates</h2>
+        {votes.length > 0 && (
+          <p className="mt-[10px] px-4 text-lg leading-6">
+            You can drag the position circles to reorder the candidates.
+          </p>
+        )}
         <div className="rounded-md bg-almostWhite py-[10px]">
           <ul>
             {votes.map((address, i) => (
