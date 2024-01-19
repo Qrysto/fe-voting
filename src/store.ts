@@ -27,6 +27,7 @@ type Actions = {
   confirmCode: () => Promise<void>;
   unconfirmCode: () => void;
   addVote: (id: string) => void;
+  swapVotes: (index1: number, index2: number) => void;
   removeVote: (id: string) => void;
   resetVote: () => void;
   goBack: () => void;
@@ -136,10 +137,20 @@ export const useStore = create<State & Actions>((set, get) => ({
   },
 
   unconfirmCode: () => set({ jwToken: null }),
+
   addVote: (id: string) =>
     set((state) => ({
       votes: state.votes.length < 6 ? [...state.votes, id] : state.votes,
     })),
+  swapVotes: (index1, index2) =>
+    set((state) => {
+      const newVotes = [...state.votes];
+      [newVotes[index1], newVotes[index2]] = [
+        newVotes[index2],
+        newVotes[index1],
+      ];
+      return { votes: newVotes };
+    }),
   removeVote: (id: string) =>
     set((state) => ({ votes: state.votes.filter((cid) => cid !== id) })),
   resetVote: () => set({ votes: [] }),
@@ -159,5 +170,4 @@ export const useStore = create<State & Actions>((set, get) => ({
   loadCandidates: (allCandidates) => set({ allCandidates }),
 }));
 
-export const useStep = () =>
-  useStore((state) => (!state.phoneNumber ? 1 : !state.jwToken ? 2 : 3));
+export const useStep = () => useStore((state) => 3); //(!state.phoneNumber ? 1 : !state.jwToken ? 2 : 3));

@@ -1,5 +1,9 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import axios from 'axios';
+import { TouchBackend } from 'react-dnd-touch-backend';
+import { DndProvider } from 'react-dnd';
+import type { Identifier, XYCoord } from 'dnd-core';
+import { useDrag, useDrop } from 'react-dnd';
 import { useRouter } from 'next/navigation';
 import BigButton from '@/components/BigButton';
 import CandidateImage from '@/components/CandidateImage';
@@ -69,6 +73,12 @@ function Candidate({
   );
 }
 
+interface DragItem {
+  rank: number;
+  address: string;
+  type: string;
+}
+
 function VotedCandidate({
   candidate,
   rank,
@@ -76,13 +86,84 @@ function VotedCandidate({
   candidate: Candidate | undefined;
   rank: number;
 }) {
+  const ref = useRef<HTMLLIElement>(null);
+  const swapVotes = useStore((state) => state.swapVotes);
   const removeVote = useStore((state) => state.removeVote);
+  const [{ handlerId }, drop] = useDrop<
+    DragItem,
+    void,
+    { handlerId: Identifier | null }
+  >({
+    accept: 'candidate',
+    collect(monitor) {
+      return {
+        handlerId: monitor.getHandlerId(),
+      };
+    },
+    hover(item: DragItem, monitor) {
+      if (!ref.current) {
+        return;
+      }
+
+      // Don't replace items with themselves
+      if (item.rank === rank) {
+        return;
+      }
+
+      // Determine rectangle on screen
+      const hoverBoundingRect = ref.current?.getBoundingClientRect();
+
+      // Get vertical middle
+      const hoverMiddleY =
+        (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+
+      // Determine mouse position
+      const clientOffset = monitor.getClientOffset();
+
+      // Get pixels to the top
+      const hoverClientY = (clientOffset as XYCoord).y - hoverBoundingRect.top;
+
+      // Only perform the move when the mouse has crossed half of the items height
+      // When dragging downwards, only move when the cursor is below 50%
+      // When dragging upwards, only move when the cursor is above 50%
+      if (
+        // Dragging downwards
+        (item.rank < rank && hoverClientY < hoverMiddleY) ||
+        // Dragging upwards
+        (item.rank > rank && hoverClientY > hoverMiddleY)
+      ) {
+        return;
+      }
+
+      // Time to actually perform the action; index = rank - 1
+      swapVotes(item.rank - 1, rank - 1);
+      item.rank = rank;
+    },
+  });
+
+  const [{ isDragging }, drag] = useDrag({
+    type: 'candidate',
+    item: () => {
+      return candidate ? { address: candidate.address, rank } : null;
+    },
+    collect: (monitor: any) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
+
   if (!candidate) return null;
   const superscript =
     rank === 1 ? 'ST' : rank === 2 ? 'ND' : rank === 3 ? 'RD' : 'TH';
 
+  drag(drop(ref));
   return (
-    <li className="flex items-center px-4 py-[10px]">
+    <li
+      ref={ref}
+      className={`flex items-center px-4 py-[10px] ${
+        isDragging ? 'opacity-0' : ''
+      }`}
+      data-handler-id={handlerId}
+    >
       <div
         className={`relative mr-3 h-[45px] w-[45px] shrink-0 grow-0 rounded-full bg-lightGreen pr-1 text-center text-[25px] font-semibold leading-[45px] text-green ${oswald.className}`}
       >
@@ -166,87 +247,95 @@ export default function CastVote() {
   const router = useRouter();
 
   return (
-    <div className="pb-8">
-      <h2 className="px-4 text-4xl uppercase">Vote</h2>
-      <p className="mt-[10px] px-4 text-lg leading-6">
-        Please rank your top six candidates. This list contains candidates on
-        the ballot in at least four states or received 2% in a national poll.
-      </p>
-      <p className="mt-[10px] px-4 text-lg leading-6">
-        E-mail{' '}
-        <a
-          href="mailto:info@freeandequal.org"
-          className="text-blue underline underline-offset-1"
-        >
-          info@freeandequal.org
-        </a>{' '}
-        if you qualify and would like to be added.
-      </p>
-      <h2 className="mb-3 mt-8 px-4 text-2xl uppercase">Candidates</h2>
-      <div className="rounded-md bg-almostWhite py-[10px]">
-        <ul>
-          {votes.map((address, i) => (
-            <VotedCandidate
-              key={address}
-              candidate={allCandidates.find((c) => c.address === address)}
-              rank={i + 1}
-            />
-          ))}
-        </ul>
-        {votes.length > 0 && (
-          <>
-            <BigButton
-              className="mt-6"
-              primary
-              disabled={votes.length > 6}
-              onClick={() => {
-                setConfirmModalOpen(true);
-              }}
-            >
-              Submit my votes
-            </BigButton>
-            <BigButton className="mb-6 mt-4" onClick={resetVote}>
-              Reset all my votes
-            </BigButton>
-            <div className="my-[10px] border-t border-solid border-gray"></div>
-          </>
-        )}
-        <ul>
-          {allCandidates
-            .filter((c) => !votes.includes(c.address))
-            .map((candidate) => (
-              <Candidate
-                key={candidate.address}
-                candidate={candidate}
-                disableVote={votes.length >= 6}
+    <DndProvider
+      backend={TouchBackend}
+      options={{
+        enableTouchEvents: true,
+        enableMouseEvents: true,
+      }}
+    >
+      <div className="pb-8">
+        <h2 className="px-4 text-4xl uppercase">Vote</h2>
+        <p className="mt-[10px] px-4 text-lg leading-6">
+          Please rank your top six candidates. This list contains candidates on
+          the ballot in at least four states or received 2% in a national poll.
+        </p>
+        <p className="mt-[10px] px-4 text-lg leading-6">
+          E-mail{' '}
+          <a
+            href="mailto:info@freeandequal.org"
+            className="text-blue underline underline-offset-1"
+          >
+            info@freeandequal.org
+          </a>{' '}
+          if you qualify and would like to be added.
+        </p>
+        <h2 className="mb-3 mt-8 px-4 text-2xl uppercase">Candidates</h2>
+        <div className="rounded-md bg-almostWhite py-[10px]">
+          <ul>
+            {votes.map((address, i) => (
+              <VotedCandidate
+                key={address}
+                candidate={allCandidates.find((c) => c.address === address)}
+                rank={i + 1}
               />
             ))}
-        </ul>
-      </div>
+          </ul>
+          {votes.length > 0 && (
+            <>
+              <BigButton
+                className="mt-6"
+                primary
+                disabled={votes.length > 6}
+                onClick={() => {
+                  setConfirmModalOpen(true);
+                }}
+              >
+                Submit my votes
+              </BigButton>
+              <BigButton className="mb-6 mt-4" onClick={resetVote}>
+                Reset all my votes
+              </BigButton>
+              <div className="my-[10px] border-t border-solid border-gray"></div>
+            </>
+          )}
+          <ul>
+            {allCandidates
+              .filter((c) => !votes.includes(c.address))
+              .map((candidate) => (
+                <Candidate
+                  key={candidate.address}
+                  candidate={candidate}
+                  disableVote={votes.length >= 6}
+                />
+              ))}
+          </ul>
+        </div>
 
-      <ConfirmVoteModal
-        open={confirmModalOpen}
-        close={() => {
-          setConfirmModalOpen(false);
-        }}
-        confirmVote={async () => {
-          try {
-            await axios.post('/api/vote', { jwToken, votes });
-          } catch (err: any) {
-            console.error(err);
-            alert('ERROR! ' + err?.message);
-            return;
-          }
-          setConfirmModalOpen(false);
-          setConfirmedModalOpen(true);
-        }}
-      />
-      <VoteConfirmedModal
-        open={confirmedModalOpen}
-        close={() => {
-          router.push('/ranking');
-        }}
-      />
-    </div>
+        <ConfirmVoteModal
+          open={confirmModalOpen}
+          close={() => {
+            setConfirmModalOpen(false);
+          }}
+          confirmVote={async () => {
+            try {
+              await axios.post('/api/vote', { jwToken, votes });
+            } catch (err: any) {
+              console.error(err);
+              alert('ERROR! ' + err?.message);
+              return;
+            }
+            setConfirmModalOpen(false);
+            setConfirmedModalOpen(true);
+          }}
+        />
+        <VoteConfirmedModal
+          open={confirmedModalOpen}
+          close={() => {
+            router.push('/ranking');
+          }}
+        />
+      </div>
+    </DndProvider>
   );
 }
