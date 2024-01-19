@@ -9,6 +9,7 @@ import BigButton from '@/components/BigButton';
 import CandidateImage from '@/components/CandidateImage';
 import ConfirmVoteModal from './ConfirmVoteModal';
 import VoteConfirmedModal from './VoteConfirmedModal';
+import CustomDragLayer from './CustomDragLayer';
 import { oswald } from '@/fonts';
 import { Candidate } from '@/types';
 import { useStore } from '@/store';
@@ -79,7 +80,7 @@ interface DragItem {
   type: string;
 }
 
-function VotedCandidate({
+export function VotedCandidate({
   candidate,
   rank,
 }: {
@@ -160,7 +161,7 @@ function VotedCandidate({
     <li
       ref={ref}
       className={`flex items-center px-4 py-[10px] ${
-        isDragging ? 'opacity-0' : ''
+        isDragging ? 'opacity-30' : ''
       }`}
       data-handler-id={handlerId}
     >
@@ -281,6 +282,7 @@ export default function CastVote() {
               />
             ))}
           </ul>
+          <CustomDragLayer allCandidates={allCandidates} />
           {votes.length > 0 && (
             <>
               <BigButton
