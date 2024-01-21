@@ -3,6 +3,8 @@ import { oswald } from '@/fonts';
 import { Candidate } from '@/types';
 import CandidateImage from '@/components/CandidateImage';
 
+const format = Intl.NumberFormat('en-US').format;
+
 export const metadata: Metadata = {
   title: 'Results | Free And Equal',
   description: 'View the results of the current vote! Powered by nexus.io.',
@@ -24,7 +26,9 @@ function RankedCandidate({ candidate }: { candidate: Candidate }) {
           <span className="text-[17px] font-bold text-darkBlue">
             {`${candidate.First} ${candidate.Last}`} -{' '}
           </span>
-          <span className="whitespace-nowrap">{candidate.balance} Votes</span>
+          <span className="whitespace-nowrap">
+            {format(candidate.balance)} Votes
+          </span>
         </div>
         <div className="relative h-4 rounded-[4px] bg-gray/15">
           <div
