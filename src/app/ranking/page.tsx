@@ -75,7 +75,8 @@ export default async function RankingPage() {
 
   return (
     <div className="mt-10">
-      <h2 className="mb-3 px-4 text-2xl uppercase">Current ranking</h2>
+      <h2 className=" px-4 text-2xl uppercase">Current ranking</h2>
+      <div className="mb-3 mt-4 px-4">Total votes: {format(totalVotes)}</div>
       <div className="rounded-md bg-almostWhite py-[10px]">
         <ul>
           {allCandidates.map((candidate) => (
