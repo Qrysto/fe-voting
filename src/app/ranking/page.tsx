@@ -45,7 +45,7 @@ function RankedCandidate({ candidate }: { candidate: Candidate }) {
 export default async function RankingPage() {
   const res = await fetch('http://node5.nexus.io:7080/assets/list/accounts', {
     next: { revalidate: 10, tags: ['allCandidates'] },
-    cache: 'no-store',
+    // cache: 'no-store',
     headers: {
       Authorization: `Basic ${process.env.API_BASIC_AUTH}`,
     },
