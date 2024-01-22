@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
 import axios from 'axios';
+import Image from 'next/image';
 import { TouchBackend } from 'react-dnd-touch-backend';
 import { DndProvider } from 'react-dnd';
 import type { Identifier, XYCoord } from 'dnd-core';
@@ -13,6 +14,7 @@ import CustomDragLayer from './CustomDragLayer';
 import { oswald } from '@/fonts';
 import { Candidate } from '@/types';
 import { useStore } from '@/store';
+import searchIcon from './search.svg';
 
 function Candidate({
   candidate,
@@ -247,6 +249,8 @@ export default function CastVote() {
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const [confirmedModalOpen, setConfirmedModalOpen] = useState(false);
   const router = useRouter();
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [query, setQuery] = useState('');
 
   return (
     <DndProvider
@@ -272,13 +276,46 @@ export default function CastVote() {
           </a>{' '}
           if you would like to be added.
         </p>
-        <h2 className="mb-3 mt-8 px-4 text-2xl uppercase">Candidates</h2>
-        {votes.length > 0 && (
-          <p className="mt-[10px] px-4 text-lg leading-6">
-            You can drag the position circles to reorder the candidates.
-          </p>
-        )}
-        <div className="rounded-md bg-almostWhite py-[10px]">
+        <div className="flex items-end">
+          <div className="shrink grow">
+            <h2 className="mb-3 mt-8 px-4 text-2xl uppercase">Candidates</h2>
+            {votes.length > 0 && (
+              <p className="mt-[10px] px-4 text-lg leading-6">
+                You can drag the position circles to reorder the candidates.
+              </p>
+            )}
+          </div>
+          <button
+            className="shrink-0 grow-0 rounded-t-3xl bg-almostWhite px-5 pb-3 pt-5"
+            onClick={() => {
+              setSearchOpen(!searchOpen);
+            }}
+          >
+            <Image
+              src={searchIcon}
+              alt="Search"
+              width={22}
+              height={22}
+              className={`${searchOpen ? '' : 'opacity-70'}`}
+            />
+          </button>
+        </div>
+        <div className="rounded-l-md rounded-br-md bg-almostWhite py-[10px]">
+          {searchOpen && (
+            <div className="mx-4 mb-4 mt-2 flex items-center gap-2 border-b border-blue">
+              <div className="shrink-0 grow-0">
+                <Image src={searchIcon} alt="Search" width={16} height={16} />
+              </div>
+              <input
+                type="search"
+                autoFocus
+                placeholder="Search for candidate"
+                className="w-full shrink grow bg-transparent py-1 outline-none"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+              />
+            </div>
+          )}
           <ul>
             {votes.map((address, i) => (
               <VotedCandidate
@@ -309,7 +346,13 @@ export default function CastVote() {
           )}
           <ul>
             {allCandidates
-              .filter((c) => !votes.includes(c.address))
+              .filter(
+                (c) =>
+                  !votes.includes(c.address) &&
+                  (!searchOpen ||
+                    c.First.toLowerCase().includes(query.toLowerCase()) ||
+                    c.Last.toLowerCase().includes(query.toLowerCase()))
+              )
               .map((candidate) => (
                 <Candidate
                   key={candidate.address}

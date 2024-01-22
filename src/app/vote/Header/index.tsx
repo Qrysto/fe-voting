@@ -3,7 +3,6 @@ import Image from 'next/image';
 import { useStore } from '@/store';
 import logo from './full-logo@2x.png';
 import backIcon from './arrow-left.svg';
-// import searchIcon from './search.svg';
 import shareIcon from './shareIcon.svg';
 
 function IconButton({
