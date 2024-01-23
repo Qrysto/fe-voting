@@ -15,6 +15,7 @@ import { oswald } from '@/fonts';
 import { Candidate } from '@/types';
 import { useStore } from '@/store';
 import searchIcon from './search.svg';
+import filterIcon from './filter.svg';
 
 function Candidate({
   candidate,
@@ -256,7 +257,7 @@ export default function CastVote() {
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const [confirmedModalOpen, setConfirmedModalOpen] = useState(false);
   const router = useRouter();
-  const [searchOpen, setSearchOpen] = useState(false);
+  const [filterOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [selectedParty, selectParty] = useState<string | null>(null);
   const displayedCandidates = useMemo(
@@ -265,7 +266,7 @@ export default function CastVote() {
         // Don't show voted candidates
         if (votes.includes(c.address)) return false;
         // No need to filter if filter is not open
-        if (!searchOpen) return true;
+        if (!filterOpen) return true;
         // Else, filter by query
         if (query) {
           const lQuery = query.toLowerCase();
@@ -281,7 +282,7 @@ export default function CastVote() {
         // Default
         return true;
       }),
-    [allCandidates, searchOpen, query, selectedParty, votes]
+    [allCandidates, filterOpen, query, selectedParty, votes]
   );
 
   return (
@@ -320,20 +321,19 @@ export default function CastVote() {
           <button
             className="shrink-0 grow-0 rounded-t-3xl bg-almostWhite px-5 pb-3 pt-5"
             onClick={() => {
-              setSearchOpen(!searchOpen);
+              setSearchOpen(!filterOpen);
             }}
           >
             <Image
-              src={searchIcon}
-              alt="Search"
-              width={22}
-              height={22}
-              className={`${searchOpen ? '' : 'opacity-70'}`}
+              src={filterIcon}
+              alt="Filter"
+              width={26}
+              className={`${filterOpen ? '' : 'opacity-70'}`}
             />
           </button>
         </div>
         <div className="rounded-l-md rounded-br-md bg-almostWhite py-[10px]">
-          {searchOpen && (
+          {filterOpen && (
             <>
               <div className="mx-4 mb-4 mt-2 flex items-center gap-2 border-b border-blue">
                 <div className="shrink-0 grow-0">
