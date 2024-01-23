@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import axios from 'axios';
 import Image from 'next/image';
 import { TouchBackend } from 'react-dnd-touch-backend';
@@ -239,6 +239,13 @@ export function VotedCandidate({
 
 export default function CastVote() {
   const allCandidates = useStore((state) => state.allCandidates);
+  const parties = useMemo(() => {
+    const parties: { [key: string]: any } = {};
+    allCandidates.forEach((c: Candidate) => {
+      parties[c.Party] = true;
+    });
+    return Object.keys(parties).sort();
+  }, [allCandidates]);
   // const shuffledCandidates = useMemo(
   //   () => shuffle([...allCandidates]),
   //   [allCandidates]
@@ -251,6 +258,31 @@ export default function CastVote() {
   const router = useRouter();
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState('');
+  const [selectedParty, selectParty] = useState<string | null>(null);
+  const displayedCandidates = useMemo(
+    () =>
+      allCandidates.filter((c) => {
+        // Don't show voted candidates
+        if (votes.includes(c.address)) return false;
+        // No need to filter if filter is not open
+        if (!searchOpen) return true;
+        // Else, filter by query
+        if (query) {
+          const lQuery = query.toLowerCase();
+          return (
+            c.First.toLowerCase().includes(lQuery) ||
+            c.Last.toLowerCase().includes(lQuery)
+          );
+        }
+        // Filter by party
+        if (selectedParty) {
+          return c.Party === selectedParty;
+        }
+        // Default
+        return true;
+      }),
+    [allCandidates, searchOpen, query, selectedParty, votes]
+  );
 
   return (
     <DndProvider
@@ -302,19 +334,54 @@ export default function CastVote() {
         </div>
         <div className="rounded-l-md rounded-br-md bg-almostWhite py-[10px]">
           {searchOpen && (
-            <div className="mx-4 mb-4 mt-2 flex items-center gap-2 border-b border-blue">
-              <div className="shrink-0 grow-0">
-                <Image src={searchIcon} alt="Search" width={16} height={16} />
+            <>
+              <div className="mx-4 mb-4 mt-2 flex items-center gap-2 border-b border-blue">
+                <div className="shrink-0 grow-0">
+                  <Image src={searchIcon} alt="Search" width={16} height={16} />
+                </div>
+                <input
+                  type="search"
+                  autoFocus
+                  placeholder="Search for candidate"
+                  className="w-full shrink grow bg-transparent py-1 outline-none"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                />
               </div>
-              <input
-                type="search"
-                autoFocus
-                placeholder="Search for candidate"
-                className="w-full shrink grow bg-transparent py-1 outline-none"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-              />
-            </div>
+              <div className="mx-4 flex flex-wrap gap-2 pb-3">
+                {parties.map((party) => (
+                  <button
+                    key={party}
+                    className={`shrink-0 grow-0 rounded-md border px-3 py-[2px] ${
+                      selectedParty === party
+                        ? 'border-blue bg-lightBlue'
+                        : 'border-gray'
+                    }`}
+                    onClick={() => {
+                      if (selectedParty === party) {
+                        selectParty(null);
+                      } else {
+                        selectParty(party);
+                      }
+                    }}
+                  >
+                    <span
+                      className={`text-[11px] font-bold uppercase ${
+                        oswald.className
+                      } ${
+                        party.toUpperCase() === 'DEMOCRAT'
+                          ? 'text-blue'
+                          : party.toUpperCase() === 'REPUBLICAN'
+                            ? 'text-red'
+                            : 'text-orange'
+                      }`}
+                    >
+                      {party}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </>
           )}
           <ul>
             {votes.map((address, i) => (
@@ -345,21 +412,13 @@ export default function CastVote() {
             </>
           )}
           <ul>
-            {allCandidates
-              .filter(
-                (c) =>
-                  !votes.includes(c.address) &&
-                  (!searchOpen ||
-                    c.First.toLowerCase().includes(query.toLowerCase()) ||
-                    c.Last.toLowerCase().includes(query.toLowerCase()))
-              )
-              .map((candidate) => (
-                <Candidate
-                  key={candidate.address}
-                  candidate={candidate}
-                  disableVote={votes.length >= 6}
-                />
-              ))}
+            {displayedCandidates.map((candidate) => (
+              <Candidate
+                key={candidate.address}
+                candidate={candidate}
+                disableVote={votes.length >= 6}
+              />
+            ))}
           </ul>
         </div>
 
