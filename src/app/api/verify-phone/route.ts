@@ -23,8 +23,8 @@ export async function POST(request: NextRequest) {
     const phoneLookup = await lookup
       .phoneNumbers(fullPhoneNumber)
       .fetch({ fields: 'line_type_intelligence' });
+    console.log('Phone lookup', phoneLookup);
     if (phoneLookup?.lineTypeIntelligence?.type === 'nonFixedVoip') {
-      console.log('Phone lookup', phoneLookup);
       return Response.json(
         { message: 'VOIP numbers are not allowed' },
         { status: 400 }
