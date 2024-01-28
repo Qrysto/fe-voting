@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
       );
     } else {
       console.log('Debit result', result);
-      console.log('Body', body);
+      console.log('Body', phoneNumber, body);
       try {
         await addVoted(phoneNumber);
         return Response.json({ ok: true });
