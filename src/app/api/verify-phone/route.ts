@@ -1,5 +1,5 @@
 import { type NextRequest } from 'next/server';
-import verifyService from '../verifyService';
+import { verifyService, lookup } from '../twilio';
 import { isValidPhoneNumber, toE164US, isVoted } from '../phone';
 
 export async function POST(request: NextRequest) {
@@ -19,6 +19,28 @@ export async function POST(request: NextRequest) {
   }
 
   const fullPhoneNumber = toE164US(phoneNumber);
+  try {
+    const phoneLookup = await lookup
+      .phoneNumbers(fullPhoneNumber)
+      .fetch({ fields: 'line_type_intelligence' });
+    if (
+      phoneLookup?.lineTypeIntelligence?.type === 'nonFixedVoip' ||
+      phoneLookup?.line_type_intelligence?.type === 'nonFixedVoip'
+    ) {
+      console.log('Phone lookup', phoneLookup);
+      return Response.json(
+        { message: 'VOIP numbers are not allowed' },
+        { status: 400 }
+      );
+    }
+  } catch (error: any) {
+    console.error(error);
+    return Response.json(
+      { message: 'Unknown error occurred' },
+      { status: 500 }
+    );
+  }
+
   try {
     const verification = await verifyService.verifications.create({
       to: fullPhoneNumber,
