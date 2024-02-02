@@ -40,10 +40,10 @@ export default function HomePage() {
       </div>
       <div className="flex flex-col items-center pt-8">
         <Link
-          href="/vote"
+          href="/ranking"
           className={`block h-12 w-44 rounded-md text-center leading-[48px] ${oswald.className} bg-lightBlue font-bold uppercase text-blue active:bg-lightBlue/90`}
         >
-          Vote now
+          See results
         </Link>
         <a
           href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fvote.freeandequal.org"
