@@ -455,7 +455,7 @@ export default function CastVote() {
         <VoteConfirmedModal
           open={confirmedModalOpen}
           close={() => {
-            router.push('/ranking');
+            router.push('/result/poll2');
           }}
         />
       </div>
