@@ -33,14 +33,14 @@ function VotedCandidate({ address, rank }: { address: string; rank: number }) {
             {candidate.Party}
           </span>
           {candidate.Website === 'NONE' ? (
-            <span className="ml-3 text-gray underline underline-offset-1">
+            <span className="ml-3 text-gray underline underline-offset-2">
               Website
             </span>
           ) : (
             <a
               href={candidate.Website}
               target="_blank"
-              className="ml-3 text-blue underline underline-offset-1"
+              className="ml-3 text-blue underline underline-offset-2"
             >
               Website
             </a>

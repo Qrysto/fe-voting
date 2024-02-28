@@ -46,14 +46,14 @@ function Candidate({
             {candidate.Party}
           </span>
           {candidate.Website === 'NONE' ? (
-            <span className="ml-3 text-gray underline underline-offset-1">
+            <span className="ml-3 text-gray underline underline-offset-2">
               Website
             </span>
           ) : (
             <a
               href={candidate.Website}
               target="_blank"
-              className="ml-3 text-blue underline underline-offset-1"
+              className="ml-3 text-blue underline underline-offset-2"
             >
               Website
             </a>
@@ -193,14 +193,14 @@ export function VotedCandidate({
             {candidate.Party}
           </span>
           {candidate.Website === 'NONE' ? (
-            <span className="ml-3 text-gray underline underline-offset-1">
+            <span className="ml-3 text-gray underline underline-offset-2">
               Website
             </span>
           ) : (
             <a
               href={candidate.Website}
               target="_blank"
-              className="ml-3 text-blue underline underline-offset-1"
+              className="ml-3 text-blue underline underline-offset-2"
             >
               Website
             </a>
@@ -296,24 +296,36 @@ export default function CastVote() {
       <div className="pb-8">
         <h2 className="px-4 text-4xl uppercase">Vote</h2>
         <p className="mt-[10px] px-4 text-lg leading-6">
-          Please rank your top six candidates, you must select at least one
-          candidate to vote.
+          Take a moment to reflect on the candidate's positions. If you need a
+          refresher,{' '}
+          <a
+            target="_blank"
+            href="https://freeandequal.org/debate/2024-free-equal-presidential-debate/"
+            className="text-darkBlue underline underline-offset-2 active:text-darkBlue/90"
+          >
+            click here
+          </a>{' '}
+          to watch.
         </p>
         <p className="mt-[10px] px-4 text-lg leading-6">
-          E-mail{' '}
-          <a
-            href="mailto:info@freeandequal.org"
-            className="text-blue underline underline-offset-1"
-          >
-            info@freeandequal.org
-          </a>{' '}
-          if you would like to be added.
+          Select the candidate you believe won the debate by clicking on their
+          name below. Take a moment to reflect on the debate performances.
         </p>
         <div className="flex items-end">
           <div className="shrink grow">
             <h2 className="mb-3 mt-8 px-4 text-2xl uppercase">Candidates</h2>
+            <p className="mt-[10px] px-4 text-lg leading-6">
+              <a
+                target="_blank"
+                href="https://freeandequal.org/debate/2024-free-equal-presidential-debate/"
+                className="text-darkBlue underline underline-offset-2 active:text-darkBlue/90"
+              >
+                Ranked Choice Voting
+              </a>{' '}
+              is applied in this poll.
+            </p>
             {votes.length > 0 && (
-              <p className="mt-[10px] px-4 text-lg leading-6">
+              <p className="mt-2 px-4 text-lg leading-6">
                 You can drag the position circles to reorder the candidates.
               </p>
             )}

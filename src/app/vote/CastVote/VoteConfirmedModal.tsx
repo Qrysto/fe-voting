@@ -18,19 +18,16 @@ export default function VoteConfirmedModal({
         </div>
         <h1 className="text-4xl uppercase">Vote confirmed</h1>
         <p className="mt-[10px]">
-          Your vote has been submitted, thank you for your vote! Your voice
-          matters.
-        </p>
-        <p className="mt-[10px]">
-          Help us fund the Free and Equal Debate and reduce corporate influence
-          in politics. Every donation counts. Support us here:{' '}
+          Thank you for participating! Did your candidate miss out on this
+          debate stage? Here's how you can help:{' '}
           <a
-            href="https://givebutter.com/free-and-equal-debate"
             target="_blank"
-            className="underline underline-offset-1"
+            href="https://freeandequal.org/donate"
+            className="text-darkBlue underline underline-offset-2 active:text-darkBlue/90"
           >
-            https://givebutter.com/free-and-equal-debate
-          </a>
+            Donate to Free & Equal
+          </a>{' '}
+          to support the production of our third presidential debate.
         </p>
         <BigButton className="mt-8" primary onClick={close}>
           Close & continue

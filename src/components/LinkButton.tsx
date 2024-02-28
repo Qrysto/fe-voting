@@ -41,7 +41,7 @@ export default forwardRef(function LinkButton(
       {...rest}
     >
       {busy && <Spinner className="mr-2 inline-block" />}
-      <span className="align-middle underline underline-offset-1">
+      <span className="align-middle underline underline-offset-2">
         {children}
       </span>
     </button>
