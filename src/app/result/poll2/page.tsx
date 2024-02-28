@@ -142,7 +142,7 @@ async function loadRCVCandidates() {
       `results.token=${tokenAddress} AND results.active=1`
     )}`,
     {
-      next: { revalidate: 60, tags: ['allChoices'] },
+      next: { revalidate: 10, tags: ['allChoices'] },
       headers: {
         Authorization: `Basic ${process.env.API_BASIC_AUTH}`,
       },
