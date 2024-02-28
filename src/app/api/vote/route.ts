@@ -121,7 +121,6 @@ export async function POST(request: NextRequest) {
       );
     } else {
       console.log('Debit result', result.result);
-      console.log('Body', phoneNumber, body);
       try {
         await addVoted(phoneNumber, result.result.txid);
         return Response.json({ ok: true });
