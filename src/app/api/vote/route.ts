@@ -114,16 +114,16 @@ export async function POST(request: NextRequest) {
     );
     const result = await response.json();
 
-    if (result.error) {
+    if (result?.error) {
       return Response.json(
         { message: result.error.message, result },
         { status: 500 }
       );
     } else {
-      console.log('Debit result', result);
+      console.log('Debit result', result.result);
       console.log('Body', phoneNumber, body);
       try {
-        await addVoted(phoneNumber);
+        await addVoted(phoneNumber), result.result.txid);
         return Response.json({ ok: true });
       } catch (err) {
         return Response.json(

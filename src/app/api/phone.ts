@@ -7,11 +7,11 @@ export function isValidPhoneNumber(phoneNo: string) {
 
 export const toE164US = (phoneNo: string) => '+1' + phoneNo;
 
-export const addVoted = async (phoneNo: string) => {
+export const addVoted = async (phoneNo: string, txid: string) => {
   const body = JSON.stringify({
     table,
     key: phoneNo,
-    value: 'voted',
+    value: txid,
   });
   const res = await fetch('http://node5.nexus.io:7080/local/push/record', {
     method: 'POST',
