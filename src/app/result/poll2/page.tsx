@@ -135,7 +135,7 @@ function RankingByChoice({
 
   return (
     <div className="mt-6">
-      <h2 className="flex items-center px-4 text-xl uppercase">
+      <h3 className="flex items-center px-4 text-xl uppercase">
         <div
           className={`relative mr-3 h-[45px] w-[45px] shrink-0 grow-0 rounded-full bg-lightGreen pr-1 text-center text-[25px] font-semibold leading-[45px] text-green ${oswald.className}`}
         >
@@ -143,7 +143,7 @@ function RankingByChoice({
           <span className="absolute top-[-5px] text-[10px]">{superscript}</span>
         </div>
         <div className="">{toOrdinal(choice)}-Choice Votes</div>
-      </h2>
+      </h3>
       <div className="mt-2 rounded-md bg-almostWhite py-[10px]">
         <ul>
           {candidates
@@ -213,6 +213,10 @@ export default async function RankingPage() {
 
   return (
     <div className="mt-10">
+      <h2 className="mb-10 text-3xl uppercase text-darkBlue">
+        Overall ranking
+      </h2>
+      <h2 className="text-3xl uppercase text-darkBlue">Live ranking</h2>
       {choices.map((choice) => (
         <RankingByChoice
           key={choice}
