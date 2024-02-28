@@ -1,9 +1,45 @@
 import jwt from 'jsonwebtoken';
 import { type NextRequest } from 'next/server';
 import { maxChoices, tokenAddress } from '@/constants';
+import type { Choice } from '@/types';
 import { isVoted, addVoted } from '../phone';
 
 const jwtSecret = process.env.JWT_SECRET || 'secret';
+
+async function fetchChoiceMap() {
+  const res = await fetch(
+    `http://node5.nexus.io:7080/assets/list/accounts?where=${encodeURIComponent(
+      `results.token=${tokenAddress} AND results.active=1`
+    )}`,
+    {
+      next: { revalidate: 60, tags: ['allChoices'] },
+      headers: {
+        Authorization: `Basic ${process.env.API_BASIC_AUTH}`,
+      },
+    }
+  );
+  if (!res.ok) {
+    const err = await res.json();
+    console.error('assets/list/accounts', res.status, err);
+    throw err;
+  }
+
+  const { result } = await res.json();
+  const data: {
+    [candidateAddress: string]: {
+      [choice: number]: string;
+    };
+  } = {};
+  result.forEach(({ choice, reference, address }: Choice) => {
+    if (choice > 1) {
+      if (!data[reference]) {
+        data[reference] = {};
+      }
+      data[reference][choice] = address;
+    }
+  });
+  return data;
+}
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
@@ -43,11 +79,25 @@ export async function POST(request: NextRequest) {
   }
 
   try {
+    // Ranked Choice Voting applied
+    const choices = await fetchChoiceMap();
+    const destAddresses: string[] = [];
+    votes.forEach((candidateAddress, i) => {
+      if (i === 0) {
+        // First choice - send to candidate address (choice 1)
+        destAddresses[0] = candidateAddress;
+      } else {
+        // Other choices - find the address corresponding to the candidate
+        // Choice 2 is at index 0 in the array, and so on...
+        destAddresses[i] = choices[candidateAddress][i + 2];
+      }
+    });
+
     const body = JSON.stringify({
       from: tokenAddress,
-      recipients: votes.map((candidateAddress, i) => ({
-        to: candidateAddress,
-        amount: 6 - i,
+      recipients: destAddresses.map((address) => ({
+        to: address,
+        amount: 1,
       })),
       pin: process.env.SIGCHAIN_PIN,
     });
@@ -63,6 +113,7 @@ export async function POST(request: NextRequest) {
       }
     );
     const result = await response.json();
+
     if (result.error) {
       return Response.json(
         { message: result.error.message, result },
