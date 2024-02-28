@@ -18,20 +18,20 @@ export const metadata: Metadata = {
 };
 
 export default async function VotePage() {
-  const res = await fetch('http://node5.nexus.io:7080/assets/list/accounts', {
-    next: { revalidate: 60, tags: ['allCandidates'] },
-    headers: {
-      Authorization: `Basic ${process.env.API_BASIC_AUTH}`,
-      'Content-Type': 'application/json',
-    },
-    method: 'POST',
-    body: JSON.stringify({
-      where: `results.token=${tokenAddress} AND results.active=1 AND results.choice=1`,
-    }),
-  });
+  const res = await fetch(
+    `http://node5.nexus.io:7080/assets/list/accounts?where=${encodeURIComponent(
+      `results.token=${tokenAddress} AND results.active=1 AND results.choice=1`
+    )}`,
+    {
+      next: { revalidate: 300, tags: ['allCandidates'] },
+      headers: {
+        Authorization: `Basic ${process.env.API_BASIC_AUTH}`,
+      },
+    }
+  );
   if (!res.ok) {
-    console.error('assets/list/accounts', res.status, res.body);
     const err = await res.json();
+    console.error('assets/list/accounts', res.status, err);
     throw err;
   }
 
