@@ -318,7 +318,7 @@ export default function CastVote() {
               This poll uses{' '}
               <a
                 target="_blank"
-                href="https://freeandequal.org/debate/2024-free-equal-presidential-debate/"
+                href="https://en.wikipedia.org/wiki/Ranked_voting"
                 className="text-darkBlue underline underline-offset-2 active:text-darkBlue/90"
               >
                 Ranked Choice Voting
