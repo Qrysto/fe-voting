@@ -3,6 +3,7 @@
 import { create } from 'zustand';
 import axios from 'axios';
 import { phoneDigitCount, codeDigitCount } from '@/constants';
+import { maxChoices } from '@/constants';
 import { Candidate } from './types';
 
 type State = {
@@ -140,7 +141,8 @@ export const useStore = create<State & Actions>((set, get) => ({
 
   addVote: (id: string) =>
     set((state) => ({
-      votes: state.votes.length < 6 ? [...state.votes, id] : state.votes,
+      votes:
+        state.votes.length < maxChoices ? [...state.votes, id] : state.votes,
     })),
   swapVotes: (index1, index2) =>
     set((state) => {

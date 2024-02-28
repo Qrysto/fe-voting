@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { type NextRequest } from 'next/server';
+import { maxChoices, tokenAddress } from '@/constants';
 import { isVoted, addVoted } from '../phone';
 
 const jwtSecret = process.env.JWT_SECRET || 'secret';
@@ -17,9 +18,9 @@ export async function POST(request: NextRequest) {
   if (!votes?.length || !votes?.every((a) => a)) {
     return Response.json({ message: 'Missing some votes' }, { status: 400 });
   }
-  if (votes?.length > 6) {
+  if (votes?.length > maxChoices) {
     return Response.json(
-      { message: 'Voted for too many candidates' },
+      { message: 'You voted for too many candidates' },
       { status: 400 }
     );
   }
@@ -30,7 +31,7 @@ export async function POST(request: NextRequest) {
     phoneNumber = decoded.phoneNumber;
     if (await isVoted(phoneNumber)) {
       return Response.json(
-        { message: 'This phone number has already voted' },
+        { message: 'This phone number has already voted', phoneNumber },
         { status: 400 }
       );
     }
@@ -43,7 +44,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = JSON.stringify({
-      from: 'votes',
+      from: tokenAddress,
       recipients: votes.map((candidateAddress, i) => ({
         to: candidateAddress,
         amount: 6 - i,
