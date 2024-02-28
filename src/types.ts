@@ -14,6 +14,8 @@ export interface Candidate {
   balance: number;
   token: string;
   address: string;
+  choice: number;
+  reference: string;
   // Added
   percentage: number;
 }
