@@ -123,7 +123,7 @@ export async function POST(request: NextRequest) {
       console.log('Debit result', result.result);
       console.log('Body', phoneNumber, body);
       try {
-        await addVoted(phoneNumber), result.result.txid);
+        await addVoted(phoneNumber, result.result.txid);
         return Response.json({ ok: true });
       } catch (err) {
         return Response.json(
