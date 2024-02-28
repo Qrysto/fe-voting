@@ -315,6 +315,7 @@ export default function CastVote() {
           <div className="shrink grow">
             <h2 className="mb-3 mt-8 px-4 text-2xl uppercase">Candidates</h2>
             <p className="mt-[10px] px-4 text-lg leading-6">
+              This poll uses{' '}
               <a
                 target="_blank"
                 href="https://freeandequal.org/debate/2024-free-equal-presidential-debate/"
@@ -322,7 +323,7 @@ export default function CastVote() {
               >
                 Ranked Choice Voting
               </a>{' '}
-              is applied in this poll.
+              .
             </p>
             {votes.length > 0 && (
               <p className="mt-2 px-4 text-lg leading-6">
