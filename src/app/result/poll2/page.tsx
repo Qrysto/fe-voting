@@ -65,7 +65,7 @@ function RankedCandidate({
         <div className="relative h-4 rounded-[4px] bg-gray/15">
           <div
             className="absolute inset-y-0 left-0 h-4 rounded-[4px] bg-green"
-            style={{ width: voteCount / total + '%' }}
+            style={{ width: (100 * voteCount) / total + '%' }}
           ></div>
         </div>
       </div>
