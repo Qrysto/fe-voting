@@ -88,8 +88,8 @@ export async function POST(request: NextRequest) {
         destAddresses[0] = candidateAddress;
       } else {
         // Other choices - find the address corresponding to the candidate
-        // Choice 2 is at index 0 in the array, and so on...
-        destAddresses[i] = choices[candidateAddress][i + 2];
+        // Choice 2 is at index 1 in the array, and so on...
+        destAddresses[i] = choices[candidateAddress][i + 1];
       }
     });
 
