@@ -23,7 +23,6 @@ export const addVoted = async (phoneNo: string) => {
   });
   if (res.ok) {
     const json = await res.json();
-    console.log('push/record json', json);
     if (json?.result?.success) {
       return;
     }
@@ -50,7 +49,6 @@ export const isVoted = async (phoneNo: string) => {
     });
     if (res.ok) {
       const json = await res.json();
-      console.log('has/record json', json);
       if (json?.result?.exists) {
         return true;
       }

@@ -10,14 +10,20 @@ export async function POST(request: NextRequest) {
   const phoneNumber = body?.phoneNumber;
   const code = body?.code;
   if (!phoneNumber) {
-    return Response.json({ message: 'Missing phone number' }, { status: 400 });
+    return Response.json(
+      { message: 'Missing phone number', phoneNumber },
+      { status: 400 }
+    );
   }
   if (!isValidPhoneNumber(phoneNumber)) {
-    return Response.json({ message: 'Invalid phone number' }, { status: 400 });
+    return Response.json(
+      { message: 'Invalid phone number', phoneNumber },
+      { status: 400 }
+    );
   }
   if (!code) {
     return Response.json(
-      { message: 'Missing verification code' },
+      { message: 'Missing verification code', phoneNumber },
       { status: 400 }
     );
   }
@@ -27,8 +33,13 @@ export async function POST(request: NextRequest) {
       to: '+1' + phoneNumber,
       code,
     });
-    console.log('verify code', code, 'phone', phoneNumber);
-    console.log(verification);
+    console.log(
+      'Check code',
+      code,
+      'for phone number',
+      phoneNumber,
+      verification
+    );
 
     if (verification.status === 'approved') {
       try {
@@ -39,19 +50,24 @@ export async function POST(request: NextRequest) {
             expiresIn: '1 day',
           }
         );
-        return Response.json({ ok: true, token, verification });
+        return Response.json({ ok: true, token, phoneNumber });
       } catch (err) {
-        return Response.json({ message: JSON.stringify(err) }, { status: 500 });
+        return Response.json(
+          { message: JSON.stringify(err), phoneNumber },
+          { status: 500 }
+        );
       }
     } else {
-      return Response.json({ message: 'Invalid code!' }, { status: 400 });
+      return Response.json(
+        { message: 'Invalid code!', code, phoneNumber },
+        { status: 400 }
+      );
     }
   } catch (err: any) {
-    console.log('verify code error', code, 'phone', phoneNumber);
+    console.log('Verify code error', code, 'phone', phoneNumber);
     console.error(err);
-    console.log(JSON.stringify(err, null, 2));
     return Response.json(
-      { message: err?.message, error: err },
+      { message: err?.message, error: err, phoneNumber },
       { status: 400 }
     );
   }

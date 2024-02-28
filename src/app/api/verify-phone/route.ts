@@ -6,14 +6,20 @@ export async function POST(request: NextRequest) {
   const body = await request.json();
   const phoneNumber = body?.phoneNumber;
   if (!phoneNumber) {
-    return Response.json({ message: 'Missing phone number' }, { status: 400 });
+    return Response.json(
+      { message: 'Missing phone number', phoneNumber },
+      { status: 400 }
+    );
   }
   if (!isValidPhoneNumber(phoneNumber)) {
-    return Response.json({ message: 'Invalid phone number' }, { status: 400 });
+    return Response.json(
+      { message: 'Invalid phone number', phoneNumber },
+      { status: 400 }
+    );
   }
   if (await isVoted(phoneNumber)) {
     return Response.json(
-      { message: 'This phone number has already voted' },
+      { message: 'This phone number has already voted', phoneNumber },
       { status: 400 }
     );
   }
@@ -23,10 +29,10 @@ export async function POST(request: NextRequest) {
     const phoneLookup = await lookup
       .phoneNumbers(fullPhoneNumber)
       .fetch({ fields: 'line_type_intelligence' });
-    console.log('Phone lookup', phoneLookup);
+    console.log('Phone lookup result', phoneLookup);
     if (phoneLookup?.lineTypeIntelligence?.type === 'nonFixedVoip') {
       return Response.json(
-        { message: 'VOIP numbers are not allowed' },
+        { message: 'VOIP numbers are not allowed', phoneNumber },
         { status: 400 }
       );
     }
@@ -43,9 +49,10 @@ export async function POST(request: NextRequest) {
       to: fullPhoneNumber,
       channel: 'sms',
     });
-    console.log('Verify phone', fullPhoneNumber, verification);
+    console.log('Verify phone result', phoneNumber, verification);
   } catch (error: any) {
+    console.error(error);
     return Response.json({ message: error?.message, error }, { status: 400 });
   }
-  return Response.json({ ok: true, phoneNumber: fullPhoneNumber });
+  return Response.json({ ok: true, phoneNumber });
 }
