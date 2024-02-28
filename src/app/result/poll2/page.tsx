@@ -18,14 +18,34 @@ export const metadata: Metadata = {
   },
 };
 
+function fillColor(choice: number) {
+  switch (choice) {
+    case 1:
+      return 'bg-green';
+    case 2:
+      return 'bg-green/85';
+    case 3:
+      return 'bg-green/70';
+    case 4:
+      return 'bg-green/55';
+    case 5:
+      return 'bg-green/40';
+    case 6:
+      return 'bg-green/25';
+  }
+  return 'bg-gray';
+}
+
 function RankedCandidate({
   candidate,
   total,
   voteCount,
+  choice,
 }: {
   candidate: Candidate;
   total: number;
   voteCount: number;
+  choice: number;
 }) {
   return (
     <li className="flex items-center px-4 py-2">
@@ -64,7 +84,9 @@ function RankedCandidate({
         </div>
         <div className="relative h-4 rounded-[4px] bg-gray/15">
           <div
-            className="absolute inset-y-0 left-0 h-4 rounded-[4px] bg-green"
+            className={`absolute inset-y-0 left-0 h-4 rounded-[4px] ${fillColor(
+              choice
+            )}`}
             style={{ width: (100 * voteCount) / total + '%' }}
           ></div>
         </div>
@@ -108,13 +130,21 @@ function RankingByChoice({
     (total, candidate) => total + votesByChoice[candidate.address][choice],
     0
   );
+  const superscript =
+    choice === 1 ? 'ST' : choice === 2 ? 'ND' : choice === 3 ? 'RD' : 'TH';
 
   return (
-    <div className="mt-4">
-      <h2 className="px-4 text-xl uppercase">
-        {toOrdinal(choice)}-Choice Votes
+    <div className="mt-6">
+      <h2 className="flex items-center px-4 text-xl uppercase">
+        <div
+          className={`relative mr-3 h-[45px] w-[45px] shrink-0 grow-0 rounded-full bg-lightGreen pr-1 text-center text-[25px] font-semibold leading-[45px] text-green ${oswald.className}`}
+        >
+          <span>{choice}</span>
+          <span className="absolute top-[-5px] text-[10px]">{superscript}</span>
+        </div>
+        <div className="">{toOrdinal(choice)}-Choice Votes</div>
       </h2>
-      <div className="mt-1 rounded-md bg-almostWhite py-[10px]">
+      <div className="mt-2 rounded-md bg-almostWhite py-[10px]">
         <ul>
           {candidates
             .sort(
@@ -128,6 +158,7 @@ function RankingByChoice({
                 candidate={candidate}
                 voteCount={votesByChoice[candidate.address][choice]}
                 total={total}
+                choice={choice}
               />
             ))}
         </ul>
