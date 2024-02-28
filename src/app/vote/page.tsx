@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
-import Steps from './Steps';
 import { Candidate } from '@/types';
+import { tokenAddress } from '@/constants';
+import Steps from './Steps';
 
 export const metadata: Metadata = {
   title: 'Vote! | Free And Equal',
@@ -21,7 +22,12 @@ export default async function VotePage() {
     next: { revalidate: 60, tags: ['allCandidates'] },
     headers: {
       Authorization: `Basic ${process.env.API_BASIC_AUTH}`,
+      'Content-Type': 'application/json',
     },
+    method: 'POST',
+    body: JSON.stringify({
+      where: `results.token=${tokenAddress} AND results.active=1 AND results.choice=1`,
+    }),
   });
   if (!res.ok) {
     console.error('assets/list/accounts', res.status, res.body);
@@ -30,9 +36,9 @@ export default async function VotePage() {
   }
 
   const result = await res.json();
-  const allCandidates = result?.result
-    ?.filter((c: Candidate) => c.active)
-    .sort((c1: Candidate, c2: Candidate) => c1.Last.localeCompare(c2.Last));
+  const allCandidates = result?.result.sort((c1: Candidate, c2: Candidate) =>
+    c1.Last.localeCompare(c2.Last)
+  );
 
   return <Steps allCandidates={allCandidates} />;
 }
