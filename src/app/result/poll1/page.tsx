@@ -27,7 +27,7 @@ function RankedCandidate({ candidate }: { candidate: Candidate }) {
             {`${candidate.First} ${candidate.Last}`} -{' '}
           </span>
           <span className="whitespace-nowrap">
-            {format(candidate.balance)} Votes
+            {format(candidate.balance)} Points
           </span>
         </div>
         <div className="relative h-4 rounded-[4px] bg-gray/15">
@@ -49,7 +49,7 @@ function RankedCandidate({ candidate }: { candidate: Candidate }) {
 export default async function RankingPage() {
   const res = await fetch(
     `http://node5.nexus.io:7080/assets/list/accounts?where=${encodeURIComponent(
-      'results.ticker=votes'
+      'results.ticker=votes AND results.active=1'
     )}`,
     {
       next: { revalidate: 86400 /* 24 hours */, tags: ['allCandidates'] },
@@ -83,6 +83,12 @@ export default async function RankingPage() {
       <div className="mb-3 mt-4 px-4">
         Total allocated points: {format(totalVotes)}
       </div>
+      <p className="mb-3 mt-2 px-4">
+        This poll used Borda count voting. Each voter can choose at most 6
+        candidates to vote. First choice of each vote worths 6 points, second
+        choice worths 5 points, and so on... Candidates will then be ranked by
+        the total number of points they receive.
+      </p>
       <div className="rounded-md bg-almostWhite py-[10px]">
         <ul>
           {allCandidates.map((candidate) => (
