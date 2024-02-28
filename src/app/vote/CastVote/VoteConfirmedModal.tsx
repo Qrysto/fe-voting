@@ -19,7 +19,7 @@ export default function VoteConfirmedModal({
         <h1 className="text-4xl uppercase">Vote confirmed</h1>
         <p className="mt-[10px]">
           Thank you for participating! Did your candidate miss out on this
-          debate stage? Here's how you can help:{' '}
+          debate stage? Here&#39;s how you can help:{' '}
           <a
             target="_blank"
             href="https://freeandequal.org/donate"

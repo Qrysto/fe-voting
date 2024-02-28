@@ -296,8 +296,8 @@ export default function CastVote() {
       <div className="pb-8">
         <h2 className="px-4 text-4xl uppercase">Vote</h2>
         <p className="mt-[10px] px-4 text-lg leading-6">
-          Take a moment to reflect on the candidate's positions. If you need a
-          refresher,{' '}
+          Take a moment to reflect on the candidate&#39;s positions. If you need
+          a refresher,{' '}
           <a
             target="_blank"
             href="https://freeandequal.org/debate/2024-free-equal-presidential-debate/"
