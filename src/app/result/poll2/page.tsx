@@ -119,8 +119,8 @@ function RankingByChoice({
           {candidates
             .sort(
               (c1, c2) =>
-                votesByChoice[c1.address][choice] -
-                votesByChoice[c2.address][choice]
+                votesByChoice[c2.address][choice] -
+                votesByChoice[c1.address][choice]
             )
             .map((candidate) => (
               <RankedCandidate
