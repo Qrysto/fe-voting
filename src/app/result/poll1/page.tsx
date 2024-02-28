@@ -79,8 +79,7 @@ export default async function RankingPage() {
 
   return (
     <div className="mt-10">
-      <h2 className=" px-4 text-2xl uppercase">Current ranking</h2>
-      <div className="mb-3 mt-4 px-4">
+      <div className="mb-3 px-4 font-bold">
         Total allocated points: {format(totalVotes)}
       </div>
       <p className="mb-3 mt-2 px-4">
@@ -89,6 +88,7 @@ export default async function RankingPage() {
         choice worths 5 points, and so on... Candidates will then be ranked by
         the total number of points they receive.
       </p>
+      <h2 className="mt-4 px-4 text-2xl uppercase">Final ranking</h2>
       <div className="rounded-md bg-almostWhite py-[10px]">
         <ul>
           {allCandidates.map((candidate) => (
