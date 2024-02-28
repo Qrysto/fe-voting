@@ -38,17 +38,29 @@ export default function HomePage() {
           />
         </div>
       </div>
-      <div className="flex flex-col items-center pt-8">
+      <div className="flex flex-col items-center pt-6">
+        <div
+          className={`${oswald.className} mb-4 text-xl font-bold uppercase text-white`}
+        >
+          Who won the debate?
+        </div>
         <Link
-          href="/ranking"
+          href="/vote"
           className={`block h-12 w-44 rounded-md text-center leading-[48px] ${oswald.className} bg-lightBlue font-bold uppercase text-blue active:bg-lightBlue/90`}
         >
-          See results
+          Vote now
         </Link>
+        <Link
+          href="/result/poll1"
+          className={`${oswald.className} mt-8 text-sm font-medium uppercase text-lightBlue/90 underline underline-offset-2 active:text-lightBlue/80`}
+        >
+          See last poll's result
+        </Link>
+
         <a
           href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fvote.freeandequal.org"
           target="_blank"
-          className={`${oswald.className} mt-10 font-bold uppercase text-white`}
+          className={`${oswald.className} mt-12 font-bold uppercase text-white`}
         >
           <span>Share to</span>
           <Image
