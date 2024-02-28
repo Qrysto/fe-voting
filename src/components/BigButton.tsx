@@ -27,7 +27,7 @@ export default forwardRef(function BigButton(
       className={`block h-12 w-full rounded-md ${
         oswald.className
       } text-center font-bold uppercase ${
-        disabled
+        disabled || busy
           ? 'bg-gray text-white'
           : primary
             ? 'bg-blue text-white active:bg-blue/90'

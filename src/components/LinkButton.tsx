@@ -24,7 +24,7 @@ export default forwardRef(function LinkButton(
       ref={ref}
       disabled={disabled || busy}
       className={`font-bold uppercase ${oswald.className}  ${className || ''} ${
-        disabled ? 'text-gray' : 'text-blue active:text-blue/90'
+        disabled || busy ? 'text-gray' : 'text-blue active:text-blue/90'
       }`}
       {...(action
         ? {

@@ -64,7 +64,7 @@ export default function ConfirmVoteModal({
 }: {
   open?: boolean;
   close: () => void;
-  confirmVote: () => void;
+  confirmVote: () => Promise<void>;
 }) {
   const votes = useStore((state) => state.votes);
   const resetVote = useStore((state) => state.resetVote);
@@ -86,7 +86,7 @@ export default function ConfirmVoteModal({
             <VotedCandidate key={address} address={address} rank={i + 1} />
           ))}
         </ul>
-        <BigButton className="mt-4" primary onClick={confirmVote}>
+        <BigButton className="mt-4" primary action={confirmVote}>
           Confirm my votes
         </BigButton>
         <BigButton
