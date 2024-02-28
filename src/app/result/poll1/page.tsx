@@ -47,13 +47,17 @@ function RankedCandidate({ candidate }: { candidate: Candidate }) {
 }
 
 export default async function RankingPage() {
-  const res = await fetch('http://node5.nexus.io:7080/assets/list/accounts', {
-    next: { revalidate: 10, tags: ['allCandidates'] },
-    // cache: 'no-store',
-    headers: {
-      Authorization: `Basic ${process.env.API_BASIC_AUTH}`,
-    },
-  });
+  const res = await fetch(
+    `http://node5.nexus.io:7080/assets/list/accounts?where=${encodeURIComponent(
+      'results.ticker=votes'
+    )}`,
+    {
+      next: { revalidate: 86400 /* 24 hours */, tags: ['allCandidates'] },
+      headers: {
+        Authorization: `Basic ${process.env.API_BASIC_AUTH}`,
+      },
+    }
+  );
   if (!res.ok) {
     console.error('assets/list/accounts', res.status, res.body);
     const err = await res.json();
@@ -76,7 +80,9 @@ export default async function RankingPage() {
   return (
     <div className="mt-10">
       <h2 className=" px-4 text-2xl uppercase">Current ranking</h2>
-      <div className="mb-3 mt-4 px-4">Total votes: {format(totalVotes)}</div>
+      <div className="mb-3 mt-4 px-4">
+        Total allocated points: {format(totalVotes)}
+      </div>
       <div className="rounded-md bg-almostWhite py-[10px]">
         <ul>
           {allCandidates.map((candidate) => (
