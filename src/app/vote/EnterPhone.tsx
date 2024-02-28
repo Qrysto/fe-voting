@@ -102,9 +102,17 @@ export default function EnterPhone() {
 
   return (
     <div>
-      <div className="pt-8" ref={part1Ref}>
+      <div ref={part1Ref}>
+        <p className="text-lg leading-6">
+          Thank you for watching the Free & Equal Presidential Debate. Who do
+          you think won the debate? Cast your vote for your preferred candidate!
+        </p>
+        <p className="mt-2 text-lg leading-6">
+          To ensure fairness, please limit yourself to one vote per person and
+          avoid the use of VOIP numbers for voting.
+        </p>
         <h2
-          className={`px-8 text-center text-2xl uppercase ${
+          className={`mt-6 px-8 text-center text-2xl uppercase ${
             phoneError ? 'text-red' : ''
           }`}
         >
