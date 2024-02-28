@@ -1,5 +1,5 @@
 const regex = /^\d{10}$/;
-const table = 'votes';
+const table = 'votes2test';
 
 export function isValidPhoneNumber(phoneNo: string) {
   return regex.test(phoneNo);
