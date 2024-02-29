@@ -29,7 +29,24 @@ async function fetchChoices() {
 
 async function fetchVotesDistribution(choices: Choice[]) {
   const votes: VoteDistribution = {};
-  const limit = 100;
+  const addressMap: AddressMap = {};
+  choices.forEach(({ choice, address, reference }) => {
+    if (choice === 1) {
+      addressMap[address] = {
+        address,
+        choice,
+      };
+      // Populate all votes arrays for all candidates
+      votes[address] = [];
+    } else {
+      addressMap[address] = {
+        address: reference,
+        choice,
+      };
+    }
+  });
+
+  const limit = 3;
   let page = 0;
   let transactions: any = null;
   do {
@@ -60,28 +77,6 @@ async function fetchVotesDistribution(choices: Choice[]) {
     console.log(
       `[RCV] Fetched transactions page ${page}. Got ${transactions.length} transactions`
     );
-
-    const addressMap: AddressMap = {};
-    choices.forEach(({ choice, address, reference }) => {
-      if (choice === 1) {
-        addressMap[address] = {
-          address,
-          choice,
-        };
-      } else {
-        addressMap[address] = {
-          address: reference,
-          choice,
-        };
-      }
-    });
-
-    // Populate all votes arrays for all candidates
-    choices
-      .filter((c) => c.choice === 1)
-      .forEach((choice) => {
-        votes[choice.address] = [];
-      });
 
     // Distribute votes into the right buckets
     transactions.forEach((tx: any) => {
