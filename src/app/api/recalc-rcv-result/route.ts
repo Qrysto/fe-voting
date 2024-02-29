@@ -2,7 +2,7 @@ import { type NextRequest } from 'next/server';
 import { maxChoices, tokenAddress, rcvTable, rcvKey } from '@/constants';
 import type { Choice, Candidate } from '@/types';
 
-export const maxDuration = 900;
+export const maxDuration = 300;
 
 async function fetchChoices() {
   const res = await fetch(
