@@ -190,7 +190,7 @@ async function calcRCVResult() {
   console.log('[RCV] Finished fetching votes');
 
   const result: RCVResult = {
-    roundNo: 1,
+    roundNo: 0,
     rounds: {},
     timeStamp: Date.now(),
   };
@@ -198,9 +198,9 @@ async function calcRCVResult() {
 
   let foundWinner = false;
   do {
+    result.roundNo++;
     foundWinner = processRCVRound({ result, votes, eliminatedAddresses });
     console.log('[RCV] Round ', result.roundNo, result.rounds[result.roundNo]);
-    result.roundNo++;
   } while (!foundWinner && result.roundNo <= maxChoices);
 
   const duration = Date.now() - startTime;
