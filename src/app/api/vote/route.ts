@@ -42,6 +42,7 @@ async function fetchAddressMap() {
 }
 
 export async function POST(request: NextRequest) {
+  console.log(Date.now());
   const body = await request.json();
   const jwToken: string = body?.jwToken;
   const votes: string[] = body?.votes;
