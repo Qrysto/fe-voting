@@ -239,7 +239,7 @@ async function saveRCVResult(result: RCVResult) {
  * @param request
  * @returns
  */
-export async function POST(request: NextRequest) {
+export async function GET(request: NextRequest) {
   if (
     request.headers.get('Authorization') !== `Bearer ${process.env.CRON_SECRET}`
   ) {
