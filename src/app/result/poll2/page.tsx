@@ -77,7 +77,7 @@ export default async function RankingPage() {
       {result ? (
         <>
           <UpdatedTime timeStamp={result.timeStamp} />
-          <div className="mt-8">
+          <div className="mt-6">
             <h2 className="text-2xl uppercase text-darkBlue">Current Winner</h2>
             <Winner candidates={candidates} result={result} />
           </div>
@@ -106,7 +106,7 @@ export default async function RankingPage() {
           </div>
         </>
       ) : (
-        <p>No ranking yet</p>
+        <p className="mt-4">Results will be calculated in a few minutes.</p>
       )}
     </div>
   );
