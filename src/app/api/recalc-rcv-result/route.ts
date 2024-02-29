@@ -42,7 +42,7 @@ async function fetchVotesDistribution(choices: Choice[]) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          where: `results.contracts.token=${tokenAddress}`,
+          where: `results.contracts.token=${tokenAddress} AND results.contracts.OP=DEBIT`,
           verbose: 'summary',
           limit,
           page,
