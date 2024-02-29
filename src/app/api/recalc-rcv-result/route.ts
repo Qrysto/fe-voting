@@ -188,6 +188,7 @@ async function calcRCVResult() {
 
   const votes = await fetchVotesDistribution(choices);
   console.log('[RCV] Finished fetching votes');
+  console.log('[RCV] Votes', votes);
 
   const result: RCVResult = {
     roundNo: 0,
