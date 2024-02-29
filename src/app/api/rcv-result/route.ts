@@ -1,6 +1,7 @@
 import { rcvTable, rcvKey } from '@/constants';
 
 export async function GET() {
+  console.log(Date.now());
   const res = await fetch(
     `http://node5.nexus.io:7080/local/list/records?table=${rcvTable}`,
     {
