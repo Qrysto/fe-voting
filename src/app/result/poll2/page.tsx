@@ -42,7 +42,6 @@ async function loadRCVCandidates() {
 
 async function loadRCVResult() {
   const result = await kv.get(rcvTable);
-  console.log('result', result);
   // const res = await fetch(
   //   `http://node5.nexus.io:7080/local/list/records?table=${rcvTable}`,
   //   {

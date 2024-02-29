@@ -236,7 +236,7 @@ async function saveRCVResult(result: RCVResult) {
   //   console.error('Failed to save RCV result', res.status, err);
   //   throw err;
   // }
-  console.log('[RCV] Saved result');
+  console.log('[RCV] Saved result to KV', rcvTable);
 }
 
 /**
