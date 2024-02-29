@@ -322,7 +322,7 @@ export default function CastVote() {
                 className="text-darkBlue underline underline-offset-2 active:text-darkBlue/90"
               >
                 Ranked Choice Voting
-              </a>{' '}
+              </a>
               .
             </p>
             {votes.length > 0 && (

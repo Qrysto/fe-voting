@@ -1,6 +1,8 @@
 import { oswald } from '@/fonts';
-import { Candidate, Round, RCVResult } from '@/types';
+import { Candidate, RCVResult } from '@/types';
+import Image from 'next/image';
 import CandidateImage from '@/components/CandidateImage';
+import crownImg from './crown.png';
 
 export default function Winner({
   candidates,
@@ -62,6 +64,14 @@ export default function Winner({
               Website
             </a>
           )}
+        </div>
+      </div>
+      <div className="shrink-0 grow-0">
+        <Image src={crownImg} width={48} height={48} alt="" />
+        <div
+          className={`text-center uppercase text-orange ${oswald.className}`}
+        >
+          Winner
         </div>
       </div>
     </li>

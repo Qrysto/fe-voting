@@ -77,7 +77,7 @@ export default async function RankingPage() {
       {result ? (
         <>
           <UpdatedTime timeStamp={result.timeStamp} />
-          <div className="mt-10">
+          <div className="mt-8">
             <h2 className="text-2xl uppercase text-darkBlue">Current Winner</h2>
             <Winner candidates={candidates} result={result} />
           </div>
@@ -92,7 +92,7 @@ export default async function RankingPage() {
                 className="text-darkBlue underline underline-offset-2 active:text-darkBlue/90"
               >
                 Ranked Choice Voting
-              </a>{' '}
+              </a>
               .
             </p>
             {Object.keys(result.rounds).map((roundNo) => (
