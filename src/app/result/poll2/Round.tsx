@@ -12,11 +12,13 @@ function RankedCandidate({
   total,
   voteCount,
   eliminated,
+  winner,
 }: {
   candidate: Candidate;
   total: number;
   voteCount: number;
   eliminated: boolean;
+  winner: boolean;
 }) {
   return (
     <li className="flex items-center px-4 py-2">
@@ -31,12 +33,23 @@ function RankedCandidate({
           {format(voteCount)} votes
           {eliminated ? (
             <span>
-              {' '}
-              -{' '}
+              &nbsp;&nbsp;-&nbsp;&nbsp;
               <span
                 className={`text-[12px] font-bold uppercase text-red ${oswald.className}`}
               >
                 Eliminated
+              </span>
+            </span>
+          ) : (
+            ''
+          )}
+          {winner ? (
+            <span>
+              &nbsp;&nbsp;-&nbsp;&nbsp;
+              <span
+                className={`text-[12px] font-bold uppercase text-blue ${oswald.className}`}
+              >
+                Winner
               </span>
             </span>
           ) : (
@@ -118,6 +131,7 @@ export default function Round({
                 voteCount={round.voteCount[candidate.address]}
                 total={total}
                 eliminated={round.eliminated === candidate.address}
+                winner={round.winner === candidate.address}
               />
             ))}
         </ul>
