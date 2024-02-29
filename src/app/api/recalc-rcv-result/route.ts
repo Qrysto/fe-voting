@@ -2,6 +2,8 @@ import { type NextRequest } from 'next/server';
 import { maxChoices, tokenAddress, rcvTable, rcvKey } from '@/constants';
 import type { Choice, Candidate } from '@/types';
 
+export const maxDuration = 900;
+
 async function fetchChoices() {
   const res = await fetch(
     `http://node5.nexus.io:7080/assets/list/accounts?where=${encodeURIComponent(
