@@ -46,7 +46,7 @@ async function fetchVotesDistribution(choices: Choice[]) {
     }
   });
 
-  const limit = 3;
+  const limit = 100;
   let page = 0;
   let transactions: any = null;
   do {
