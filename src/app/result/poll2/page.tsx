@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { kv } from '@vercel/kv';
 import { Candidate, RCVResult } from '@/types';
 import { tokenAddress, rcvTable, rcvKey } from '@/constants';
 import Round from './Round';
@@ -40,25 +41,27 @@ async function loadRCVCandidates() {
 }
 
 async function loadRCVResult() {
-  const res = await fetch(
-    `http://node5.nexus.io:7080/local/list/records?table=${rcvTable}`,
-    {
-      cache: 'no-store',
-      headers: {
-        Authorization: `Basic ${process.env.API_BASIC_AUTH}`,
-        'Content-Type': 'application/json',
-      },
-    }
-  );
-  if (!res.ok) {
-    const err = await res.json();
-    console.error('Failed to get RCV result', res.status, err);
-    throw err;
-  }
+  const result = await kv.get(rcvTable);
+  console.log('result', result);
+  // const res = await fetch(
+  //   `http://node5.nexus.io:7080/local/list/records?table=${rcvTable}`,
+  //   {
+  //     cache: 'no-store',
+  //     headers: {
+  //       Authorization: `Basic ${process.env.API_BASIC_AUTH}`,
+  //       'Content-Type': 'application/json',
+  //     },
+  //   }
+  // );
+  // if (!res.ok) {
+  //   const err = await res.json();
+  //   console.error('Failed to get RCV result', res.status, err);
+  //   throw err;
+  // }
 
-  const json = await res.json();
-  const resultJson = json?.result?.[rcvKey];
-  const result = (resultJson && JSON.parse(resultJson)) || null;
+  // const json = await res.json();
+  // const resultJson = json?.result?.[rcvKey];
+  // const result = (resultJson && JSON.parse(resultJson)) || null;
   return result as RCVResult;
 }
 

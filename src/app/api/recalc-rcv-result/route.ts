@@ -1,4 +1,5 @@
 import { type NextRequest } from 'next/server';
+import { kv } from '@vercel/kv';
 import { maxChoices, tokenAddress, rcvTable, rcvKey } from '@/constants';
 import type { Choice, Candidate, RCVResult, Round } from '@/types';
 
@@ -215,25 +216,27 @@ async function calcRCVResult() {
  * @param result
  */
 async function saveRCVResult(result: RCVResult) {
-  const body = JSON.stringify({
-    table: rcvTable,
-    key: rcvKey,
-    value: JSON.stringify(result),
-  });
-  const res = await fetch('http://node5.nexus.io:7080/local/push/record', {
-    cache: 'no-store',
-    method: 'POST',
-    headers: {
-      Authorization: `Basic ${process.env.API_BASIC_AUTH}`,
-      'Content-Type': 'application/json',
-    },
-    body,
-  });
-  if (!res.ok) {
-    const err = await res.json();
-    console.error('Failed to save RCV result', res.status, err);
-    throw err;
-  }
+  await kv.set(rcvTable, result);
+  // const body = JSON.stringify({
+  //   table: rcvTable,
+  //   key: rcvKey,
+  //   value: JSON.stringify(result),
+  // });
+  // const res = await fetch('http://node5.nexus.io:7080/local/push/record', {
+  //   cache: 'no-store',
+  //   method: 'POST',
+  //   headers: {
+  //     Authorization: `Basic ${process.env.API_BASIC_AUTH}`,
+  //     'Content-Type': 'application/json',
+  //   },
+  //   body,
+  // });
+  // if (!res.ok) {
+  //   const err = await res.json();
+  //   console.error('Failed to save RCV result', res.status, err);
+  //   throw err;
+  // }
+  console.log('[RCV] Saved result');
 }
 
 /**

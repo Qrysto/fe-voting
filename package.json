@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@vercel/kv": "^1.0.1",
     "axios": "^1.6.5",
     "javascript-time-ago": "^2.5.9",
     "jsonwebtoken": "^9.0.2",
