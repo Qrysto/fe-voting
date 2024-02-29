@@ -72,6 +72,7 @@ export default async function RankingPage() {
     <div className="mt-4">
       <h2 className="text-3xl uppercase text-darkBlue">Ranking</h2>
       <UpdatedTime timeStamp={result.timeStamp} />
+      <div>{Date.now()}</div>
       <div className="mt-10">
         {Object.keys(result.rounds).map((roundNo) => (
           <Round
