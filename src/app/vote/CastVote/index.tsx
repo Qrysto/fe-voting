@@ -318,7 +318,7 @@ export default function CastVote() {
               This poll uses{' '}
               <a
                 target="_blank"
-                href="https://en.wikipedia.org/wiki/Ranked_voting"
+                href="https://fairvote.org/our-reforms/ranked-choice-voting/"
                 className="text-darkBlue underline underline-offset-2 active:text-darkBlue/90"
               >
                 Ranked Choice Voting
