@@ -1,6 +1,6 @@
 import { type NextRequest } from 'next/server';
 import { maxChoices, tokenAddress, rcvTable, rcvKey } from '@/constants';
-import type { Choice, Candidate } from '@/types';
+import type { Choice, Candidate, RCVResult, Round } from '@/types';
 
 export const maxDuration = 300;
 
@@ -257,19 +257,6 @@ export async function GET(request: NextRequest) {
 /**
  * ===========================================================
  */
-interface Round {
-  voteCount: { [address: string]: number };
-  eliminated?: string;
-  winner?: string;
-}
-
-interface RCVResult {
-  roundNo: number;
-  rounds: {
-    [roundNo: number]: Round;
-  };
-  timeStamp: number;
-}
 
 interface AddressMap {
   [address: string]: { address: string; choice: number };

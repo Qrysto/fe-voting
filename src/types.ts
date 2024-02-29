@@ -23,3 +23,17 @@ export interface Candidate extends Choice {
   // Added
   percentage: number;
 }
+
+export interface Round {
+  voteCount: { [address: string]: number };
+  eliminated?: string;
+  winner?: string;
+}
+
+export interface RCVResult {
+  roundNo: number;
+  rounds: {
+    [roundNo: number]: Round;
+  };
+  timeStamp: number;
+}
