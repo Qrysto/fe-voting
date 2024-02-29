@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/recalc-rcv-result",
+      "schedule": "0 1 * * *"
+    }
+  ]
+}
