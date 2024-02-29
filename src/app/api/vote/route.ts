@@ -6,7 +6,7 @@ import { isVoted, addVoted } from '../phone';
 
 const jwtSecret = process.env.JWT_SECRET || 'secret';
 
-async function fetchChoiceMap() {
+async function fetchAddressMap() {
   const res = await fetch(
     `http://node5.nexus.io:7080/assets/list/accounts?where=${encodeURIComponent(
       `results.token=${tokenAddress} AND results.active=1`
@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
 
   try {
     // Ranked Choice Voting applied
-    const choices = await fetchChoiceMap();
+    const addressMap = await fetchAddressMap();
     const destAddresses: string[] = [];
     votes.forEach((candidateAddress, i) => {
       if (i === 0) {
@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
       } else {
         // Other choices - find the address corresponding to the candidate
         // Choice 2 is at index 1 in the array, and so on...
-        destAddresses[i] = choices[candidateAddress][i + 1];
+        destAddresses[i] = addressMap[candidateAddress][i + 1];
       }
     });
 

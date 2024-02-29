@@ -1,5 +1,6 @@
+import { phoneNumbersTable } from '@/constants';
+
 const regex = /^\d{10}$/;
-const table = 'votes2test';
 
 export function isValidPhoneNumber(phoneNo: string) {
   return regex.test(phoneNo);
@@ -9,11 +10,12 @@ export const toE164US = (phoneNo: string) => '+1' + phoneNo;
 
 export const addVoted = async (phoneNo: string, txid: string) => {
   const body = JSON.stringify({
-    table,
+    table: phoneNumbersTable,
     key: phoneNo,
     value: txid,
   });
   const res = await fetch('http://node5.nexus.io:7080/local/push/record', {
+    cache: 'no-store',
     method: 'POST',
     headers: {
       Authorization: `Basic ${process.env.API_BASIC_AUTH}`,
@@ -36,10 +38,11 @@ export const addVoted = async (phoneNo: string, txid: string) => {
 export const isVoted = async (phoneNo: string) => {
   try {
     const body = JSON.stringify({
-      table,
+      table: phoneNumbersTable,
       key: phoneNo,
     });
     const res = await fetch('http://node5.nexus.io:7080/local/has/record', {
+      cache: 'no-store',
       method: 'POST',
       headers: {
         Authorization: `Basic ${process.env.API_BASIC_AUTH}`,

@@ -6,3 +6,8 @@ export const maxChoices = 5;
 
 export const tokenAddress =
   '8CxPoCNnSRC9ALXAvTZBwPSuG2vWJZYhPvihUSfoJKgypP6ddDQ';
+
+export const phoneNumbersTable = 'phonePoll2Test';
+
+export const rcvTable = 'rcvResult';
+export const rcvKey = 'poll2Test';
