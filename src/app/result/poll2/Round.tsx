@@ -11,10 +11,12 @@ function RankedCandidate({
   candidate,
   total,
   voteCount,
+  eliminated,
 }: {
   candidate: Candidate;
   total: number;
   voteCount: number;
+  eliminated: boolean;
 }) {
   return (
     <li className="flex items-center px-4 py-2">
@@ -27,6 +29,19 @@ function RankedCandidate({
         </div>
         <div className={`text-sm font-medium ${oswald.className}`}>
           {format(voteCount)} votes
+          {eliminated ? (
+            <span>
+              {' '}
+              -{' '}
+              <span
+                className={`text-[12px] font-bold uppercase text-red ${oswald.className}`}
+              >
+                Eliminated
+              </span>
+            </span>
+          ) : (
+            ''
+          )}
         </div>
         <div className="relative h-4 rounded-[4px] bg-gray/15">
           <div
@@ -102,6 +117,7 @@ export default function Round({
                 candidate={candidate}
                 voteCount={round.voteCount[candidate.address]}
                 total={total}
+                eliminated={round.eliminated === candidate.address}
               />
             ))}
         </ul>
