@@ -62,7 +62,7 @@ async function loadRCVResult() {
   // const json = await res.json();
   // const resultJson = json?.result?.[rcvKey];
   // const result = (resultJson && JSON.parse(resultJson)) || null;
-  return result as RCVResult;
+  return result as RCVResult | null;
 }
 
 export default async function RankingPage() {
@@ -74,17 +74,23 @@ export default async function RankingPage() {
   return (
     <div className="mt-4">
       <h2 className="text-3xl uppercase text-darkBlue">Ranking</h2>
-      <UpdatedTime timeStamp={result.timeStamp} />
-      <div className="mt-10">
-        {Object.keys(result.rounds).map((roundNo) => (
-          <Round
-            key={roundNo}
-            roundNo={parseInt(roundNo)}
-            round={result.rounds[parseInt(roundNo)]}
-            candidates={candidates}
-          />
-        ))}
-      </div>
+      {result ? (
+        <>
+          <UpdatedTime timeStamp={result.timeStamp} />
+          <div className="mt-10">
+            {Object.keys(result.rounds).map((roundNo) => (
+              <Round
+                key={roundNo}
+                roundNo={parseInt(roundNo)}
+                round={result.rounds[parseInt(roundNo)]}
+                candidates={candidates}
+              />
+            ))}
+          </div>
+        </>
+      ) : (
+        <p>No ranking yet</p>
+      )}
     </div>
   );
 }
