@@ -29,7 +29,7 @@ async function fetchChoices() {
 
 async function fetchVotesDistribution(choices: Choice[]) {
   const votes: VoteDistribution = {};
-  const limit = 3;
+  const limit = 100;
   let page = 0;
   let transactions: any = null;
   do {
