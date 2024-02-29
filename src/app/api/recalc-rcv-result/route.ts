@@ -92,6 +92,14 @@ async function fetchVotesDistribution(choices: Choice[]) {
       const firstChoice = vote[0];
       if (firstChoice) {
         votes[firstChoice].push(vote);
+        console.log(
+          'Pushed vote',
+          vote,
+          'to',
+          firstChoice,
+          'now has',
+          votes[firstChoice].length
+        );
       }
     });
     page++;
