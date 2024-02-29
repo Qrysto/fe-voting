@@ -4,6 +4,7 @@ import { Candidate, RCVResult } from '@/types';
 import { tokenAddress, rcvTable, rcvKey } from '@/constants';
 import Round from './Round';
 import UpdatedTime from './UpdatedTime';
+import Winner from './Winner';
 
 export const metadata: Metadata = {
   title: 'Results | Free And Equal',
@@ -71,12 +72,29 @@ export default async function RankingPage() {
   ]);
 
   return (
-    <div className="mt-4">
-      <h2 className="text-3xl uppercase text-darkBlue">Ranking</h2>
+    <div className="mt-6">
+      <h1 className="text-3xl uppercase text-darkBlue">Poll result</h1>
       {result ? (
         <>
           <UpdatedTime timeStamp={result.timeStamp} />
           <div className="mt-10">
+            <h2 className="text-2xl uppercase text-darkBlue">Current Winner</h2>
+            <Winner candidates={candidates} result={result} />
+          </div>
+
+          <div className="mt-10">
+            <h2 className="text-2xl uppercase text-darkBlue">Round Results</h2>
+            <p className="mt-[10px] text-lg leading-6">
+              This poll uses{' '}
+              <a
+                target="_blank"
+                href="https://fairvote.org/our-reforms/ranked-choice-voting/"
+                className="text-darkBlue underline underline-offset-2 active:text-darkBlue/90"
+              >
+                Ranked Choice Voting
+              </a>{' '}
+              .
+            </p>
             {Object.keys(result.rounds).map((roundNo) => (
               <Round
                 key={roundNo}

@@ -49,7 +49,7 @@ function RankedCandidate({
               <span
                 className={`text-[12px] font-bold uppercase text-blue ${oswald.className}`}
               >
-                Winner
+                Winner!
               </span>
             </span>
           ) : (
