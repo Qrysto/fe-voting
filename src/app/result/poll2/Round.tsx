@@ -7,34 +7,14 @@ import CandidateImage from '@/components/CandidateImage';
 const format = Intl.NumberFormat('en-US').format;
 TimeAgo.addDefaultLocale(en);
 
-function fillColor(choice: number) {
-  switch (choice) {
-    case 1:
-      return 'bg-green';
-    case 2:
-      return 'bg-green/85';
-    case 3:
-      return 'bg-green/70';
-    case 4:
-      return 'bg-green/55';
-    case 5:
-      return 'bg-green/40';
-    case 6:
-      return 'bg-green/25';
-  }
-  return 'bg-gray';
-}
-
 function RankedCandidate({
   candidate,
   total,
   voteCount,
-  roundNo,
 }: {
   candidate: Candidate;
   total: number;
   voteCount: number;
-  roundNo: number;
 }) {
   return (
     <li className="flex items-center px-4 py-2">
@@ -50,9 +30,7 @@ function RankedCandidate({
         </div>
         <div className="relative h-4 rounded-[4px] bg-gray/15">
           <div
-            className={`absolute inset-y-0 left-0 h-4 rounded-[4px] ${fillColor(
-              roundNo
-            )}`}
+            className="absolute inset-y-0 left-0 h-4 rounded-[4px] bg-green"
             style={{ width: (100 * voteCount) / total + '%' }}
           ></div>
         </div>
@@ -124,7 +102,6 @@ export default function Round({
                 candidate={candidate}
                 voteCount={round.voteCount[candidate.address]}
                 total={total}
-                roundNo={roundNo}
               />
             ))}
         </ul>
