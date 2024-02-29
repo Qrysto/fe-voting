@@ -9,5 +9,4 @@ export const tokenAddress =
 
 export const phoneNumbersTable = 'phonePoll2Test';
 
-export const rcvTable = 'rcvResult';
-export const rcvKey = 'poll2Test';
+export const rcvResultKVKey = 'rcvResult';

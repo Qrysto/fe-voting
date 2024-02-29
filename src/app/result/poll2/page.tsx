@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { kv } from '@vercel/kv';
 import { Candidate, RCVResult } from '@/types';
-import { tokenAddress, rcvTable, rcvKey } from '@/constants';
+import { tokenAddress, rcvResultKVKey } from '@/constants';
 import Round from './Round';
 import UpdatedTime from './UpdatedTime';
 import Winner from './Winner';
@@ -42,26 +42,7 @@ async function loadRCVCandidates() {
 }
 
 async function loadRCVResult() {
-  const result = await kv.get(rcvTable);
-  // const res = await fetch(
-  //   `http://node5.nexus.io:7080/local/list/records?table=${rcvTable}`,
-  //   {
-  //     cache: 'no-store',
-  //     headers: {
-  //       Authorization: `Basic ${process.env.API_BASIC_AUTH}`,
-  //       'Content-Type': 'application/json',
-  //     },
-  //   }
-  // );
-  // if (!res.ok) {
-  //   const err = await res.json();
-  //   console.error('Failed to get RCV result', res.status, err);
-  //   throw err;
-  // }
-
-  // const json = await res.json();
-  // const resultJson = json?.result?.[rcvKey];
-  // const result = (resultJson && JSON.parse(resultJson)) || null;
+  const result = await kv.get(rcvResultKVKey);
   return result as RCVResult | null;
 }
 
