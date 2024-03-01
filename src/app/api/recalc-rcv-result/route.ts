@@ -5,6 +5,12 @@ import type { Choice, Candidate, RCVResult, Round } from '@/types';
 
 export const maxDuration = 300;
 
+export default function sleep(miliseconds: number) {
+  return new Promise((resolve) =>
+    setTimeout(() => resolve(undefined), miliseconds)
+  );
+}
+
 async function fetchChoices() {
   const res = await fetch(
     `http://node5.nexus.io:7080/assets/list/accounts?where=${encodeURIComponent(
@@ -50,6 +56,9 @@ async function fetchVotesDistribution(choices: Choice[]) {
   let page = 0;
   let transactions: any = null;
   do {
+    if (page !== 0) {
+      await sleep(30000);
+    }
     const fetchStart = Date.now();
     const res = await fetch(
       `http://node5.nexus.io:7080/profiles/transactions/master`,
