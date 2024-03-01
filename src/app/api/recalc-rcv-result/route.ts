@@ -247,11 +247,11 @@ async function saveRCVResult(result: RCVResult) {
  * @returns
  */
 export async function GET(request: NextRequest) {
-  // if (
-  //   request.headers.get('Authorization') !== `Bearer ${process.env.CRON_SECRET}`
-  // ) {
-  //   return Response.json({ message: 'Unauthorized' }, { status: 401 });
-  // }
+  if (
+    request.headers.get('Authorization') !== `Bearer ${process.env.CRON_SECRET}`
+  ) {
+    return Response.json({ message: 'Unauthorized' }, { status: 401 });
+  }
 
   const result = await calcRCVResult();
 
