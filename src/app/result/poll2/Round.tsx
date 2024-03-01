@@ -81,7 +81,7 @@ function toOrdinal(num: number) {
     case 3:
       return 'Third';
     case 4:
-      return 'Forth';
+      return 'Fourth';
     case 5:
       return 'Fifth';
     case 6:
