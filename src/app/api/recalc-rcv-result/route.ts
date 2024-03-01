@@ -28,8 +28,8 @@ async function fetchChoices() {
 }
 
 async function fetchVotesDistribution(choices: Choice[]) {
+  const votes: VoteDistribution = {};
   try {
-    const votes: VoteDistribution = {};
     const addressMap: AddressMap = {};
     choices.forEach(({ choice, address, reference }) => {
       if (choice === 1) {
@@ -100,11 +100,10 @@ async function fetchVotesDistribution(choices: Choice[]) {
       });
       page++;
     } while (transactions.length === limit);
-
-    return votes;
   } catch (err) {
     console.error(err);
   }
+  return votes;
 }
 
 /**
