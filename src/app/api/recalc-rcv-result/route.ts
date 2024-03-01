@@ -91,7 +91,10 @@ async function fetchVotesDistribution(choices: Choice[]) {
       });
       const firstChoice = vote[0];
       if (firstChoice) {
-        votes[firstChoice].push(vote);
+        if (!votes[firstChoice]) {
+          console.log('!votes[firstChoice]', firstChoice, votes);
+        }
+        votes[firstChoice]?.push(vote);
       }
     });
     page++;
@@ -162,7 +165,10 @@ function processRCVRound({
           !eliminatedAddresses.includes(voteAddress)
         ) {
           // Found the highest preferred candidate who is not eliminated -> move it
-          votes[voteAddress].push(vote);
+          if (!votes[voteAddress]) {
+            console.log('!votes[voteAddress]', voteAddress, votes);
+          }
+          votes[voteAddress]?.push(vote);
           break;
         }
       }
