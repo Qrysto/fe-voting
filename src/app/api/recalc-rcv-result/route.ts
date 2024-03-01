@@ -99,7 +99,7 @@ async function fetchVotesDistribution(choices: Choice[]) {
   let transactions: any = null;
   let lastTimeTaken: number = 0;
   do {
-    if (lastTimeTaken > 1000) {
+    if (lastTimeTaken > 600) {
       await sleep(30000);
     }
     const fetchStart = Date.now();
