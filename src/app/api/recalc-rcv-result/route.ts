@@ -11,6 +11,10 @@ function sleep(miliseconds: number) {
   );
 }
 
+/**
+ * ===========================================================
+ * @returns
+ */
 async function fetchChoices() {
   const res = await fetch(
     `http://node5.nexus.io:7080/assets/list/accounts?where=${encodeURIComponent(
@@ -33,6 +37,44 @@ async function fetchChoices() {
   return result as Choice[];
 }
 
+/**
+ * ===========================================================
+ * @param page
+ * @param limit
+ * @returns
+ */
+async function fetchPage(page: number, limit: number) {
+  const res = await fetch(
+    `http://node5.nexus.io:7080/profiles/transactions/master`,
+    {
+      cache: 'no-store',
+      method: 'POST',
+      headers: {
+        Authorization: `Basic ${process.env.API_BASIC_AUTH}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        where: `results.contracts.token=${tokenAddress} AND results.contracts.OP=DEBIT`,
+        verbose: 'summary',
+        limit,
+        page,
+      }),
+    }
+  );
+  if (!res.ok) {
+    const err = await res.json();
+    console.error('profiles/transactions/master', res.status, err);
+    throw err;
+  }
+  const json = await res.json();
+  return json.result;
+}
+
+/**
+ * ===========================================================
+ * @param choices
+ * @returns
+ */
 async function fetchVotesDistribution(choices: Choice[]) {
   const votes: VoteDistribution = {};
   const addressMap: AddressMap = {};
@@ -62,31 +104,8 @@ async function fetchVotesDistribution(choices: Choice[]) {
     }
     const fetchStart = Date.now();
     try {
-      const res = await fetch(
-        `http://node5.nexus.io:7080/profiles/transactions/master`,
-        {
-          cache: 'no-store',
-          method: 'POST',
-          headers: {
-            Authorization: `Basic ${process.env.API_BASIC_AUTH}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            where: `results.contracts.token=${tokenAddress} AND results.contracts.OP=DEBIT`,
-            verbose: 'summary',
-            limit,
-            page,
-          }),
-        }
-      );
-      if (!res.ok) {
-        const err = await res.json();
-        console.error('profiles/transactions/master', res.status, err);
-        throw err;
-      }
-      const json = await res.json();
+      transactions = fetchPage(page, limit);
       const timeTaken = Date.now() - fetchStart;
-      transactions = json.result;
       console.log(
         `[RCV] Fetched transactions page ${page}. Got ${
           transactions.length
