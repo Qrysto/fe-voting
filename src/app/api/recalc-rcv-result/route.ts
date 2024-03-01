@@ -97,15 +97,15 @@ async function fetchVotesDistribution(choices: Choice[]) {
   const limit = 100;
   let page = 0;
   let transactions: any = null;
-  let lastTimeTaken: number = 0;
+  let timeTaken: number = 0;
   do {
-    if (lastTimeTaken > 600) {
-      await sleep(30000);
+    if (timeTaken > 1000) {
+      await sleep(15000);
     }
     const fetchStart = Date.now();
     try {
-      transactions = fetchPage(page, limit);
-      const timeTaken = Date.now() - fetchStart;
+      transactions = await fetchPage(page, limit);
+      timeTaken = Date.now() - fetchStart;
       console.log(
         `[RCV] Fetched transactions page ${page}. Got ${
           transactions.length
