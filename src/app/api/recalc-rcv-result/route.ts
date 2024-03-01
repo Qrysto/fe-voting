@@ -5,7 +5,7 @@ import type { Choice, Candidate, RCVResult, Round } from '@/types';
 
 export const maxDuration = 300;
 
-export default function sleep(miliseconds: number) {
+function sleep(miliseconds: number) {
   return new Promise((resolve) =>
     setTimeout(() => resolve(undefined), miliseconds)
   );
