@@ -29,80 +29,77 @@ async function fetchChoices() {
 
 async function fetchVotesDistribution(choices: Choice[]) {
   const votes: VoteDistribution = {};
-  try {
-    const addressMap: AddressMap = {};
-    choices.forEach(({ choice, address, reference }) => {
-      if (choice === 1) {
-        addressMap[address] = {
-          address,
-          choice,
-        };
-        // Populate all votes arrays for all candidates
-        votes[address] = [];
-      } else {
-        addressMap[address] = {
-          address: reference,
-          choice,
-        };
+  const addressMap: AddressMap = {};
+  choices.forEach(({ choice, address, reference }) => {
+    if (choice === 1) {
+      addressMap[address] = {
+        address,
+        choice,
+      };
+      // Populate all votes arrays for all candidates
+      votes[address] = [];
+    } else {
+      addressMap[address] = {
+        address: reference,
+        choice,
+      };
+    }
+  });
+
+  const limit = 100;
+  let page = 0;
+  let transactions: any = null;
+  do {
+    const fetchStart = Date.now();
+    const res = await fetch(
+      `http://node5.nexus.io:7080/profiles/transactions/master`,
+      {
+        cache: 'no-store',
+        method: 'POST',
+        headers: {
+          Authorization: `Basic ${process.env.API_BASIC_AUTH}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          where: `results.contracts.token=${tokenAddress} AND results.contracts.OP=DEBIT`,
+          verbose: 'summary',
+          limit,
+          page,
+        }),
+      }
+    );
+    if (!res.ok) {
+      const err = await res.json();
+      console.error('profiles/transactions/master', res.status, err);
+      throw err;
+    }
+    const json = await res.json();
+    const timeTaken = Date.now() - fetchStart;
+    transactions = json.result;
+    console.log(
+      `[RCV] Fetched transactions page ${page}. Got ${
+        transactions.length
+      } transactions, took ${timeTaken / 1000}s`
+    );
+
+    // Distribute votes into the right buckets
+    transactions.forEach((tx: any) => {
+      const vote: Vote = [];
+      tx.contracts.forEach((contract: any) => {
+        const { address, choice } = addressMap[contract.to.address];
+        vote[choice - 1] = address;
+      });
+      const firstChoice = vote[0];
+      if (firstChoice) {
+        if (!votes[firstChoice]) {
+          console.log('!votes[firstChoice]', firstChoice, votes);
+        }
+        votes[firstChoice]?.push(vote);
       }
     });
+    page++;
+  } while (transactions.length === limit);
 
-    const limit = 100;
-    let page = 0;
-    let transactions: any = null;
-    do {
-      const fetchStart = Date.now();
-      const res = await fetch(
-        `http://node5.nexus.io:7080/profiles/transactions/master`,
-        {
-          cache: 'no-store',
-          method: 'POST',
-          headers: {
-            Authorization: `Basic ${process.env.API_BASIC_AUTH}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            where: `results.contracts.token=${tokenAddress} AND results.contracts.OP=DEBIT`,
-            verbose: 'summary',
-            limit,
-            page,
-          }),
-        }
-      );
-      if (!res.ok) {
-        const err = await res.json();
-        console.error('profiles/transactions/master', res.status, err);
-        throw err;
-      }
-      const json = await res.json();
-      const timeTaken = Date.now() - fetchStart;
-      transactions = json.result;
-      console.log(
-        `[RCV] Fetched transactions page ${page}. Got ${
-          transactions.length
-        } transactions, took ${timeTaken / 1000}s`
-      );
-
-      // Distribute votes into the right buckets
-      transactions.forEach((tx: any) => {
-        const vote: Vote = [];
-        tx.contracts.forEach((contract: any) => {
-          const { address, choice } = addressMap[contract.to.address];
-          vote[choice - 1] = address;
-        });
-        const firstChoice = vote[0];
-        if (firstChoice) {
-          if (!votes[firstChoice]) {
-            console.log('!votes[firstChoice]', firstChoice, votes);
-          }
-          votes[firstChoice]?.push(vote);
-        }
-      });
-      page++;
-    } while (transactions.length === limit);
-  } catch (err) {
-    console.error(err);
-  }
   return votes;
 }
 
