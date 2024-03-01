@@ -175,14 +175,15 @@ function processRCVRound({
         const voteAddress = vote[i];
         if (voteAddress === eliminated) {
           vote[i] = null;
-        } else if (
-          voteAddress !== null &&
-          !eliminatedAddresses.includes(voteAddress)
-        ) {
-          // Found the highest preferred candidate who is not eliminated -> move it
+        } else if (voteAddress && !eliminatedAddresses.includes(voteAddress)) {
+          // Debugging
+          if (voteAddress === undefined) {
+            console.log('undefined in vote', vote, i);
+          }
           if (!votes[voteAddress]) {
             console.log('!votes[voteAddress]', voteAddress, votes);
           }
+          // Found the highest preferred candidate who is not eliminated -> move it
           votes[voteAddress]?.push(vote);
           break;
         }
