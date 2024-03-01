@@ -6,8 +6,11 @@ import headingImg from './heading@2x.png';
 import iconImg from './icon@2x.png';
 import bannerImg from './banner@2x.png';
 import shareIcon from './shareIcon.svg';
+import { endTime } from '@/constants';
 
 export default function HomePage() {
+  const pollEnded = Date.now() > endTime;
+
   return (
     <main
       style={{ backgroundImage: `url('${backgroundImg.src}')` }}
@@ -45,11 +48,12 @@ export default function HomePage() {
           Who won the debate?
         </div>
         <Link
-          href="/vote"
+          href={pollEnded ? 'result/poll2' : '/vote'}
           className={`block h-12 w-44 rounded-md text-center leading-[48px] ${oswald.className} bg-lightBlue font-bold uppercase text-blue active:bg-lightBlue/90`}
         >
-          Vote now
+          {pollEnded ? 'See Result' : 'Vote Now'}
         </Link>
+
         <Link
           href="/result/poll1"
           className={`${oswald.className} mt-8 text-sm font-medium uppercase text-lightBlue/90 underline underline-offset-2 active:text-lightBlue/80`}
