@@ -5,7 +5,7 @@ export const codeDigitCount = 6;
 export const maxChoices = 5;
 
 export const tokenAddress =
-  '8DkBdZWSRuaLHtNxaxxm5AU8jTL9Mm5hDJw9LvrLnP1zrKC62bZ';
+  '8EorF6GG8XypDHPfDudYQR4RZbqxeJUSdtgdVzvsZfUBY76SKp6';
 
 export const phoneNumbersTable = 'phonePoll2';
 
