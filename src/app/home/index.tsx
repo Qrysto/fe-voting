@@ -58,7 +58,7 @@ export default function HomePage() {
           href="/result/poll1"
           className={`${oswald.className} mt-8 text-sm font-medium uppercase text-lightBlue/90 underline underline-offset-2 active:text-lightBlue/80`}
         >
-          See last poll&#39;s result
+          See Candidate Selection poll&#39;s result
         </Link>
 
         <a
