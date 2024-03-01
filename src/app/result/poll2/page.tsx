@@ -58,7 +58,9 @@ export default async function RankingPage() {
       <h2 className="mt-4 text-xl uppercase">Debate Winner Poll</h2>
       <EndingTime />
 
-      <h1 className="mt-4 text-3xl uppercase text-darkBlue">Poll result</h1>
+      <h1 className="mt-4 text-3xl uppercase text-darkBlue">
+        Current poll result
+      </h1>
       {result ? (
         <>
           <UpdatedTime timeStamp={result.timeStamp} />
