@@ -34,7 +34,7 @@ export default function Header() {
       <div className="absolute inset-y-0 right-0 flex items-center object-right-top">
         <IconButton
           className="ml-4"
-          href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fvote.freeandequal.org%2Franking"
+          href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fvote.freeandequal.org%2Fresult%2Fpoll1"
           target="_blank"
         >
           <Image src={shareIcon} height={23} alt="Share" />
