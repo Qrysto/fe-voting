@@ -13,7 +13,7 @@ export default function UpdatedTime({ timeStamp }: { timeStamp: number }) {
         Updated <ReactTimeAgo date={timeStamp} locale="en-US" />.
       </div>
       <div className="mt-1">
-        Poll result will be automatically re-calculated every 10 minutes.
+        Poll result will be automatically re-calculated every 15 minutes.
       </div>
     </>
   );
