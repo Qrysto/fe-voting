@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { type NextRequest } from 'next/server';
-import { maxChoices, tokenAddress } from '@/constants';
+import { maxChoices, tokenAddress, endTime } from '@/constants';
 import type { Choice } from '@/types';
 import { isVoted, addVoted } from '../phone';
 
@@ -42,6 +42,11 @@ async function fetchAddressMap() {
 }
 
 export async function POST(request: NextRequest) {
+  const pollEnded = Date.now() > endTime;
+  if (pollEnded) {
+    return Response.json({ message: 'The poll has ended' }, { status: 400 });
+  }
+
   const body = await request.json();
   const jwToken: string = body?.jwToken;
   const votes: string[] = body?.votes;

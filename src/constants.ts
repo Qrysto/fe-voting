@@ -9,4 +9,6 @@ export const tokenAddress =
 
 export const phoneNumbersTable = 'phonePoll2';
 
-export const rcvResultKVKey = 'rcvResultPoll2';
+export const rcvResultKVKey = 'rcvResult';
+
+export const endTime = 1709521200000;

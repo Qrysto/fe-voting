@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Candidate } from '@/types';
-import { tokenAddress } from '@/constants';
+import { endTime, tokenAddress } from '@/constants';
 import Steps from './Steps';
 
 export const metadata: Metadata = {
@@ -18,6 +18,11 @@ export const metadata: Metadata = {
 };
 
 export default async function VotePage() {
+  const pollEnded = Date.now() > endTime;
+  if (pollEnded) {
+    return <div className="mt-12 text-center">The poll has ended.</div>;
+  }
+
   const res = await fetch(
     `http://node5.nexus.io:7080/assets/list/accounts?where=${encodeURIComponent(
       `results.token=${tokenAddress} AND results.active=1 AND results.choice=1`
