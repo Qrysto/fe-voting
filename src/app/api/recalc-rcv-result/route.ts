@@ -55,41 +55,47 @@ async function fetchVotesDistribution(choices: Choice[]) {
   const limit = 100;
   let page = 0;
   let transactions: any = null;
+  let lastTimeTaken: number = 0;
   do {
-    if (page !== 0) {
-      await sleep(30000);
+    if (lastTimeTaken > 1000) {
+      await sleep(15000);
     }
     const fetchStart = Date.now();
-    const res = await fetch(
-      `http://node5.nexus.io:7080/profiles/transactions/master`,
-      {
-        cache: 'no-store',
-        method: 'POST',
-        headers: {
-          Authorization: `Basic ${process.env.API_BASIC_AUTH}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          where: `results.contracts.token=${tokenAddress} AND results.contracts.OP=DEBIT`,
-          verbose: 'summary',
-          limit,
-          page,
-        }),
+    try {
+      const res = await fetch(
+        `http://node5.nexus.io:7080/profiles/transactions/master`,
+        {
+          cache: 'no-store',
+          method: 'POST',
+          headers: {
+            Authorization: `Basic ${process.env.API_BASIC_AUTH}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            where: `results.contracts.token=${tokenAddress} AND results.contracts.OP=DEBIT`,
+            verbose: 'summary',
+            limit,
+            page,
+          }),
+        }
+      );
+      if (!res.ok) {
+        const err = await res.json();
+        console.error('profiles/transactions/master', res.status, err);
+        throw err;
       }
-    );
-    if (!res.ok) {
-      const err = await res.json();
-      console.error('profiles/transactions/master', res.status, err);
+      const json = await res.json();
+      const timeTaken = Date.now() - fetchStart;
+      transactions = json.result;
+      console.log(
+        `[RCV] Fetched transactions page ${page}. Got ${
+          transactions.length
+        } transactions, took ${timeTaken / 1000}s`
+      );
+    } catch (err) {
+      console.error('Error fetching page', page, err);
       throw err;
     }
-    const json = await res.json();
-    const timeTaken = Date.now() - fetchStart;
-    transactions = json.result;
-    console.log(
-      `[RCV] Fetched transactions page ${page}. Got ${
-        transactions.length
-      } transactions, took ${timeTaken / 1000}s`
-    );
 
     // Distribute votes into the right buckets
     transactions.forEach((tx: any) => {
@@ -240,11 +246,11 @@ async function saveRCVResult(result: RCVResult) {
  * @returns
  */
 export async function GET(request: NextRequest) {
-  if (
-    request.headers.get('Authorization') !== `Bearer ${process.env.CRON_SECRET}`
-  ) {
-    return Response.json({ message: 'Unauthorized' }, { status: 401 });
-  }
+  // if (
+  //   request.headers.get('Authorization') !== `Bearer ${process.env.CRON_SECRET}`
+  // ) {
+  //   return Response.json({ message: 'Unauthorized' }, { status: 401 });
+  // }
 
   const result = await calcRCVResult();
 
