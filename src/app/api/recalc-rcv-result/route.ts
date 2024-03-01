@@ -50,6 +50,7 @@ async function fetchVotesDistribution(choices: Choice[]) {
   let page = 0;
   let transactions: any = null;
   do {
+    const fetchStart = Date.now();
     const res = await fetch(
       `http://node5.nexus.io:7080/profiles/transactions/master`,
       {
@@ -73,9 +74,12 @@ async function fetchVotesDistribution(choices: Choice[]) {
       throw err;
     }
     const json = await res.json();
+    const timeTaken = Date.now() - fetchStart;
     transactions = json.result;
     console.log(
-      `[RCV] Fetched transactions page ${page}. Got ${transactions.length} transactions`
+      `[RCV] Fetched transactions page ${page}. Got ${
+        transactions.length
+      } transactions, took ${timeTaken / 1000}s`
     );
 
     // Distribute votes into the right buckets
