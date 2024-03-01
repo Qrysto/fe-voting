@@ -5,6 +5,7 @@ import { tokenAddress, rcvResultKVKey } from '@/constants';
 import Round from './Round';
 import UpdatedTime from './UpdatedTime';
 import Winner from './Winner';
+import EndingTime from './EndingTime';
 
 export const metadata: Metadata = {
   title: 'Results | Free And Equal',
@@ -54,7 +55,10 @@ export default async function RankingPage() {
 
   return (
     <div className="mt-6">
-      <h1 className="text-3xl uppercase text-darkBlue">Poll result</h1>
+      <h2 className="mt-4 text-xl uppercase">Debate Winner Poll</h2>
+      <EndingTime />
+
+      <h1 className="mt-4 text-3xl uppercase text-darkBlue">Poll result</h1>
       {result ? (
         <>
           <UpdatedTime timeStamp={result.timeStamp} />
