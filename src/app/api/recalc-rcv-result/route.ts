@@ -168,9 +168,11 @@ async function fetchVotesDistribution(choices: Choice[]) {
       });
       return vote;
     });
-    kv.set(votesPageKVKey + page, voteList).catch((err) => {
-      console.error('[RCV] Caching votes Page', page, err);
-    });
+    if (transactions.length === limit) {
+      kv.set(votesPageKVKey + page, voteList).catch((err) => {
+        console.error('[RCV] Caching votes Page', page, err);
+      });
+    }
 
     // Distribute votes into the right buckets
     distributeVotes(voteList, votes);
