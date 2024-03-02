@@ -101,23 +101,8 @@ function distributeVotes(voteList: Vote[], votes: VoteDistribution) {
  * @returns
  */
 async function fetchVotesDistribution(choices: Choice[]) {
-  // Fetch saved pages of votes from KV
-  let votes: VoteDistribution = {};
-  let page = 0;
-  while (true) {
-    const voteList = await kv.get(votesPageKVKey + page);
-    console.log(
-      `[RCV] Fetched votes page ${page} from KV cache. Got ${votes.length} votes`
-    );
-    page++;
-    if (voteList) {
-      distributeVotes(voteList as Vote[], votes);
-    } else {
-      break;
-    }
-  }
-
   // Prepare addressMap
+  let votes: VoteDistribution = {};
   const addressMap: AddressMap = {};
   choices.forEach(({ choice, address, reference }) => {
     if (choice === 1) {
@@ -135,13 +120,28 @@ async function fetchVotesDistribution(choices: Choice[]) {
     }
   });
 
+  // Fetch saved pages of votes from KV
+  let page = 0;
+  while (true) {
+    const voteList = await kv.get<Vote[] | null>(votesPageKVKey + page);
+    if (voteList) {
+      console.log(
+        `[RCV] Fetched votes page ${page} from KV cache. Got ${voteList.length} votes`
+      );
+      distributeVotes(voteList, votes);
+      page++;
+    } else {
+      break;
+    }
+  }
+
   // Fetch newer pages of votes
   const limit = 100;
   let transactions: any = null;
   let timeTaken: number = 0;
   do {
     if (timeTaken > 1000) {
-      await sleep(15000);
+      await sleep(5000);
     }
     const fetchStart = Date.now();
 
