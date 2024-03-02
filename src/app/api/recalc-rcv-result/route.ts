@@ -105,12 +105,13 @@ async function fetchVotesDistribution(choices: Choice[]) {
   let votes: VoteDistribution = {};
   let page = 0;
   while (true) {
-    const nextVotes = await kv.get(votesPageKVKey + page++);
+    const voteList = await kv.get(votesPageKVKey + page);
     console.log(
       `[RCV] Fetched votes page ${page} from KV cache. Got ${votes.length} votes`
     );
-    if (nextVotes) {
-      distributeVotes(nextVotes as Vote[], votes);
+    page++;
+    if (voteList) {
+      distributeVotes(voteList as Vote[], votes);
     } else {
       break;
     }
