@@ -293,7 +293,7 @@ export default function CastVote() {
         enableMouseEvents: true,
       }}
     >
-      <div className="pb-8">
+      <div className="">
         <h2 className="px-4 text-4xl uppercase">Vote</h2>
         <p className="mt-[10px] px-4 text-lg leading-6">
           Take a moment to reflect on the candidate&#39;s positions. If you need
@@ -433,6 +433,19 @@ export default function CastVote() {
               />
             ))}
           </ul>
+        </div>
+
+        <div className="mt-16 pb-8 text-center text-sm">
+          Thank you for using the Free & Equal Election Assistant App Beta -
+          please email{' '}
+          <a
+            href="mailto:info@freeandequal.org"
+            target="_blank"
+            className="underline underline-offset-2"
+          >
+            info@freeandequal.org
+          </a>{' '}
+          with any feedback.
         </div>
 
         <ConfirmVoteModal

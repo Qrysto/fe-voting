@@ -54,7 +54,7 @@ export default async function RankingPage() {
   ]);
 
   return (
-    <div className="mt-6 pb-8">
+    <div className="mt-6">
       <h2 className="mt-4 text-xl uppercase">Debate Winner Poll</h2>
       <EndingTime />
 
@@ -95,6 +95,19 @@ export default async function RankingPage() {
       ) : (
         <p className="mt-4">Results will be calculated in a few minutes.</p>
       )}
+
+      <div className="mt-16 pb-8 text-center text-sm">
+        Thank you for using the Free & Equal Election Assistant App Beta -
+        please email{' '}
+        <a
+          href="mailto:info@freeandequal.org"
+          target="_blank"
+          className="underline underline-offset-2"
+        >
+          info@freeandequal.org
+        </a>{' '}
+        with any feedback.
+      </div>
     </div>
   );
 }
