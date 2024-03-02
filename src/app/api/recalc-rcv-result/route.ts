@@ -1,6 +1,11 @@
 import { type NextRequest } from 'next/server';
 import { kv } from '@vercel/kv';
-import { maxChoices, tokenAddress, rcvResultKVKey } from '@/constants';
+import {
+  maxChoices,
+  tokenAddress,
+  rcvResultKVKey,
+  votesPageKVKey,
+} from '@/constants';
 import type { Choice, Candidate, RCVResult, Round } from '@/types';
 
 export const maxDuration = 300;
@@ -58,6 +63,8 @@ async function fetchPage(page: number, limit: number) {
         verbose: 'summary',
         limit,
         page,
+        sort: 'timestamp',
+        order: 'asc',
       }),
     }
   );
@@ -72,11 +79,44 @@ async function fetchPage(page: number, limit: number) {
 
 /**
  * ===========================================================
+ * @param voteList
+ * @param votes
+ */
+function distributeVotes(voteList: Vote[], votes: VoteDistribution) {
+  voteList.forEach((vote) => {
+    const firstChoice = vote[0];
+    if (firstChoice) {
+      if (votes[firstChoice]) {
+        votes[firstChoice]?.push(vote);
+      } else {
+        console.log('!votes[firstChoice]', firstChoice, votes);
+      }
+    }
+  });
+}
+
+/**
+ * ===========================================================
  * @param choices
  * @returns
  */
 async function fetchVotesDistribution(choices: Choice[]) {
-  const votes: VoteDistribution = {};
+  // Fetch saved pages of votes from KV
+  let votes: VoteDistribution = {};
+  let page = 0;
+  while (true) {
+    const nextVotes = await kv.get(votesPageKVKey + page++);
+    console.log(
+      `[RCV] Fetched votes page ${page} from KV cache. Got ${votes.length} votes`
+    );
+    if (nextVotes) {
+      distributeVotes(nextVotes as Vote[], votes);
+    } else {
+      break;
+    }
+  }
+
+  // Prepare addressMap
   const addressMap: AddressMap = {};
   choices.forEach(({ choice, address, reference }) => {
     if (choice === 1) {
@@ -94,8 +134,8 @@ async function fetchVotesDistribution(choices: Choice[]) {
     }
   });
 
+  // Fetch newer pages of votes
   const limit = 100;
-  let page = 0;
   let transactions: any = null;
   let timeTaken: number = 0;
   do {
@@ -103,6 +143,8 @@ async function fetchVotesDistribution(choices: Choice[]) {
       await sleep(15000);
     }
     const fetchStart = Date.now();
+
+    // Fetch transactions
     try {
       transactions = await fetchPage(page, limit);
       timeTaken = Date.now() - fetchStart;
@@ -116,21 +158,21 @@ async function fetchVotesDistribution(choices: Choice[]) {
       throw err;
     }
 
-    // Distribute votes into the right buckets
-    transactions.forEach((tx: any) => {
+    // Extract vote from transaction
+    const voteList = transactions.map((tx: any) => {
       const vote: Vote = [];
       tx.contracts.forEach((contract: any) => {
         const { address, choice } = addressMap[contract.to.address];
         vote[choice - 1] = address;
       });
-      const firstChoice = vote[0];
-      if (firstChoice) {
-        if (!votes[firstChoice]) {
-          console.log('!votes[firstChoice]', firstChoice, votes);
-        }
-        votes[firstChoice]?.push(vote);
-      }
+      return vote;
     });
+    kv.get(votesPageKVKey + page).catch((err) => {
+      console.error('[RCV] Caching votes Page', page, err);
+    });
+
+    // Distribute votes into the right buckets
+    distributeVotes(voteList, votes);
     page++;
   } while (transactions.length === limit);
 

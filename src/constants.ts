@@ -12,3 +12,5 @@ export const phoneNumbersTable = 'phonePoll2';
 export const rcvResultKVKey = 'rcvResult';
 
 export const endTime = 1709866800000;
+
+export const votesPageKVKey = 'votesPage';
