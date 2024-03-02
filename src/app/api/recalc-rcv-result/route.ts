@@ -167,7 +167,7 @@ async function fetchVotesDistribution(choices: Choice[]) {
       });
       return vote;
     });
-    kv.get(votesPageKVKey + page).catch((err) => {
+    kv.set(votesPageKVKey + page, voteList).catch((err) => {
       console.error('[RCV] Caching votes Page', page, err);
     });
 
