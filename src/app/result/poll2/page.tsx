@@ -3,7 +3,7 @@ import { kv } from '@vercel/kv';
 import { Candidate, RCVResult } from '@/types';
 import { tokenAddress, rcvResultKVKey } from '@/constants';
 import Round from './Round';
-import UpdatedTime from './UpdatedTime';
+// import UpdatedTime from './UpdatedTime';
 import Winner from './Winner';
 import EndingTime from './EndingTime';
 
@@ -56,16 +56,17 @@ export default async function RankingPage() {
   return (
     <div className="mt-6">
       <h2 className="mt-4 text-xl uppercase">Debate Winner Poll</h2>
-      <EndingTime />
+      <div className="mb-3">February 29th - March 7th</div>
+      {/* <EndingTime /> */}
 
       <h1 className="mt-4 text-3xl uppercase text-darkBlue">
-        Current poll result
+        Final poll result
       </h1>
       {result ? (
         <>
-          <UpdatedTime timeStamp={result.timeStamp} />
+          {/* <UpdatedTime timeStamp={result.timeStamp} /> */}
           <div className="mt-6">
-            <h2 className="text-2xl uppercase text-darkBlue">Current Winner</h2>
+            <h2 className="text-2xl uppercase text-darkBlue">Winner</h2>
             <Winner candidates={candidates} result={result} />
           </div>
 
