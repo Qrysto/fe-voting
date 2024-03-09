@@ -5,6 +5,7 @@ import {
   tokenAddress,
   rcvResultKVKey,
   votesPageKVKey,
+  phoneNumbersTable,
 } from '@/constants';
 import type { Choice, Candidate, RCVResult, Round } from '@/types';
 
@@ -79,6 +80,41 @@ async function fetchPage(page: number, limit: number) {
 
 /**
  * ===========================================================
+ */
+async function fetchVotesPage(page: number, limit: number) {
+  const body = JSON.stringify({
+    table: phoneNumbersTable,
+    limit,
+    page,
+  });
+  const res = await fetch('http://node5.nexus.io:7080/local/list/record', {
+    cache: 'no-store',
+    method: 'POST',
+    headers: {
+      Authorization: `Basic ${process.env.API_BASIC_AUTH}`,
+      'Content-Type': 'application/json',
+    },
+    body,
+  });
+  if (!res.ok) {
+    const err = await res.json();
+    console.error(
+      'Error fetching votes from records, page',
+      page,
+      'error',
+      err
+    );
+    throw err;
+  }
+  const json = await res.json();
+  const voteList = Object.values(json?.result).map((stringified) =>
+    JSON.parse(stringified as string)
+  );
+  return voteList as Vote[];
+}
+
+/**
+ * ===========================================================
  * @param voteList
  * @param votes
  */
@@ -120,64 +156,21 @@ async function fetchVotesDistribution(choices: Choice[]) {
     }
   });
 
-  // Fetch saved pages of votes from KV
-  let page = 0;
-  while (true) {
-    const voteList = await kv.get<Vote[] | null>(votesPageKVKey + page);
-    if (voteList) {
-      console.log(
-        `[RCV] Fetched votes page ${page} from KV cache. Got ${voteList.length} votes`
-      );
-      distributeVotes(voteList, votes);
-      page++;
-    } else {
-      break;
-    }
-  }
-
-  // Fetch newer pages of votes
+  // Fetch votes from records
   const limit = 100;
-  let transactions: any = null;
-  let timeTaken: number = 0;
+  let page = 0;
+  let voteList: Vote[] | null = null;
   do {
-    if (timeTaken > 1000) {
-      await sleep(5000);
-    }
-    const fetchStart = Date.now();
+    voteList = await fetchVotesPage(page, limit);
 
-    // Fetch transactions
-    try {
-      transactions = await fetchPage(page, limit);
-      timeTaken = Date.now() - fetchStart;
-      console.log(
-        `[RCV] Fetched transactions page ${page}. Got ${
-          transactions.length
-        } transactions, took ${timeTaken / 1000}s`
-      );
-    } catch (err) {
-      console.error('Error fetching page', page, err);
-      throw err;
-    }
-
-    // Extract vote from transaction
-    const voteList = transactions.map((tx: any) => {
-      const vote: Vote = [];
-      tx.contracts.forEach((contract: any) => {
-        const { address, choice } = addressMap[contract.to.address];
-        vote[choice - 1] = address;
-      });
-      return vote;
-    });
-    if (transactions.length === limit) {
-      kv.set(votesPageKVKey + page, voteList).catch((err) => {
-        console.error('[RCV] Caching votes Page', page, err);
-      });
-    }
+    console.log(
+      `[RCV] Fetched votes page ${page} from records. Got ${voteList.length} votes`
+    );
 
     // Distribute votes into the right buckets
     distributeVotes(voteList, votes);
     page++;
-  } while (transactions.length === limit);
+  } while (voteList?.length === limit);
 
   return votes;
 }
@@ -263,9 +256,25 @@ function processRCVRound({
 
 /**
  * ===========================================================
+ * @param result
+ */
+async function saveRCVResult(result: RCVResult) {
+  await kv.set(rcvResultKVKey, result);
+  console.log('[RCV] Saved result to KV', rcvResultKVKey);
+}
+
+/**
+ * ===========================================================
+ * @param request
  * @returns
  */
-async function calcRCVResult() {
+export async function GET(request: NextRequest) {
+  if (
+    request.headers.get('Authorization') !== `Bearer ${process.env.CRON_SECRET}`
+  ) {
+    return Response.json({ message: 'Unauthorized' }, { status: 401 });
+  }
+
   console.log('[RCV] Start Recalculation');
   const startTime = Date.now();
 
@@ -292,32 +301,6 @@ async function calcRCVResult() {
   const duration = Date.now() - startTime;
   console.log(`[RCV] Finished Recalculation (${duration / 1000}s)`);
   console.log('[RCV] Result: ', result);
-
-  return result;
-}
-
-/**
- * ===========================================================
- * @param result
- */
-async function saveRCVResult(result: RCVResult) {
-  await kv.set(rcvResultKVKey, result);
-  console.log('[RCV] Saved result to KV', rcvResultKVKey);
-}
-
-/**
- * ===========================================================
- * @param request
- * @returns
- */
-export async function GET(request: NextRequest) {
-  if (
-    request.headers.get('Authorization') !== `Bearer ${process.env.CRON_SECRET}`
-  ) {
-    return Response.json({ message: 'Unauthorized' }, { status: 401 });
-  }
-
-  const result = await calcRCVResult();
 
   await saveRCVResult(result);
   return Response.json({ ok: true, result });
