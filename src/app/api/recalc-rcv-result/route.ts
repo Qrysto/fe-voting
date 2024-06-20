@@ -11,6 +11,8 @@ import type { Choice, Candidate, RCVResult, Round } from '@/types';
 
 export const maxDuration = 300;
 
+const limit = 100;
+
 function sleep(miliseconds: number) {
   return new Promise((resolve) =>
     setTimeout(() => resolve(undefined), miliseconds)
@@ -19,9 +21,8 @@ function sleep(miliseconds: number) {
 
 /**
  * ===========================================================
- * @returns
  */
-async function fetchChoices() {
+async function fetchCandidates() {
   const res = await fetch(
     `http://node5.nexus.io:7080/assets/list/accounts?where=${encodeURIComponent(
       `results.token=${tokenAddress} AND results.active=1`
@@ -40,16 +41,13 @@ async function fetchChoices() {
   }
 
   const { result } = await res.json();
-  return result as Choice[];
+  return result as Candidate[];
 }
 
 /**
  * ===========================================================
- * @param page
- * @param limit
- * @returns
  */
-async function fetchPage(page: number, limit: number) {
+async function fetchPage(page: number) {
   const res = await fetch(
     `http://node5.nexus.io:7080/profiles/transactions/master`,
     {
@@ -81,7 +79,7 @@ async function fetchPage(page: number, limit: number) {
 /**
  * ===========================================================
  */
-async function fetchVotesPage(page: number, limit: number) {
+async function fetchVotesPage(page: number) {
   const body = JSON.stringify({
     table: phoneNumbersTable,
     limit,
@@ -115,17 +113,15 @@ async function fetchVotesPage(page: number, limit: number) {
 
 /**
  * ===========================================================
- * @param voteList
- * @param votes
  */
-function distributeVotes(voteList: Vote[], votes: VoteDistribution) {
-  voteList.forEach((vote) => {
+function distributeVotes(votes: Vote[], voteDistribution: VoteDistribution) {
+  votes.forEach((vote) => {
     const firstChoice = vote[0];
     if (firstChoice) {
-      if (votes[firstChoice]) {
-        votes[firstChoice]?.push(vote);
+      if (voteDistribution[firstChoice]) {
+        voteDistribution[firstChoice]?.push(vote);
       } else {
-        console.log('!votes[firstChoice]', firstChoice, votes);
+        console.log('!votes[firstChoice]', firstChoice, voteDistribution);
       }
     }
   });
@@ -133,71 +129,53 @@ function distributeVotes(voteList: Vote[], votes: VoteDistribution) {
 
 /**
  * ===========================================================
- * @param choices
- * @returns
  */
-async function fetchVotesDistribution(choices: Choice[]) {
-  // Prepare addressMap
-  let votes: VoteDistribution = {};
-  const addressMap: AddressMap = {};
-  choices.forEach(({ choice, address, reference }) => {
-    if (choice === 1) {
-      addressMap[address] = {
-        address,
-        choice,
-      };
-      // Populate all votes arrays for all candidates
-      votes[address] = [];
-    } else {
-      addressMap[address] = {
-        address: reference,
-        choice,
-      };
-    }
+async function fetchVotesDistribution(candidates: Candidate[]) {
+  let voteDistribution: VoteDistribution = {};
+  // Initialize votes arrays for all candidates
+  candidates.forEach(({ address }) => {
+    voteDistribution[address] = [];
   });
 
   // Fetch votes from records
-  const limit = 100;
   let page = 0;
-  let voteList: Vote[] | null = null;
+  let votes: Vote[] | null = null;
   do {
-    voteList = await fetchVotesPage(page, limit);
+    votes = await fetchVotesPage(page);
 
     console.log(
-      `[RCV] Fetched votes page ${page} from records. Got ${voteList.length} votes`
+      `[RCV] Fetched votes page ${page} from records. Got ${votes.length} votes`
     );
 
     // Distribute votes into the right buckets
-    distributeVotes(voteList, votes);
+    distributeVotes(votes, voteDistribution);
     page++;
-  } while (voteList?.length === limit);
+  } while (votes?.length === limit);
 
-  return votes;
+  return voteDistribution;
 }
 
 /**
  * ===========================================================
- * @param param0
- * @returns
  */
 function processRCVRound({
   result,
-  votes,
+  voteDistribution,
   eliminatedAddresses,
 }: {
   result: RCVResult;
-  votes: VoteDistribution;
+  voteDistribution: VoteDistribution;
   eliminatedAddresses: string[];
 }) {
   const round: Round = (result.rounds[result.roundNo] = {
     voteCount: {},
   });
   // Addresses of candidates that are still not eliminated
-  const addresses = Object.keys(votes);
+  const addresses = Object.keys(voteDistribution);
 
   // 1. Count the votes
   addresses.forEach((address) => {
-    round.voteCount[address] = votes[address].length;
+    round.voteCount[address] = voteDistribution[address].length;
   });
 
   // 2. Check for winner
@@ -213,7 +191,7 @@ function processRCVRound({
     return true;
   }
 
-  // 3. No winner yet => Eliminate candidate has the lowest vote count
+  // 3. No winner yet => Eliminate the candidate who has the lowest vote count
   // Look for the lowest vote count
   const eliminated = addresses.reduce(
     (lowest: string | undefined, address) =>
@@ -226,8 +204,8 @@ function processRCVRound({
     round.eliminated = eliminated;
     eliminatedAddresses.push(eliminated);
 
-    // Move votes from elinimated to the next preferred candidate
-    votes[eliminated].forEach((vote) => {
+    // Move votes from the elinimated candidate to the next preferred one
+    voteDistribution[eliminated].forEach((vote) => {
       for (let i = 0; i < vote.length; i++) {
         const voteAddress = vote[i];
         if (voteAddress === eliminated) {
@@ -237,18 +215,18 @@ function processRCVRound({
           if (voteAddress === undefined) {
             console.log('undefined in vote', vote, i);
           }
-          if (!votes[voteAddress]) {
-            console.log('!votes[voteAddress]', voteAddress, votes);
+          if (!voteDistribution[voteAddress]) {
+            console.log('!votes[voteAddress]', voteAddress, voteDistribution);
           }
           // Found the highest preferred candidate who is not eliminated -> move it
-          votes[voteAddress]?.push(vote);
+          voteDistribution[voteAddress].push(vote);
           break;
         }
       }
     });
 
     // Remove eliminated candidate from votes
-    delete votes[eliminated];
+    delete voteDistribution[eliminated];
   }
 
   return false;
@@ -256,7 +234,6 @@ function processRCVRound({
 
 /**
  * ===========================================================
- * @param result
  */
 async function saveRCVResult(result: RCVResult) {
   await kv.set(rcvResultKVKey, result);
@@ -265,8 +242,6 @@ async function saveRCVResult(result: RCVResult) {
 
 /**
  * ===========================================================
- * @param request
- * @returns
  */
 export async function GET(request: NextRequest) {
   if (
@@ -278,10 +253,10 @@ export async function GET(request: NextRequest) {
   console.log('[RCV] Start Recalculation');
   const startTime = Date.now();
 
-  const choices = await fetchChoices();
-  console.log('[RCV] Finished fetching Choice assets', choices);
+  const candidates = await fetchCandidates();
+  console.log('[RCV] Finished fetching Choice assets', candidates);
 
-  const votes = await fetchVotesDistribution(choices);
+  const voteDistribution = await fetchVotesDistribution(candidates);
   console.log('[RCV] Finished fetching votes');
 
   const result: RCVResult = {
@@ -294,7 +269,11 @@ export async function GET(request: NextRequest) {
   let foundWinner = false;
   do {
     result.roundNo++;
-    foundWinner = processRCVRound({ result, votes, eliminatedAddresses });
+    foundWinner = processRCVRound({
+      result,
+      voteDistribution,
+      eliminatedAddresses,
+    });
     console.log('[RCV] Round ', result.roundNo, result.rounds[result.roundNo]);
   } while (!foundWinner && result.roundNo <= maxChoices);
 
@@ -309,10 +288,6 @@ export async function GET(request: NextRequest) {
 /**
  * ===========================================================
  */
-
-interface AddressMap {
-  [address: string]: { address: string; choice: number };
-}
 
 type Vote = (string | null)[];
 
