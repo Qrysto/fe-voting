@@ -1,18 +1,18 @@
 import jwt from 'jsonwebtoken';
 import { type NextRequest } from 'next/server';
 import { maxChoices, tokenAddress, endTime } from '@/constants';
-import type { Choice } from '@/types';
-import { isVoted, addVoted } from '../phone';
+import type { Candidate } from '@/types';
+import { markNumberVoted, markNumberNotVoted } from '../phone';
 
 const jwtSecret = process.env.JWT_SECRET || 'secret';
 
-async function fetchAddressMap() {
+async function fetchCandidateAddresses() {
   const res = await fetch(
     `http://node5.nexus.io:7080/assets/list/accounts?where=${encodeURIComponent(
       `results.token=${tokenAddress} AND results.active=1`
     )}`,
     {
-      next: { revalidate: 60, tags: ['allChoices'] },
+      next: { revalidate: 60, tags: ['allCandidates'] },
       headers: {
         Authorization: `Basic ${process.env.API_BASIC_AUTH}`,
       },
@@ -24,21 +24,8 @@ async function fetchAddressMap() {
     throw err;
   }
 
-  const { result } = await res.json();
-  const data: {
-    [candidateAddress: string]: {
-      [choice: number]: string;
-    };
-  } = {};
-  result.forEach(({ choice, reference, address }: Choice) => {
-    if (choice > 1) {
-      if (!data[reference]) {
-        data[reference] = {};
-      }
-      data[reference][choice] = address;
-    }
-  });
-  return data;
+  const { result }: { result: Candidate[] } = await res.json();
+  return result.map((candidate) => candidate.address);
 }
 
 export async function POST(request: NextRequest) {
@@ -56,9 +43,6 @@ export async function POST(request: NextRequest) {
       { status: 401 }
     );
   }
-  if (!votes?.length || !votes?.every((a) => a)) {
-    return Response.json({ message: 'Missing some votes' }, { status: 400 });
-  }
   if (votes?.length > maxChoices) {
     return Response.json(
       { message: 'You voted for too many candidates' },
@@ -70,11 +54,24 @@ export async function POST(request: NextRequest) {
   try {
     const decoded: any = jwt.verify(jwToken, jwtSecret);
     phoneNumber = decoded.phoneNumber;
-    if (await isVoted(phoneNumber)) {
+    const alreadyVoted = !(await markNumberVoted(
+      phoneNumber,
+      JSON.stringify(votes)
+    ));
+    if (alreadyVoted) {
       return Response.json(
         { message: 'This phone number has already voted', phoneNumber },
         { status: 400 }
       );
+    }
+
+    const emptyVotes = !votes?.length;
+    const validAddresses = await fetchCandidateAddresses();
+    const allVotesAreValid = votes.every((vote) =>
+      validAddresses.includes(vote)
+    );
+    if (emptyVotes || !allVotesAreValid) {
+      return Response.json({ message: 'Invalid vote', votes }, { status: 400 });
     }
   } catch (err: any) {
     return Response.json(
@@ -84,25 +81,12 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    // Ranked Choice Voting applied
-    const addressMap = await fetchAddressMap();
-    const destAddresses: string[] = [];
-    votes.forEach((candidateAddress, i) => {
-      if (i === 0) {
-        // First choice - send to candidate address (choice 1)
-        destAddresses[0] = candidateAddress;
-      } else {
-        // Other choices - find the address corresponding to the candidate
-        // Choice 2 is at index 1 in the array, and so on...
-        destAddresses[i] = addressMap[candidateAddress][i + 1];
-      }
-    });
-
     const body = JSON.stringify({
       from: tokenAddress,
-      recipients: destAddresses.map((address) => ({
+      recipients: votes.map((address, i) => ({
         to: address,
-        amount: 1,
+        amount: maxChoices - i,
+        reference: `checksum(\`${phoneNumber}\`);`,
       })),
       pin: process.env.SIGCHAIN_PIN,
     });
@@ -120,21 +104,14 @@ export async function POST(request: NextRequest) {
     const result = await response.json();
 
     if (result?.error) {
+      // Revert when the vote fails
+      await markNumberNotVoted(phoneNumber);
       return Response.json(
         { message: result.error.message, result },
         { status: 500 }
       );
     } else {
       console.log('Debit result', result.result);
-      try {
-        await addVoted(phoneNumber, JSON.stringify(votes));
-        return Response.json({ ok: true });
-      } catch (err) {
-        return Response.json(
-          { message: 'This phone number has already voted', error: err },
-          { status: 400 }
-        );
-      }
     }
   } catch (err: any) {
     console.error(err);

@@ -8,13 +8,40 @@ export function isValidPhoneNumber(phoneNo: string) {
 
 export const toE164US = (phoneNo: string) => '+1' + phoneNo;
 
-export const addVoted = async (phoneNo: string, txid: string) => {
+export async function markNumberVoted(phoneNo: string, votes: string) {
   const body = JSON.stringify({
     table: phoneNumbersTable,
     key: phoneNo,
-    value: txid,
+    value: votes,
   });
   const res = await fetch('http://node5.nexus.io:7080/local/push/record', {
+    cache: 'no-store',
+    method: 'POST',
+    headers: {
+      Authorization: `Basic ${process.env.API_BASIC_AUTH}`,
+      'Content-Type': 'application/json',
+    },
+    body,
+  });
+  const json = await res.json();
+  if (!res.ok) {
+    console.error('push/record error', json);
+    throw json?.error || new Error('Unknown error');
+  }
+
+  if (!json?.result?.success) {
+    // This number already voted
+    return false;
+  }
+  return true;
+}
+
+export async function markNumberNotVoted(phoneNo: string) {
+  const body = JSON.stringify({
+    table: phoneNumbersTable,
+    key: phoneNo,
+  });
+  const res = await fetch('http://node5.nexus.io:7080/local/remove/record', {
     cache: 'no-store',
     method: 'POST',
     headers: {
@@ -31,11 +58,11 @@ export const addVoted = async (phoneNo: string, txid: string) => {
   }
 
   const json = await res.json();
-  console.error('push/record error', json);
+  console.error('remove/record error', json);
   throw json?.error || new Error('Unknown error');
-};
+}
 
-export const isVoted = async (phoneNo: string) => {
+export async function isVoted(phoneNo: string) {
   try {
     const body = JSON.stringify({
       table: phoneNumbersTable,
@@ -61,4 +88,4 @@ export const isVoted = async (phoneNo: string) => {
   } catch (err) {
     return false;
   }
-};
+}
