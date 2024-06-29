@@ -17,11 +17,15 @@ export async function POST(request: NextRequest) {
       { status: 400 }
     );
   }
-  if (await isVoted(phoneNumber)) {
-    return Response.json(
-      { message: 'This phone number has already voted', phoneNumber },
-      { status: 400 }
-    );
+  try {
+    if (await isVoted(phoneNumber)) {
+      return Response.json(
+        { message: 'This phone number has already voted', phoneNumber },
+        { status: 400 }
+      );
+    }
+  } catch (err) {
+    return Response.json({ message: 'Server error' }, { status: 500 });
   }
 
   const fullPhoneNumber = toE164US(phoneNumber);

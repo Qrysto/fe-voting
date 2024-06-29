@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Candidate } from '@/types';
 import { endTime, tokenAddress } from '@/constants';
+import { callNexus } from '@/app/lib/api';
 import Steps from './Steps';
 
 export const metadata: Metadata = {
@@ -23,24 +24,17 @@ export default async function VotePage() {
     return <div className="mt-12 text-center">The poll has ended.</div>;
   }
 
-  const res = await fetch(
-    `http://node5.nexus.io:7080/assets/list/accounts?where=${encodeURIComponent(
-      `results.token=${tokenAddress} AND results.active=1 AND results.choice=1`
-    )}`,
+  const result = await callNexus(
+    'assets/list/accounts',
     {
-      next: { revalidate: 300, tags: ['allCandidates'] },
-      headers: {
-        Authorization: `Basic ${process.env.API_BASIC_AUTH}`,
-      },
+      where: `results.token=${tokenAddress} AND results.active=1 AND results.choice=1`,
+    },
+    {
+      revalidate: 300,
+      tags: ['allCandidates'],
     }
   );
-  if (!res.ok) {
-    const err = await res.json();
-    console.error('assets/list/accounts', res.status, err);
-    throw err;
-  }
 
-  const result = await res.json();
   const allCandidates = result?.result.sort((c1: Candidate, c2: Candidate) =>
     c1.Last.localeCompare(c2.Last)
   );

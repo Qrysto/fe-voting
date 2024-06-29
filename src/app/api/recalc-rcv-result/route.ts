@@ -8,6 +8,7 @@ import {
   phoneNumbersTable,
 } from '@/constants';
 import type { Choice, Candidate, RCVResult, Round } from '@/types';
+import { callNexus } from '@/app/lib/api';
 
 export const maxDuration = 300;
 
@@ -23,24 +24,9 @@ function sleep(miliseconds: number) {
  * ===========================================================
  */
 async function fetchCandidates() {
-  const res = await fetch(
-    `http://node5.nexus.io:7080/assets/list/accounts?where=${encodeURIComponent(
-      `results.token=${tokenAddress} AND results.active=1`
-    )}`,
-    {
-      cache: 'no-store',
-      headers: {
-        Authorization: `Basic ${process.env.API_BASIC_AUTH}`,
-      },
-    }
-  );
-  if (!res.ok) {
-    const err = await res.json();
-    console.error('assets/list/accounts', res.status, err);
-    throw err;
-  }
-
-  const { result } = await res.json();
+  const result = await callNexus('assets/list/accounts', {
+    where: `results.token=${tokenAddress} AND results.active=1`,
+  });
   return result as Candidate[];
 }
 
@@ -48,54 +34,31 @@ async function fetchCandidates() {
  * ===========================================================
  */
 async function fetchPage(page: number) {
-  const res = await fetch(
-    `http://node5.nexus.io:7080/profiles/transactions/master`,
-    {
-      cache: 'no-store',
-      method: 'POST',
-      headers: {
-        Authorization: `Basic ${process.env.API_BASIC_AUTH}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        where: `results.contracts.token=${tokenAddress} AND results.contracts.OP=DEBIT`,
-        verbose: 'summary',
-        limit,
-        page,
-        sort: 'timestamp',
-        order: 'asc',
-      }),
-    }
-  );
-  if (!res.ok) {
-    const err = await res.json();
-    console.error('profiles/transactions/master', res.status, err);
-    throw err;
-  }
-  const json = await res.json();
-  return json.result;
+  return await callNexus(`profiles/transactions/master`, {
+    where: `results.contracts.token=${tokenAddress} AND results.contracts.OP=DEBIT`,
+    verbose: 'summary',
+    limit,
+    page,
+    sort: 'timestamp',
+    order: 'asc',
+  });
 }
 
 /**
  * ===========================================================
  */
 async function fetchVotesPage(page: number) {
-  const body = JSON.stringify({
-    table: phoneNumbersTable,
-    limit,
-    page,
-  });
-  const res = await fetch('http://node5.nexus.io:7080/local/list/record', {
-    cache: 'no-store',
-    method: 'POST',
-    headers: {
-      Authorization: `Basic ${process.env.API_BASIC_AUTH}`,
-      'Content-Type': 'application/json',
-    },
-    body,
-  });
-  if (!res.ok) {
-    const err = await res.json();
+  try {
+    const result = await callNexus('local/list/record', {
+      table: phoneNumbersTable,
+      limit,
+      page,
+    });
+    const voteList = Object.values(result).map((stringified) =>
+      JSON.parse(stringified as string)
+    );
+    return voteList as Vote[];
+  } catch (err) {
     console.error(
       'Error fetching votes from records, page',
       page,
@@ -104,11 +67,6 @@ async function fetchVotesPage(page: number) {
     );
     throw err;
   }
-  const json = await res.json();
-  const voteList = Object.values(json?.result).map((stringified) =>
-    JSON.parse(stringified as string)
-  );
-  return voteList as Vote[];
 }
 
 /**

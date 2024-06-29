@@ -6,6 +6,7 @@ import Round from './Round';
 // import UpdatedTime from './UpdatedTime';
 import Winner from './Winner';
 import EndingTime from './EndingTime';
+import { callNexus } from '@/app/lib/api';
 
 export const metadata: Metadata = {
   title: 'Results | Free And Equal',
@@ -20,24 +21,14 @@ export const metadata: Metadata = {
 };
 
 async function loadRCVCandidates() {
-  const res = await fetch(
-    `http://node5.nexus.io:7080/assets/list/accounts?where=${encodeURIComponent(
-      `results.token=${tokenAddress} AND results.active=1 AND results.choice=1`
-    )}`,
+  const result = await callNexus(
+    'assets/list/accounts',
     {
-      next: { revalidate: 60, tags: ['allChoices'] },
-      headers: {
-        Authorization: `Basic ${process.env.API_BASIC_AUTH}`,
-      },
-    }
+      where: `results.token=${tokenAddress} AND results.active=1 AND results.choice=1`,
+    },
+    { revalidate: 60, tags: ['allChoices'] }
   );
-  if (!res.ok) {
-    console.error('assets/list/accounts', res.status, res.body);
-    const err = await res.json();
-    throw err;
-  }
 
-  const result = await res.json();
   const candidates: Candidate[] = result?.result;
   return candidates;
 }

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { oswald } from '@/fonts';
 import { Candidate } from '@/types';
 import CandidateImage from '@/components/CandidateImage';
+import { callNexus } from '@/app/lib/api';
 
 const format = Intl.NumberFormat('en-US').format;
 
@@ -47,24 +48,12 @@ function RankedCandidate({ candidate }: { candidate: Candidate }) {
 }
 
 export default async function RankingPage() {
-  const res = await fetch(
-    `http://node5.nexus.io:7080/assets/list/accounts?where=${encodeURIComponent(
-      'results.ticker=votes AND results.active=1'
-    )}`,
-    {
-      next: { revalidate: 86400 /* 24 hours */, tags: ['allCandidates'] },
-      headers: {
-        Authorization: `Basic ${process.env.API_BASIC_AUTH}`,
-      },
-    }
+  const result = await callNexus(
+    'assets/list/accounts',
+    { where: 'results.ticker=votes AND results.active=1' },
+    { revalidate: 86400 /* 24 hours */, tags: ['allCandidates'] }
   );
-  if (!res.ok) {
-    console.error('assets/list/accounts', res.status, res.body);
-    const err = await res.json();
-    throw err;
-  }
 
-  const result = await res.json();
   const allCandidates: Candidate[] = result?.result
     ?.filter((c: Candidate) => c.active)
     .sort((c1: Candidate, c2: Candidate) => c2.balance - c1.balance);

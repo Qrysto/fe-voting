@@ -2,29 +2,17 @@ import jwt from 'jsonwebtoken';
 import { type NextRequest } from 'next/server';
 import { maxChoices, tokenAddress, endTime } from '@/constants';
 import type { Candidate } from '@/types';
+import { callNexus } from '@/app/lib/api';
 import { markNumberVoted, markNumberNotVoted } from '../phone';
 
 const jwtSecret = process.env.JWT_SECRET || 'secret';
 
 async function fetchCandidateAddresses() {
-  const res = await fetch(
-    `http://node5.nexus.io:7080/assets/list/accounts?where=${encodeURIComponent(
-      `results.token=${tokenAddress} AND results.active=1`
-    )}`,
-    {
-      next: { revalidate: 60, tags: ['allCandidates'] },
-      headers: {
-        Authorization: `Basic ${process.env.API_BASIC_AUTH}`,
-      },
-    }
+  const result: Candidate[] = await callNexus(
+    'assets/list/accounts',
+    { where: `results.token=${tokenAddress} AND results.active=1` },
+    { revalidate: 60, tags: ['allCandidates'] }
   );
-  if (!res.ok) {
-    const err = await res.json();
-    console.error('assets/list/accounts', res.status, err);
-    throw err;
-  }
-
-  const { result }: { result: Candidate[] } = await res.json();
   return result.map((candidate) => candidate.address);
 }
 
@@ -54,6 +42,14 @@ export async function POST(request: NextRequest) {
   try {
     const decoded: any = jwt.verify(jwToken, jwtSecret);
     phoneNumber = decoded.phoneNumber;
+  } catch (err: any) {
+    return Response.json(
+      { message: err?.message, error: err },
+      { status: 401 }
+    );
+  }
+
+  try {
     const alreadyVoted = !(await markNumberVoted(
       phoneNumber,
       JSON.stringify(votes)
@@ -64,24 +60,19 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-
-    const emptyVotes = !votes?.length;
-    const validAddresses = await fetchCandidateAddresses();
-    const allVotesAreValid = votes.every((vote) =>
-      validAddresses.includes(vote)
-    );
-    if (emptyVotes || !allVotesAreValid) {
-      return Response.json({ message: 'Invalid vote', votes }, { status: 400 });
-    }
   } catch (err: any) {
-    return Response.json(
-      { message: err?.message, error: err },
-      { status: 401 }
-    );
+    return Response.json({ message: 'Server error' }, { status: 500 });
+  }
+
+  const emptyVotes = !votes?.length;
+  const validAddresses = await fetchCandidateAddresses();
+  const allVotesAreValid = votes.every((vote) => validAddresses.includes(vote));
+  if (emptyVotes || !allVotesAreValid) {
+    return Response.json({ message: 'Invalid vote', votes }, { status: 400 });
   }
 
   try {
-    const body = JSON.stringify({
+    const result = await callNexus('finance/debit/token', {
       from: tokenAddress,
       recipients: votes.map((address, i) => ({
         to: address,
@@ -90,34 +81,17 @@ export async function POST(request: NextRequest) {
       })),
       pin: process.env.SIGCHAIN_PIN,
     });
-    const response = await fetch(
-      'http://node5.nexus.io:7080/finance/debit/token',
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Basic ${process.env.API_BASIC_AUTH}`,
-          'Content-Type': 'application/json',
-        },
-        body,
-      }
-    );
-    const result = await response.json();
 
-    if (result?.error) {
-      // Revert when the vote fails
-      await markNumberNotVoted(phoneNumber);
-      return Response.json(
-        { message: result.error.message, result },
-        { status: 500 }
-      );
-    } else {
-      console.log('Debit result', result.result);
-    }
+    console.log('Debit result', result.result);
   } catch (err: any) {
     console.error(err);
+    // Revert when the vote fails
+    await markNumberNotVoted(phoneNumber);
     return Response.json(
       { message: err?.message, error: err },
       { status: 500 }
     );
   }
+
+  return Response.json({ ok: true });
 }
