@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
       pin: process.env.SIGCHAIN_PIN,
     });
 
-    console.log('Debit result', result.result);
+    console.log('Debit result', result);
   } catch (err: any) {
     console.error(err);
     // Revert when the vote fails

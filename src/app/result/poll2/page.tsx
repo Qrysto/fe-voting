@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 };
 
 async function loadRCVCandidates() {
-  const result = await callNexus(
+  const candidates: Candidate[] = await callNexus(
     'assets/list/accounts',
     {
       where: `results.ticker=poll2 AND results.active=1 AND results.choice=1`,
@@ -29,7 +29,6 @@ async function loadRCVCandidates() {
     { revalidate: 86400 /* 24 hours */, tags: ['allPoll2Candidates'] }
   );
 
-  const candidates: Candidate[] = result?.result;
   return candidates;
 }
 

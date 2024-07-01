@@ -36,7 +36,7 @@ export default async function VotePage() {
   );
   console.log('poll3 candidates', result);
 
-  const allCandidates = result?.result.sort((c1: Candidate, c2: Candidate) =>
+  const allCandidates = result?.sort((c1: Candidate, c2: Candidate) =>
     c1.Last.localeCompare(c2.Last)
   );
 

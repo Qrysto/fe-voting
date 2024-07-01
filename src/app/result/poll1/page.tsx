@@ -54,7 +54,7 @@ export default async function RankingPage() {
     { revalidate: 86400 /* 24 hours */, tags: ['allPoll1Candidates'] }
   );
 
-  const allCandidates: Candidate[] = result?.result
+  const allCandidates: Candidate[] = result
     ?.filter((c: Candidate) => c.active)
     .sort((c1: Candidate, c2: Candidate) => c2.balance - c1.balance);
   const totalVotes = allCandidates.reduce(
