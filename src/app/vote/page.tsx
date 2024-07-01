@@ -27,13 +27,14 @@ export default async function VotePage() {
   const result = await callNexus(
     'assets/list/accounts',
     {
-      where: `results.ticker=${ticker} AND results.active=1 AND results.choice=1`,
+      where: `results.ticker=${ticker} AND results.active=1`,
     },
     {
       revalidate: 300,
       tags: ['allCandidates'],
     }
   );
+  console.log('poll3 candidates', result);
 
   const allCandidates = result?.result.sort((c1: Candidate, c2: Candidate) =>
     c1.Last.localeCompare(c2.Last)
