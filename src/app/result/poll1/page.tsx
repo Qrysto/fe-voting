@@ -51,7 +51,7 @@ export default async function RankingPage() {
   const result = await callNexus(
     'assets/list/accounts',
     { where: 'results.ticker=votes AND results.active=1' },
-    { revalidate: 86400 /* 24 hours */, tags: ['allCandidates'] }
+    { revalidate: 86400 /* 24 hours */, tags: ['allPoll1Candidates'] }
   );
 
   const allCandidates: Candidate[] = result?.result
