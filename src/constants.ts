@@ -5,12 +5,12 @@ export const codeDigitCount = 6;
 export const maxChoices = 5;
 
 export const tokenAddress =
-  '8EorF6GG8XypDHPfDudYQR4RZbqxeJUSdtgdVzvsZfUBY76SKp6';
+  '8EAtR4YyMGWUS5R4neQ85A1U9zsw9hoVPNRnLjzrEY46khrMGke';
 
-export const phoneNumbersTable = 'phonePoll2';
+export const phoneNumbersTable = 'phonePoll3';
 
 export const rcvResultKVKey = 'rcvResult';
 
-export const endTime = 1709866800000;
+export const endTime = 1730471598110;
 
 export const votesPageKVKey = 'votesPage';
