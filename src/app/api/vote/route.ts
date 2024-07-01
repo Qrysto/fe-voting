@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  let phoneNumber;
+  let phoneNumber: string;
   try {
     const decoded: any = jwt.verify(jwToken, jwtSecret);
     phoneNumber = decoded.phoneNumber;
