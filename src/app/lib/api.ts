@@ -8,16 +8,21 @@ export async function callNexus(
   nextCache?: object
 ) {
   const body = JSON.stringify(params);
-  const res = await fetch(`http://node5.nexus.io:7080/${endpoint}`, {
-    cache: nextCache ? undefined : 'no-store',
-    next: nextCache || undefined,
-    method: nextCache ? 'GET' : 'POST',
-    headers: {
-      Authorization: `Basic ${process.env.API_BASIC_AUTH}`,
-      'Content-Type': 'application/json',
-    },
-    body: body,
-  });
+  const res = await fetch(
+    `http://node5.nexus.io:7080/${endpoint}${
+      nextCache ? toQueryString(params) : ''
+    }`,
+    {
+      cache: nextCache ? undefined : 'no-store',
+      next: nextCache || undefined,
+      method: nextCache ? 'GET' : 'POST',
+      headers: {
+        Authorization: `Basic ${process.env.API_BASIC_AUTH}`,
+        'Content-Type': 'application/json',
+      },
+      body: nextCache ? undefined : body,
+    }
+  );
   const json = await res.json();
 
   if (res.ok) {
@@ -25,4 +30,14 @@ export async function callNexus(
   } else {
     throw json?.error || new Error('Unknown error');
   }
+}
+
+function toQueryString(params?: object) {
+  if (!params) return '';
+  const query = Object.entries(params)
+    .map(([key, value]) => `${key}=${value}`)
+    .join('&');
+  if (!query) return '';
+
+  return `?${query}`;
 }
