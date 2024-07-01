@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { kv } from '@vercel/kv';
 import { Candidate, RCVResult } from '@/types';
-import { tokenAddress, rcvResultKVKey } from '@/constants';
+import { ticker, rcvResultKVKey } from '@/constants';
 import Round from './Round';
 // import UpdatedTime from './UpdatedTime';
 import Winner from './Winner';
@@ -24,7 +24,7 @@ async function loadRCVCandidates() {
   const result = await callNexus(
     'assets/list/accounts',
     {
-      where: `results.token=${tokenAddress} AND results.active=1 AND results.choice=1`,
+      where: `results.ticker=${ticker} AND results.active=1 AND results.choice=1`,
     },
     { revalidate: 60, tags: ['allChoices'] }
   );

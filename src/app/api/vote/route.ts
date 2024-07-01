@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { type NextRequest } from 'next/server';
-import { maxChoices, tokenAddress, endTime } from '@/constants';
+import { maxChoices, ticker, endTime } from '@/constants';
 import type { Candidate } from '@/types';
 import { callNexus } from '@/app/lib/api';
 import { markNumberVoted, markNumberNotVoted } from '../phone';
@@ -10,7 +10,7 @@ const jwtSecret = process.env.JWT_SECRET || 'secret';
 async function fetchCandidateAddresses() {
   const result: Candidate[] = await callNexus(
     'assets/list/accounts',
-    { where: `results.token=${tokenAddress} AND results.active=1` },
+    { where: `results.ticker=${ticker} AND results.active=1` },
     { revalidate: 60, tags: ['allCandidates'] }
   );
   return result.map((candidate) => candidate.address);
@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const result = await callNexus('finance/debit/token', {
-      from: tokenAddress,
+      from: ticker,
       recipients: votes.map((address, i) => ({
         to: address,
         amount: maxChoices - i,

@@ -2,7 +2,7 @@ import { type NextRequest } from 'next/server';
 import { kv } from '@vercel/kv';
 import {
   maxChoices,
-  tokenAddress,
+  ticker,
   rcvResultKVKey,
   votesPageKVKey,
   phoneNumbersTable,
@@ -25,7 +25,7 @@ function sleep(miliseconds: number) {
  */
 async function fetchCandidates() {
   const result = await callNexus('assets/list/accounts', {
-    where: `results.token=${tokenAddress} AND results.active=1`,
+    where: `results.ticker=${ticker} AND results.active=1`,
   });
   return result as Candidate[];
 }
@@ -35,7 +35,7 @@ async function fetchCandidates() {
  */
 async function fetchPage(page: number) {
   return await callNexus(`profiles/transactions/master`, {
-    where: `results.contracts.token=${tokenAddress} AND results.contracts.OP=DEBIT`,
+    where: `results.contracts.ticker=${ticker} AND results.contracts.OP=DEBIT`,
     verbose: 'summary',
     limit,
     page,

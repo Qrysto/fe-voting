@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Candidate } from '@/types';
-import { endTime, tokenAddress } from '@/constants';
+import { endTime, ticker } from '@/constants';
 import { callNexus } from '@/app/lib/api';
 import Steps from './Steps';
 
@@ -27,7 +27,7 @@ export default async function VotePage() {
   const result = await callNexus(
     'assets/list/accounts',
     {
-      where: `results.token=${tokenAddress} AND results.active=1 AND results.choice=1`,
+      where: `results.ticker=${ticker} AND results.active=1 AND results.choice=1`,
     },
     {
       revalidate: 300,
