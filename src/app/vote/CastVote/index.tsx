@@ -12,7 +12,7 @@ import ConfirmVoteModal from './ConfirmVoteModal';
 import VoteConfirmedModal from './VoteConfirmedModal';
 import CustomDragLayer from './CustomDragLayer';
 import { oswald } from '@/fonts';
-import { Candidate } from '@/types';
+import type { Candidate } from '@/types';
 import { useStore } from '@/store';
 import searchIcon from './search.svg';
 import filterIcon from './filter.svg';
@@ -468,7 +468,7 @@ export default function CastVote() {
         <VoteConfirmedModal
           open={confirmedModalOpen}
           close={() => {
-            router.push('/result/poll2');
+            router.push('/result/poll3');
           }}
         />
       </div>
