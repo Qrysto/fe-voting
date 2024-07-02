@@ -4,7 +4,6 @@ import {
   maxChoices,
   ticker,
   rcvResultKVKey,
-  votesPageKVKey,
   phoneNumbersTable,
 } from '@/constants';
 import type { Choice, Candidate, RCVResult, Round } from '@/types';
