@@ -7,7 +7,7 @@ export const maxChoices = 5;
 export const ticker = 'poll3';
 
 export const tokenAddress =
-  '8EAtR4YyMGWUS5R4neQ85A1U9zsw9hoVPNRnLjzrEY46khrMGke';
+  '8E1FucZqLRTC3fdcq2rzBM3PxGVCBWHJ6TTQFKTCg1m7xBerwmR';
 
 export const phoneNumbersTable = 'phonePoll3';
 
