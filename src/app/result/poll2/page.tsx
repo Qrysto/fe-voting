@@ -1,12 +1,13 @@
 import type { Metadata } from 'next';
 import { kv } from '@vercel/kv';
 import { Candidate, RCVResult } from '@/types';
-import { rcvResultKVKey } from '@/constants';
 import Round from './Round';
 // import UpdatedTime from './UpdatedTime';
 import Winner from './Winner';
 import EndingTime from './EndingTime';
 import { callNexus } from '@/app/lib/api';
+
+const rcvResultKVKey = 'rcvResult';
 
 export const metadata: Metadata = {
   title: 'Results | Free And Equal',
