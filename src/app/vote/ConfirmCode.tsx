@@ -134,7 +134,7 @@ export default function ConfirmCode() {
         </p>
         <BigButton
           primary
-          disabled={!codeFilled}
+          // disabled={!codeFilled}
           className="mt-8"
           ref={confirmBtnRef}
           onClick={confirmCode}
