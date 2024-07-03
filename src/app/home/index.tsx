@@ -48,7 +48,7 @@ export default function HomePage() {
           Who won the debate?
         </div>
         <Link
-          href={pollEnded ? 'result/poll2' : '/vote'}
+          href={pollEnded ? 'result/poll3' : '/vote'}
           className={`block h-12 w-44 rounded-md text-center leading-[48px] ${oswald.className} bg-lightBlue font-bold uppercase text-blue active:bg-lightBlue/90`}
         >
           {pollEnded ? 'See Result' : 'Vote Now'}
@@ -56,9 +56,15 @@ export default function HomePage() {
 
         <Link
           href="/result/poll1"
-          className={`${oswald.className} mt-8 text-sm font-medium uppercase text-lightBlue/90 underline underline-offset-2 active:text-lightBlue/80`}
+          className={`${oswald.className} mt-12 text-sm font-medium uppercase text-lightBlue/90 underline underline-offset-2 active:text-lightBlue/80`}
         >
           See Candidate Selection poll&#39;s result
+        </Link>
+        <Link
+          href="/result/poll2"
+          className={`${oswald.className} mt-4 text-sm font-medium uppercase text-lightBlue/90 underline underline-offset-2 active:text-lightBlue/80`}
+        >
+          See Debate Winner poll&#39;s result
         </Link>
 
         <a
