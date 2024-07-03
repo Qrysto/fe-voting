@@ -2,7 +2,7 @@ export const phoneDigitCount = 10;
 
 export const codeDigitCount = 6;
 
-export const maxChoices = 5;
+export const maxChoices = 7;
 
 export const ticker = 'poll3';
 

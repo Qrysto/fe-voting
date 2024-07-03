@@ -12,6 +12,7 @@ import ConfirmVoteModal from './ConfirmVoteModal';
 import VoteConfirmedModal from './VoteConfirmedModal';
 import CustomDragLayer from './CustomDragLayer';
 import { oswald } from '@/fonts';
+import { maxChoices } from '@/constants';
 import type { Candidate } from '@/types';
 import { useStore } from '@/store';
 import searchIcon from './search.svg';
@@ -411,7 +412,6 @@ export default function CastVote() {
               <BigButton
                 className="mt-6"
                 primary
-                disabled={votes.length > 6}
                 onClick={() => {
                   setConfirmModalOpen(true);
                 }}
@@ -429,7 +429,7 @@ export default function CastVote() {
               <Candidate
                 key={candidate.address}
                 candidate={candidate}
-                disableVote={votes.length >= 6}
+                disableVote={votes.length >= maxChoices}
               />
             ))}
           </ul>
