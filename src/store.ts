@@ -96,22 +96,22 @@ export const useStore = create<State & Actions>((set, get) => ({
 
   requestCode: async ({ phoneNumber }: { phoneNumber: string }) => {
     phoneNumber = phoneNumber || get().phoneNumber;
-    try {
-      const { data } = await axios.post('/api/verify-phone', { phoneNumber });
-      console.log('verify-phone', phoneNumber, data);
-      set({
-        phoneNumber,
-        phoneError: null,
-        codeDigits: defaultCodeDigits,
-        codeError: null,
-      });
-    } catch (err: any) {
-      console.error(err);
-      set({
-        phoneError:
-          err?.response?.data?.message || err?.message || 'Unknown error',
-      });
-    }
+    // try {
+    //   const { data } = await axios.post('/api/verify-phone', { phoneNumber });
+    //   console.log('verify-phone', phoneNumber, data);
+    set({
+      phoneNumber,
+      phoneError: null,
+      codeDigits: defaultCodeDigits,
+      codeError: null,
+    });
+    // } catch (err: any) {
+    //   console.error(err);
+    //   set({
+    //     phoneError:
+    //       err?.response?.data?.message || err?.message || 'Unknown error',
+    //   });
+    // }
   },
 
   resetPhoneNumber: () => set({ phoneNumber: '', phoneError: null }),
