@@ -9,8 +9,8 @@ export const ticker = 'poll3';
 export const tokenAddress =
   '8E1FucZqLRTC3fdcq2rzBM3PxGVCBWHJ6TTQFKTCg1m7xBerwmR';
 
-export const phoneNumbersTable = 'phonePoll3';
+export const phoneNumbersTable = 'phonePoll3Test';
 
-export const rcvResultKVKey = 'Poll3RCVResult';
+export const rcvResultKVKey = 'Poll3RCVResultTest';
 
 export const endTime = 1730471598110;
