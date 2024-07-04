@@ -114,6 +114,7 @@ async function fetchVotesDistribution(candidates: Candidate[]) {
 
 /**
  * ===========================================================
+ * @returns whether result calculation is finished
  */
 function processRCVRound({
   result,
@@ -131,9 +132,19 @@ function processRCVRound({
   const addresses = Object.keys(voteDistribution);
 
   // 1. Count the votes
+  let zeroVotes = true;
   addresses.forEach((address) => {
-    round.voteCount[address] = voteDistribution[address].length;
+    const voteCount = voteDistribution[address].length;
+    round.voteCount[address] = voteCount;
+    if (voteCount > 0) {
+      zeroVotes = false;
+    }
   });
+
+  // Skip other steps if there are zero votes
+  if (zeroVotes) {
+    return true; // finish result calculation
+  }
 
   // 2. Check for winner
   const total = addresses.reduce(
@@ -145,7 +156,7 @@ function processRCVRound({
   );
   if (winner) {
     round.winner = winner;
-    return true;
+    return true; // found a winner => finish result calculation
   }
 
   // 3. No winner yet => Eliminate the candidate who has the lowest vote count
@@ -223,16 +234,16 @@ export async function GET(request: NextRequest) {
   };
   const eliminatedAddresses: string[] = [];
 
-  let foundWinner = false;
+  let finished = false;
   do {
     result.roundNo++;
-    foundWinner = processRCVRound({
+    finished = processRCVRound({
       result,
       voteDistribution,
       eliminatedAddresses,
     });
     console.log('[RCV] Round ', result.roundNo, result.rounds[result.roundNo]);
-  } while (!foundWinner && result.roundNo <= maxChoices);
+  } while (!finished && result.roundNo <= maxChoices);
 
   const duration = Date.now() - startTime;
   console.log(`[RCV] Finished Recalculation (${duration / 1000}s)`);
