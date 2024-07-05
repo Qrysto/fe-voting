@@ -1,7 +1,7 @@
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
 import { oswald } from '@/fonts';
-import { Candidate, Round } from '@/types';
+import type { Candidate, Round } from '@/types';
 import CandidateImage from '@/components/CandidateImage';
 
 const format = Intl.NumberFormat('en-US').format;
@@ -66,7 +66,7 @@ function RankedCandidate({
       <div
         className={`w-14 shrink-0 grow-0 rounded-full text-right font-bold ${oswald.className}`}
       >
-        {Math.round((10000 * voteCount) / total) / 100 + '%'}
+        {total ? Math.round((10000 * voteCount) / total) / 100 : 0}%
       </div>
     </li>
   );
