@@ -6,6 +6,7 @@ import BigButton from '@/components/BigButton';
 import LinkButton from '@/components/LinkButton';
 import { useStore } from '@/store';
 import { codeDigitCount } from '@/constants';
+import { toE164US } from '../lib/phone';
 
 function CodeInput({ focusConfirmBtn }: { focusConfirmBtn: () => void }) {
   const digits = useStore((state) => state.codeDigits);
@@ -129,8 +130,8 @@ export default function ConfirmCode() {
       >
         <h2 className="mb-3 text-4xl uppercase">Look for your Code</h2>
         <p className="text-lg leading-6">
-          We sent you a text to your phone number +1{phoneNumber}. Please check
-          and enter your code to confirm your identity.
+          We sent you a text to your phone number {toE164US(phoneNumber)}.
+          Please check and enter your code to confirm your identity.
         </p>
         <BigButton
           primary

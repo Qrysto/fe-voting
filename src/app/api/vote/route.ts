@@ -3,7 +3,7 @@ import { type NextRequest } from 'next/server';
 import { maxChoices, ticker, endTime } from '@/constants';
 import type { Candidate } from '@/types';
 import { callNexus } from '@/app/lib/api';
-import { markNumberVoted, markNumberNotVoted } from '../phone';
+import { markNumberVoted, markNumberNotVoted } from '@/app/lib/phone';
 
 const jwtSecret = process.env.JWT_SECRET || 'secret';
 

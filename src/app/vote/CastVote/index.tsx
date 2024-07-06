@@ -15,6 +15,7 @@ import { oswald } from '@/fonts';
 import { maxChoices } from '@/constants';
 import type { Candidate } from '@/types';
 import { useStore } from '@/store';
+import { toE164US } from '@/app/lib/phone';
 import searchIcon from './search.svg';
 import filterIcon from './filter.svg';
 
@@ -252,6 +253,7 @@ export default function CastVote() {
   //   () => shuffle([...allCandidates]),
   //   [allCandidates]
   // );
+  const phoneNumber = useStore((state) => state.phoneNumber);
   const jwtToken = useStore((state) => state.jwtToken);
   const votes = useStore((state) => state.votes);
   const resetVote = useStore((state) => state.resetVote);
@@ -296,6 +298,7 @@ export default function CastVote() {
     >
       <div className="">
         <h2 className="px-4 text-4xl uppercase">Vote</h2>
+
         <p className="mt-[10px] px-4 text-lg leading-6">
           Take a moment to reflect on the candidate&#39;s positions. If you need
           a refresher,{' '}
@@ -312,6 +315,10 @@ export default function CastVote() {
           Select the candidate you believe won the debate by clicking on their
           name below. Take a moment to reflect on the debate performances.
         </p>
+        <p className="mt-4 px-4 italic">
+          You're voting as <strong>{toE164US(phoneNumber)}</strong>
+        </p>
+
         <div className="flex items-end">
           <div className="shrink grow">
             <h2 className="mb-3 mt-8 px-4 text-2xl uppercase">Candidates</h2>
