@@ -130,7 +130,9 @@ export const useStore = create<State & Actions>((set, get) => ({
         jwtToken: data.token,
         codeError: null,
       });
-      localStorage.setItem(jwtKey, data.token);
+      if (typeof localStorage === 'object') {
+        localStorage.setItem(jwtKey, data.token);
+      }
     } catch (err: any) {
       console.error(err);
       set({
