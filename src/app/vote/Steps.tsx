@@ -1,11 +1,14 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import EnterPhone from './EnterPhone';
 import ConfirmCode from './ConfirmCode';
 import CastVote from './CastVote';
 import { useStep, useStore } from '@/store';
 import { Candidate } from '@/types';
+import { jwtKey } from '@/constants';
+
+const jwtToken = localStorage.getItem(jwtKey);
 
 export default function Steps({
   allCandidates,
@@ -13,10 +16,21 @@ export default function Steps({
   allCandidates: Candidate[];
 }) {
   const loadCandidates = useStore((state) => state.loadCandidates);
+  const checkJWT = useStore((state) => state.checkJWT);
+  const [checkingJWT, setChecking] = useState(!!jwtToken);
   useEffect(() => {
     loadCandidates(allCandidates);
+    if (jwtToken) {
+      checkJWT(jwtToken).finally(() => {
+        setChecking(false);
+      });
+    }
   }, []);
   const step = useStep();
+
+  if (checkingJWT) {
+    return null;
+  }
 
   if (step === 3) {
     return <CastVote />;

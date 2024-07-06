@@ -23,9 +23,9 @@ export async function POST(request: NextRequest) {
   }
 
   const body = await request.json();
-  const jwToken: string = body?.jwToken;
+  const jwtToken: string = body?.jwtToken;
   const votes: string[] = body?.votes;
-  if (!jwToken) {
+  if (!jwtToken) {
     return Response.json(
       { message: 'You need to verify your phone number' },
       { status: 401 }
@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
 
   let phoneNumber: string;
   try {
-    const decoded: any = jwt.verify(jwToken, jwtSecret);
+    const decoded: any = jwt.verify(jwtToken, jwtSecret);
     phoneNumber = decoded.phoneNumber;
   } catch (err: any) {
     return Response.json(

@@ -252,7 +252,7 @@ export default function CastVote() {
   //   () => shuffle([...allCandidates]),
   //   [allCandidates]
   // );
-  const jwToken = useStore((state) => state.jwToken);
+  const jwtToken = useStore((state) => state.jwtToken);
   const votes = useStore((state) => state.votes);
   const resetVote = useStore((state) => state.resetVote);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
@@ -455,7 +455,7 @@ export default function CastVote() {
           }}
           confirmVote={async () => {
             try {
-              await axios.post('/api/vote', { jwToken, votes });
+              await axios.post('/api/vote', { jwtToken, votes });
             } catch (err: any) {
               console.error(err);
               alert('ERROR! ' + err?.message);

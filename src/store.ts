@@ -13,7 +13,7 @@ type State = {
   codeDigits: string[];
   codeError: string | null;
   phoneNumber: string;
-  jwToken: string | null;
+  jwtToken: string | null;
   votes: string[];
   allCandidates: Candidate[];
 };
@@ -34,6 +34,7 @@ type Actions = {
   resetVote: () => void;
   goBack: () => void;
   loadCandidates: (allCandidates: Candidate[]) => void;
+  checkJWT: (jwtToken: string) => Promise<void>;
 };
 
 const defaultCodeDigits = Array(codeDigitCount).fill('');
@@ -44,7 +45,7 @@ export const useStore = create<State & Actions>((set, get) => ({
   codeDigits: defaultCodeDigits,
   codeError: null,
   phoneNumber: '',
-  jwToken: null,
+  jwtToken: null,
   votes: [],
   allCandidates: [],
 
@@ -126,7 +127,7 @@ export const useStore = create<State & Actions>((set, get) => ({
       });
       console.log('data', data);
       set({
-        jwToken: data.token,
+        jwtToken: data.token,
         codeError: null,
       });
       localStorage.setItem(jwtKey, data.token);
@@ -139,7 +140,7 @@ export const useStore = create<State & Actions>((set, get) => ({
     }
   },
 
-  unconfirmCode: () => set({ jwToken: null }),
+  unconfirmCode: () => set({ jwtToken: null }),
 
   addVote: (id: string) =>
     set((state) => ({
@@ -160,9 +161,9 @@ export const useStore = create<State & Actions>((set, get) => ({
   resetVote: () => set({ votes: [] }),
   goBack: () => {
     const state = get();
-    if (state.jwToken) {
+    if (state.jwtToken) {
       set({
-        jwToken: null,
+        jwtToken: null,
         codeDigits: defaultCodeDigits,
         codeError: null,
       });
@@ -172,7 +173,19 @@ export const useStore = create<State & Actions>((set, get) => ({
   },
 
   loadCandidates: (allCandidates) => set({ allCandidates }),
+
+  checkJWT: async (jwtToken: string) => {
+    if (jwtToken) {
+      const { data } = await axios.get(`/api/check-jwt?token=${jwtToken}`);
+      if (data.ok) {
+        set({
+          phoneNumber: data.phoneNumber,
+          jwtToken: jwtToken,
+        });
+      }
+    }
+  },
 }));
 
 export const useStep = () =>
-  useStore((state) => (!state.phoneNumber ? 1 : !state.jwToken ? 2 : 3));
+  useStore((state) => (!state.phoneNumber ? 1 : !state.jwtToken ? 2 : 3));
