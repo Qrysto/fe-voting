@@ -45,11 +45,8 @@ export async function POST(request: NextRequest) {
     if (verification.status === 'approved') {
       try {
         const token = jwt.sign(
-          { sid: verification.sid, phoneNumber, code },
-          jwtSecret,
-          {
-            expiresIn: '1 day',
-          }
+          { sid: verification.sid, phoneNumber, code, timestamp: Date.now() },
+          jwtSecret
         );
         return Response.json({ ok: true, token, phoneNumber });
       } catch (err) {
