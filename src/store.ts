@@ -4,6 +4,7 @@ import { create } from 'zustand';
 import axios from 'axios';
 import { phoneDigitCount, codeDigitCount } from '@/constants';
 import { maxChoices } from '@/constants';
+import { jwtKey } from '@/constants';
 import { Candidate } from './types';
 
 type State = {
@@ -128,6 +129,7 @@ export const useStore = create<State & Actions>((set, get) => ({
         jwToken: data.token,
         codeError: null,
       });
+      localStorage.setItem(jwtKey, data.token);
     } catch (err: any) {
       console.error(err);
       set({

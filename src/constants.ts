@@ -1,3 +1,6 @@
+// Local storage key for storing json web token
+export const jwtKey = 'feVotingJWT';
+
 export const phoneDigitCount = 10;
 
 export const codeDigitCount = 6;
