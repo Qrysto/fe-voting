@@ -316,7 +316,7 @@ export default function CastVote() {
           name below. Take a moment to reflect on the debate performances.
         </p>
         <p className="mt-4 px-4 italic">
-          You're voting as <strong>{toE164US(phoneNumber)}</strong>
+          You&apos;re voting as <strong>{toE164US(phoneNumber)}</strong>
         </p>
 
         <div className="flex items-end">
