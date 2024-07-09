@@ -16,4 +16,4 @@ export const phoneNumbersTable = 'phonePoll3Test';
 
 export const rcvResultKVKey = 'Poll3RCVResultTest';
 
-export const endTime = 1730471598110;
+export const endTime = 1721620740000; // 2024 July 21st, 11:59pm EST
