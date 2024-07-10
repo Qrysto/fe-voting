@@ -60,7 +60,7 @@ export async function callNexusMain(
   nextCache?: object
 ) {
   return await callNexus(
-    'http://node2.nexus.io:7080',
+    'http://node2.nexus.io:8080',
     endpoint,
     params,
     nextCache
