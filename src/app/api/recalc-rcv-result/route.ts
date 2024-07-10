@@ -7,7 +7,7 @@ import {
   phoneNumbersTable,
 } from '@/constants';
 import type { Choice, Candidate, RCVResult, Round } from '@/types';
-import { callNexus } from '@/app/lib/api';
+import { callNexusPrivate } from '@/app/lib/api';
 
 export const maxDuration = 300;
 
@@ -23,7 +23,7 @@ function sleep(miliseconds: number) {
  * ===========================================================
  */
 async function fetchCandidates() {
-  const result = await callNexus('assets/list/accounts', {
+  const result = await callNexusPrivate('assets/list/accounts', {
     where: `results.ticker=${ticker} AND results.active=1`,
   });
   return result as Candidate[];
@@ -33,7 +33,7 @@ async function fetchCandidates() {
  * ===========================================================
  */
 async function fetchPage(page: number) {
-  return await callNexus(`profiles/transactions/master`, {
+  return await callNexusPrivate(`profiles/transactions/master`, {
     where: `results.contracts.ticker=${ticker} AND results.contracts.OP=DEBIT`,
     verbose: 'summary',
     limit,
@@ -48,7 +48,7 @@ async function fetchPage(page: number) {
  */
 async function fetchVotesPage(page: number) {
   try {
-    const result = await callNexus('local/list/record', {
+    const result = await callNexusPrivate('local/list/record', {
       table: phoneNumbersTable,
       limit,
       page,

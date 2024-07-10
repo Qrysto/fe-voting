@@ -2,16 +2,15 @@
  * @param {object} [nextCache] Next.js cache config to pass into fetch's `options.next`.
  * If empty, caching will be disabled and GET method will be used instead of POST.
  */
-export async function callNexus(
+async function callNexus(
+  baseUrl: string,
   endpoint: string,
   params?: object,
   nextCache?: object
 ) {
   const body = JSON.stringify(params);
   const res = await fetch(
-    `http://node5.nexus.io:7080/${endpoint}${
-      nextCache ? toQueryString(params) : ''
-    }`,
+    `${baseUrl}/${endpoint}${nextCache ? toQueryString(params) : ''}`,
     {
       cache: nextCache ? undefined : 'no-store',
       next: nextCache || undefined,
@@ -40,4 +39,30 @@ function toQueryString(params?: object) {
   if (!query) return '';
 
   return `?${query}`;
+}
+
+export async function callNexusPrivate(
+  endpoint: string,
+  params?: object,
+  nextCache?: object
+) {
+  return await callNexus(
+    'http://node5.nexus.io:7080',
+    endpoint,
+    params,
+    nextCache
+  );
+}
+
+export async function callNexusMain(
+  endpoint: string,
+  params?: object,
+  nextCache?: object
+) {
+  return await callNexus(
+    'http://node2.nexus.io:7080',
+    endpoint,
+    params,
+    nextCache
+  );
 }

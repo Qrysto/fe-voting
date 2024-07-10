@@ -5,7 +5,7 @@ import Round from './Round';
 // import UpdatedTime from './UpdatedTime';
 import Winner from './Winner';
 import EndingTime from './EndingTime';
-import { callNexus } from '@/app/lib/api';
+import { callNexusPrivate } from '@/app/lib/api';
 
 const rcvResultKVKey = 'rcvResult';
 
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 };
 
 async function loadRCVCandidates() {
-  const candidates: Candidate[] = await callNexus(
+  const candidates: Candidate[] = await callNexusPrivate(
     'assets/list/accounts',
     {
       where: `results.ticker=poll2 AND results.active=1 AND results.choice=1`,

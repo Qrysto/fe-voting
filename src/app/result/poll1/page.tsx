@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { oswald } from '@/fonts';
 import { Candidate } from '@/types';
 import CandidateImage from '@/components/CandidateImage';
-import { callNexus } from '@/app/lib/api';
+import { callNexusPrivate } from '@/app/lib/api';
 
 const format = Intl.NumberFormat('en-US').format;
 
@@ -48,7 +48,7 @@ function RankedCandidate({ candidate }: { candidate: Candidate }) {
 }
 
 export default async function RankingPage() {
-  const result = await callNexus(
+  const result = await callNexusPrivate(
     'assets/list/accounts',
     { where: 'results.ticker=votes AND results.active=1' },
     { revalidate: 86400 /* 24 hours */, tags: ['allPoll1Candidates'] }
