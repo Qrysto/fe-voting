@@ -69,7 +69,7 @@ export default async function RankingPage() {
   return (
     <div className="mt-10">
       <h2 className="mt-4 px-4 text-xl uppercase">Candidate Selection Poll</h2>
-      <div className="mb-3 px-4">January 18th - February 1st</div>
+      <div className="mb-3 px-4">January 18th - February 1st, 2024</div>
       <p className="mb-3 mt-2 px-4">
         This poll used Borda count voting. Each voter can choose at most 6
         candidates to vote. First choice of each vote worths 6 points, second

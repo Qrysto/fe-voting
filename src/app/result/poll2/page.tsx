@@ -46,7 +46,7 @@ export default async function RankingPage() {
   return (
     <div className="mt-6">
       <h2 className="mt-4 text-xl uppercase">Debate Winner Poll</h2>
-      <div className="mb-3">February 29th - March 7th</div>
+      <div className="mb-3">February 29th - March 7th, 2024</div>
       {/* <EndingTime /> */}
 
       <h1 className="mt-4 text-3xl uppercase text-darkBlue">
