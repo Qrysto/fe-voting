@@ -1,4 +1,5 @@
 import { useState, useRef, useMemo } from 'react';
+import type { MouseEvent } from 'react';
 import axios from 'axios';
 import Image from 'next/image';
 import { TouchBackend } from 'react-dnd-touch-backend';
@@ -256,6 +257,8 @@ export default function CastVote() {
   const phoneNumber = useStore((state) => state.phoneNumber);
   const jwtToken = useStore((state) => state.jwtToken);
   const votes = useStore((state) => state.votes);
+  const resetPhoneNumber = useStore((state) => state.resetPhoneNumber);
+  const unconfirmCode = useStore((state) => state.unconfirmCode);
   const resetVote = useStore((state) => state.resetVote);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const [confirmedModalOpen, setConfirmedModalOpen] = useState(false);
@@ -288,6 +291,12 @@ export default function CastVote() {
     [allCandidates, filterOpen, query, selectedParty, votes]
   );
 
+  const changePhoneNumber = (e: MouseEvent) => {
+    e.preventDefault();
+    resetPhoneNumber();
+    unconfirmCode();
+  };
+
   return (
     <DndProvider
       backend={TouchBackend}
@@ -307,16 +316,23 @@ export default function CastVote() {
             href="https://freeandequal.org/debate/2024-free-equal-presidential-debate/"
             className="text-darkBlue underline underline-offset-2 active:text-darkBlue/90"
           >
-            click here
-          </a>{' '}
-          to watch.
+            click here to watch
+          </a>
+          .
         </p>
         <p className="mt-[10px] px-4 text-lg leading-6">
           Select the candidate you believe won the debate by clicking on their
           name below. Take a moment to reflect on the debate performances.
         </p>
         <p className="mt-4 px-4 italic">
-          You&apos;re voting as <strong>{toE164US(phoneNumber)}</strong>
+          You&apos;re voting as <strong>{toE164US(phoneNumber)}</strong>.{' '}
+          <a
+            href="#"
+            className="underline underline-offset-2"
+            onClick={changePhoneNumber}
+          >
+            Change phone number
+          </a>
         </p>
 
         <div className="flex items-end">
