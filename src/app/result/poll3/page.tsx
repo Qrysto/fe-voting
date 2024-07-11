@@ -26,7 +26,7 @@ async function loadRCVCandidates() {
     {
       where: `results.ticker=${ticker} AND results.active=1`,
     },
-    { revalidate: 86400 /* 24 hours */, tags: ['allPoll3Candidates'] }
+    { revalidate: 60 /* 1 minute */, tags: ['allPoll3Candidates'] }
   );
 
   return candidates;
