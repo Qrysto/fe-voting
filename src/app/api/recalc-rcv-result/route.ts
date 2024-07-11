@@ -7,7 +7,7 @@ import {
   rcvResultKVKey,
 } from '@/constants/activePoll';
 import type { Candidate, RCVResult, Round } from '@/types';
-import { callNexusPrivate } from '@/app/lib/api';
+import { callNexusMain } from '@/app/lib/api';
 
 export const maxDuration = 300;
 
@@ -68,7 +68,7 @@ async function fetchVotesDistribution(candidates: Candidate[]) {
 
     // Fetch transactions
     try {
-      transactions = await callNexusPrivate(`profiles/transactions/master`, {
+      transactions = await callNexusMain(`profiles/transactions/master`, {
         where: `results.contracts.ticker=${ticker} AND results.contracts.OP=DEBIT`,
         verbose: 'summary',
         limit,
@@ -228,12 +228,9 @@ export async function GET(request: NextRequest) {
   console.log('[RCV] Start Recalculation');
   const startTime = Date.now();
 
-  const candidates: Candidate[] = await callNexusPrivate(
-    'assets/list/accounts',
-    {
-      where: `results.ticker=${ticker} AND results.active=1`,
-    }
-  );
+  const candidates: Candidate[] = await callNexusMain('assets/list/accounts', {
+    where: `results.ticker=${ticker} AND results.active=1`,
+  });
   console.log('[RCV] Finished fetching Choice assets', candidates);
 
   const voteDistribution = await fetchVotesDistribution(candidates);
