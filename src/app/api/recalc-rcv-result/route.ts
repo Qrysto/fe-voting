@@ -3,10 +3,10 @@ import { kv } from '@vercel/kv';
 import {
   maxChoices,
   ticker,
+  allVotesKVKey,
   rcvResultKVKey,
-  phoneNumbersTable,
 } from '@/constants/poll3Staging';
-import type { Choice, Candidate, RCVResult, Round } from '@/types';
+import type { Candidate, RCVResult, Round } from '@/types';
 import { callNexusPrivate } from '@/app/lib/api';
 
 export const maxDuration = 300;
@@ -17,55 +17,6 @@ function sleep(miliseconds: number) {
   return new Promise((resolve) =>
     setTimeout(() => resolve(undefined), miliseconds)
   );
-}
-
-/**
- * ===========================================================
- */
-async function fetchCandidates() {
-  const result = await callNexusPrivate('assets/list/accounts', {
-    where: `results.ticker=${ticker} AND results.active=1`,
-  });
-  return result as Candidate[];
-}
-
-/**
- * ===========================================================
- */
-async function fetchPage(page: number) {
-  return await callNexusPrivate(`profiles/transactions/master`, {
-    where: `results.contracts.ticker=${ticker} AND results.contracts.OP=DEBIT`,
-    verbose: 'summary',
-    limit,
-    page,
-    sort: 'timestamp',
-    order: 'asc',
-  });
-}
-
-/**
- * ===========================================================
- */
-async function fetchVotesPage(page: number) {
-  try {
-    const result = await callNexusPrivate('local/list/record', {
-      table: phoneNumbersTable,
-      limit,
-      page,
-    });
-    const voteList = Object.values(result).map((stringified) =>
-      JSON.parse(stringified as string)
-    );
-    return voteList as Vote[];
-  } catch (err) {
-    console.error(
-      'Error fetching votes from records, page',
-      page,
-      'error',
-      err
-    );
-    throw err;
-  }
 }
 
 /**
@@ -94,20 +45,84 @@ async function fetchVotesDistribution(candidates: Candidate[]) {
     voteDistribution[address] = [];
   });
 
-  // Fetch votes from records
-  let page = 0;
-  let votes: Vote[] | null = null;
-  do {
-    votes = await fetchVotesPage(page);
+  // 1. Fetch cached votes from KV
+  let total = 0;
+  const votes = await kv.lrange<Vote>(allVotesKVKey, 0, -1);
+  if (votes) {
+    console.log(`[RCV] Fetched ${votes.length} votes from KV cache.`);
+    distributeVotes(votes, voteDistribution);
+    total = votes.length;
+  } else {
+    console.log(`[RCV] No votes found in KV cache!`);
+  }
 
-    console.log(
-      `[RCV] Fetched votes page ${page} from records. Got ${votes.length} votes`
-    );
+  // 2. Fetch newer votes from Nexus blockchain
+  let transactions: any = null;
+  let timeTaken: number = 0;
+  do {
+    if (timeTaken > 1000) {
+      await sleep(5000);
+    }
+    const fetchStart = Date.now();
+
+    // Fetch transactions
+    try {
+      transactions = await callNexusPrivate(`profiles/transactions/master`, {
+        where: `results.contracts.ticker=${ticker} AND results.contracts.OP=DEBIT`,
+        verbose: 'summary',
+        limit,
+        offset: total,
+        sort: 'timestamp',
+        order: 'asc',
+      });
+      timeTaken = Date.now() - fetchStart;
+      console.log(
+        `[RCV] Fetched transactions from offset ${total}. Got ${
+          transactions.length
+        } transactions, took ${timeTaken / 1000}s`
+      );
+    } catch (err) {
+      console.error('Error fetching from offset', total, err);
+      throw err;
+    }
+
+    // Extract votes from transactions
+    const newVotesByRef: { [reference: string]: Vote } = {};
+    for (const tx of transactions) {
+      for (const contract of tx.contracts) {
+        const {
+          reference,
+          amount,
+          to: { address },
+        } = contract;
+        const index = maxChoices - amount;
+        if (index < 0) {
+          console.error(
+            `[RCV] Abnormal amount ${amount} in transaction txid=${tx.txid} `
+          );
+          throw new Error('Invalid data!');
+        }
+        if (!newVotesByRef[reference]) {
+          newVotesByRef[reference] = [];
+        }
+        if (newVotesByRef[reference][index]) {
+          console.error(
+            `[RCV] Already had the same choice for the same number, reference=${reference} index=${index}`
+          );
+          throw new Error('Invalid data!');
+        }
+        newVotesByRef[reference][index] = address;
+      }
+    }
 
     // Distribute votes into the right buckets
-    distributeVotes(votes, voteDistribution);
-    page++;
-  } while (votes?.length === limit);
+    const newVotes = Object.values(newVotesByRef);
+    distributeVotes(newVotes, voteDistribution);
+    total += newVotes.length;
+
+    // Save new votes into KV
+    kv.lpush(allVotesKVKey, ...newVotes);
+  } while (transactions.length === limit);
 
   return voteDistribution;
 }
@@ -203,14 +218,6 @@ function processRCVRound({
 /**
  * ===========================================================
  */
-async function saveRCVResult(result: RCVResult) {
-  await kv.set(rcvResultKVKey, result);
-  console.log('[RCV] Saved result to KV', rcvResultKVKey);
-}
-
-/**
- * ===========================================================
- */
 export async function GET(request: NextRequest) {
   if (
     request.headers.get('Authorization') !== `Bearer ${process.env.CRON_SECRET}`
@@ -221,7 +228,12 @@ export async function GET(request: NextRequest) {
   console.log('[RCV] Start Recalculation');
   const startTime = Date.now();
 
-  const candidates = await fetchCandidates();
+  const candidates: Candidate[] = await callNexusPrivate(
+    'assets/list/accounts',
+    {
+      where: `results.ticker=${ticker} AND results.active=1`,
+    }
+  );
   console.log('[RCV] Finished fetching Choice assets', candidates);
 
   const voteDistribution = await fetchVotesDistribution(candidates);
@@ -249,7 +261,9 @@ export async function GET(request: NextRequest) {
   console.log(`[RCV] Finished Recalculation (${duration / 1000}s)`);
   console.log('[RCV] Result: ', result);
 
-  await saveRCVResult(result);
+  await kv.set(rcvResultKVKey, result);
+  console.log('[RCV] Saved result to KV', rcvResultKVKey);
+
   return Response.json({ ok: true, result });
 }
 
