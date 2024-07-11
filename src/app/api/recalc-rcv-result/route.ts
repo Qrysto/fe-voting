@@ -59,6 +59,7 @@ async function fetchVotesDistribution(candidates: Candidate[]) {
   // 2. Fetch newer votes from Nexus blockchain
   let transactions: any = null;
   let timeTaken: number = 0;
+  const newVotesByRef: { [reference: string]: Vote } = {};
   do {
     if (timeTaken > 1000) {
       await sleep(5000);
@@ -87,7 +88,6 @@ async function fetchVotesDistribution(candidates: Candidate[]) {
     }
 
     // Extract votes from transactions
-    const newVotesByRef: { [reference: string]: Vote } = {};
     for (const tx of transactions) {
       for (const contract of tx.contracts) {
         const {
@@ -114,15 +114,15 @@ async function fetchVotesDistribution(candidates: Candidate[]) {
         newVotesByRef[reference][index] = address;
       }
     }
-
-    // Distribute votes into the right buckets
-    const newVotes = Object.values(newVotesByRef);
-    distributeVotes(newVotes, voteDistribution);
-    total += newVotes.length;
-
-    // Save new votes into KV
-    kv.lpush(allVotesKVKey, ...newVotes);
   } while (transactions.length === limit);
+
+  // Distribute new votes into the right buckets
+  const newVotes = Object.values(newVotesByRef);
+  distributeVotes(newVotes, voteDistribution);
+  total += newVotes.length;
+
+  // Save new votes into KV
+  await kv.lpush(allVotesKVKey, ...newVotes);
 
   return voteDistribution;
 }
