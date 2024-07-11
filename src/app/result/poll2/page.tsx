@@ -6,8 +6,7 @@ import Round from './Round';
 import Winner from './Winner';
 import EndingTime from './EndingTime';
 import { callNexusPrivate } from '@/app/lib/api';
-
-const rcvResultKVKey = 'rcvResult';
+import { rcvResultKVKey, ticker } from '@/constants/poll2';
 
 export const metadata: Metadata = {
   title: 'Results | Free And Equal',
@@ -25,7 +24,7 @@ async function loadRCVCandidates() {
   const candidates: Candidate[] = await callNexusPrivate(
     'assets/list/accounts',
     {
-      where: `results.ticker=poll2 AND results.active=1 AND results.choice=1`,
+      where: `results.ticker=${ticker} AND results.active=1 AND results.choice=1`,
     },
     { revalidate: 86400 /* 24 hours */, tags: ['allPoll2Candidates'] }
   );

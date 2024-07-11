@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { kv } from '@vercel/kv';
 import { Candidate, RCVResult } from '@/types';
-import { rcvResultKVKey, ticker } from '@/constants';
+import { rcvResultKVKey, ticker } from '@/constants/poll3Staging';
 import Round from './Round';
 import UpdatedTime from './UpdatedTime';
 import Winner from './Winner';
@@ -26,7 +26,7 @@ async function loadRCVCandidates() {
     {
       where: `results.ticker=${ticker} AND results.active=1`,
     },
-    { revalidate: 86400 /* 24 hours */, tags: ['allPoll2Candidates'] }
+    { revalidate: 86400 /* 24 hours */, tags: ['allPoll3Candidates'] }
   );
 
   return candidates;

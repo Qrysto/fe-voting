@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Candidate } from '@/types';
-import { endTime, ticker } from '@/constants';
+import { endTime, ticker } from '@/constants/poll3Staging';
 import { callNexusPrivate } from '@/app/lib/api';
 import Steps from './Steps';
 

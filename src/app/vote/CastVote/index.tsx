@@ -12,7 +12,7 @@ import ConfirmVoteModal from './ConfirmVoteModal';
 import VoteConfirmedModal from './VoteConfirmedModal';
 import CustomDragLayer from './CustomDragLayer';
 import { oswald } from '@/fonts';
-import { maxChoices } from '@/constants';
+import { maxChoices } from '@/constants/poll3Staging';
 import type { Candidate } from '@/types';
 import { useStore } from '@/store';
 import { toE164US } from '@/app/lib/phone';

@@ -2,9 +2,8 @@
 
 import { create } from 'zustand';
 import axios from 'axios';
-import { phoneDigitCount, codeDigitCount } from '@/constants';
-import { maxChoices } from '@/constants';
-import { jwtKey } from '@/constants';
+import { phoneDigitCount, codeDigitCount, jwtKey } from '@/constants';
+import { maxChoices } from '@/constants/poll3Staging';
 import { Candidate } from './types';
 
 type State = {

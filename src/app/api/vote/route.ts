@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { type NextRequest } from 'next/server';
-import { maxChoices, ticker, endTime } from '@/constants';
+import { maxChoices, ticker, endTime } from '@/constants/poll3Staging';
 import type { Candidate } from '@/types';
 import { callNexusPrivate } from '@/app/lib/api';
 import { markNumberVoted, markNumberNotVoted } from '@/app/lib/phone';
