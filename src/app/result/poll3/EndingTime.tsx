@@ -5,7 +5,7 @@
 // import ReactTimeAgo from 'react-time-ago';
 
 // TimeAgo.addDefaultLocale(en);
-import { endTime, endTimeString } from '@/constants/poll3Staging';
+import { endTime, endTimeString } from '@/constants/activePoll';
 
 export default function EndingTime() {
   const pollEnded = Date.now() > endTime;

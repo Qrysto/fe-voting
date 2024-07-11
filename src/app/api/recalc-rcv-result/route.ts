@@ -5,7 +5,7 @@ import {
   ticker,
   allVotesKVKey,
   rcvResultKVKey,
-} from '@/constants/poll3Staging';
+} from '@/constants/activePoll';
 import type { Candidate, RCVResult, Round } from '@/types';
 import { callNexusPrivate } from '@/app/lib/api';
 

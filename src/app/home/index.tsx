@@ -6,7 +6,7 @@ import headingImg from './heading@2x.png';
 import iconImg from './icon@2x.png';
 import bannerImg from './banner@2x.png';
 import shareIcon from './shareIcon.svg';
-import { endTime } from '@/constants/poll3Staging';
+import { endTime } from '@/constants/activePoll';
 
 export default function HomePage() {
   const pollEnded = Date.now() > endTime;

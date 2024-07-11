@@ -3,7 +3,7 @@
 import { create } from 'zustand';
 import axios from 'axios';
 import { phoneDigitCount, codeDigitCount, jwtKey } from '@/constants';
-import { maxChoices } from '@/constants/poll3Staging';
+import { maxChoices } from '@/constants/activePoll';
 import { Candidate } from './types';
 
 type State = {

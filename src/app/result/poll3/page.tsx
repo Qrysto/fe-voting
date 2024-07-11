@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { kv } from '@vercel/kv';
 import { Candidate, RCVResult } from '@/types';
-import { rcvResultKVKey, ticker } from '@/constants/poll3Staging';
+import { rcvResultKVKey, ticker } from '@/constants/activePoll';
 import Round from './Round';
 import UpdatedTime from './UpdatedTime';
 import Winner from './Winner';

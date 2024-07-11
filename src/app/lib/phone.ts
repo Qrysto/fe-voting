@@ -1,4 +1,4 @@
-import { phoneNumbersTable } from '@/constants/poll3Staging';
+import { phoneNumbersTable } from '@/constants/activePoll';
 import { callNexusPrivate } from '@/app/lib/api';
 
 const regex = /^\d{10}$/;
