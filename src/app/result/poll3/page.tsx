@@ -25,8 +25,8 @@ async function loadRCVCandidates() {
     'assets/list/accounts',
     {
       where: `results.ticker=${ticker} AND results.active=1`,
-    },
-    { revalidate: 60 /* 1 minute */, tags: ['allPoll3Candidates'] }
+    }
+    // { revalidate: 60 /* 1 minute */, tags: ['allPoll3Candidates'] }
   );
 
   return candidates;
