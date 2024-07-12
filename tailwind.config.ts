@@ -24,6 +24,8 @@ const config: Config = {
       green: 'rgb(95, 216, 38)',
       red: 'rgb(188, 2, 25)',
       orange: 'rgb(254, 166, 33)',
+      purple: 'rgb(128, 0, 128)',
+      brown: 'rgb(139,69,19)',
     },
     container: {
       center: true,

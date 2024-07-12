@@ -17,6 +17,7 @@ import { maxChoices } from '@/constants/activePoll';
 import type { Candidate } from '@/types';
 import { useStore } from '@/store';
 import { toE164US } from '@/app/lib/phone';
+import { partyColor } from '@/app/lib/utils';
 import searchIcon from './search.svg';
 import filterIcon from './filter.svg';
 
@@ -37,17 +38,7 @@ function Candidate({
           {`${candidate.First} ${candidate.Last}`}
         </div>
         <div className={`text-[11px] font-bold uppercase ${oswald.className}`}>
-          <span
-            className={
-              candidate.Party.toUpperCase() === 'DEMOCRAT'
-                ? 'text-blue'
-                : candidate.Party.toUpperCase() === 'REPUBLICAN'
-                  ? 'text-red'
-                  : 'text-orange'
-            }
-          >
-            {candidate.Party}
-          </span>
+          <span className={partyColor(candidate.Party)}>{candidate.Party}</span>
           {candidate.Website === 'NONE' ? (
             <span className="ml-3 text-gray underline underline-offset-2">
               Website
@@ -184,17 +175,7 @@ export function VotedCandidate({
           {`${candidate.First} ${candidate.Last}`}
         </div>
         <div className={`text-[11px] font-bold uppercase ${oswald.className}`}>
-          <span
-            className={
-              candidate.Party.toUpperCase() === 'DEMOCRAT'
-                ? 'text-blue'
-                : candidate.Party.toUpperCase() === 'REPUBLICAN'
-                  ? 'text-red'
-                  : 'text-orange'
-            }
-          >
-            {candidate.Party}
-          </span>
+          <span className={partyColor(candidate.Party)}>{candidate.Party}</span>
           {candidate.Website === 'NONE' ? (
             <span className="ml-3 text-gray underline underline-offset-2">
               Website
@@ -405,13 +386,7 @@ export default function CastVote() {
                     <span
                       className={`text-[11px] font-bold uppercase ${
                         oswald.className
-                      } ${
-                        party.toUpperCase() === 'DEMOCRAT'
-                          ? 'text-blue'
-                          : party.toUpperCase() === 'REPUBLICAN'
-                            ? 'text-red'
-                            : 'text-orange'
-                      }`}
+                      } ${partyColor(party)}`}
                     >
                       {party}
                     </span>

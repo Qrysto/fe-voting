@@ -3,6 +3,7 @@ import Modal from '@/components/Modal';
 import BigButton from '@/components/BigButton';
 import CandidateImage from '@/components/CandidateImage';
 import Image from 'next/image';
+import { partyColor } from '@/app/lib/utils';
 import { oswald } from '@/fonts';
 import thumbsupImg from './thumbsup-small.svg';
 
@@ -21,17 +22,7 @@ function VotedCandidate({ address, rank }: { address: string; rank: number }) {
           {`${candidate.First} ${candidate.Last}`}
         </div>
         <div className={`text-[11px] font-bold uppercase ${oswald.className}`}>
-          <span
-            className={
-              candidate.Party.toUpperCase() === 'DEMOCRAT'
-                ? 'text-blue'
-                : candidate.Party.toUpperCase() === 'REPUBLICAN'
-                  ? 'text-red'
-                  : 'text-orange'
-            }
-          >
-            {candidate.Party}
-          </span>
+          <span className={partyColor(candidate.Party)}>{candidate.Party}</span>
           {candidate.Website === 'NONE' ? (
             <span className="ml-3 text-gray underline underline-offset-2">
               Website
