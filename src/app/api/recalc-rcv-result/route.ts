@@ -11,7 +11,7 @@ import { callNexusMain } from '@/app/lib/api';
 
 export const maxDuration = 300;
 
-const limit = 100;
+const limit = 10;
 
 function sleep(miliseconds: number) {
   return new Promise((resolve) =>
@@ -68,14 +68,17 @@ async function fetchVotesDistribution(candidates: Candidate[]) {
 
     // Fetch transactions
     try {
-      transactions = await callNexusMain(`profiles/transactions/master`, {
-        where: `results.contracts.ticker=${ticker} AND results.contracts.OP=DEBIT`,
-        verbose: 'summary',
-        limit,
-        offset: voteCount,
-        sort: 'timestamp',
-        order: 'asc',
-      });
+      transactions = await callNexusMain(
+        `profiles/transactions/master/txid,contracts.reference,contracts.amount,contracts.to.address`,
+        {
+          where: `results.contracts.ticker=${ticker} AND results.contracts.OP=DEBIT`,
+          verbose: 'summary',
+          limit,
+          offset: voteCount,
+          sort: 'timestamp',
+          order: 'asc',
+        }
+      );
       timeTaken = Date.now() - fetchStart;
       console.log(
         `[RCV] Fetched transactions from offset ${voteCount}. Got ${

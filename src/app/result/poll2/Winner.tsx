@@ -2,6 +2,7 @@ import { oswald } from '@/fonts';
 import { Candidate, RCVResult } from '@/types';
 import Image from 'next/image';
 import CandidateImage from '@/components/CandidateImage';
+import { partyColor } from '@/app/lib/utils';
 import crownImg from './crown.png';
 
 export default function Winner({
@@ -40,17 +41,7 @@ export default function Winner({
           </span>
         </div>
         <div className={`text-base font-bold uppercase ${oswald.className}`}>
-          <span
-            className={
-              winner.Party.toUpperCase() === 'DEMOCRAT'
-                ? 'text-blue'
-                : winner.Party.toUpperCase() === 'REPUBLICAN'
-                  ? 'text-red'
-                  : 'text-orange'
-            }
-          >
-            {winner.Party}
-          </span>
+          <span className={partyColor(winner.Party)}>{winner.Party}</span>
           {winner.Website === 'NONE' ? (
             <span className="ml-3 text-gray underline underline-offset-2">
               Website
