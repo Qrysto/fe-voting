@@ -14,7 +14,7 @@ export default function Modal({
 
   return (
     <div className="fixed bottom-0 left-0 right-0 top-0 bg-black/70">
-      <div className="container relative h-full overflow-y-auto md:max-w-3xl">
+      <div className="container relative h-full md:max-w-3xl">
         <div className="absolute inset-x-5 inset-y-9 rounded-[28px] bg-white">
           <div>{children}</div>
           <button

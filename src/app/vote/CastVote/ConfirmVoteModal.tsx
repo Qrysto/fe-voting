@@ -86,11 +86,11 @@ export default function ConfirmVoteModal({
             <VotedCandidate key={address} address={address} rank={i + 1} />
           ))}
         </ul>
-        <BigButton className="mt-4" primary action={confirmVote}>
+        <BigButton className="mt-4 flex-shrink-0" primary action={confirmVote}>
           Confirm my votes
         </BigButton>
         <BigButton
-          className="mt-4"
+          className="mt-4 flex-shrink-0"
           onClick={() => {
             resetVote();
             close();

@@ -46,12 +46,12 @@ async function fetchVotesDistribution(candidates: Candidate[]) {
   });
 
   // 1. Fetch cached votes from KV
-  let total = 0;
+  let voteCount = 0;
   const votes = await kv.lrange<Vote>(allVotesKVKey, 0, -1);
   if (votes) {
     console.log(`[RCV] Fetched ${votes.length} votes from KV cache.`);
     distributeVotes(votes, voteDistribution);
-    total = votes.length;
+    voteCount = votes.length;
   } else {
     console.log(`[RCV] No votes found in KV cache!`);
   }
@@ -72,18 +72,18 @@ async function fetchVotesDistribution(candidates: Candidate[]) {
         where: `results.contracts.ticker=${ticker} AND results.contracts.OP=DEBIT`,
         verbose: 'summary',
         limit,
-        offset: total,
+        offset: voteCount,
         sort: 'timestamp',
         order: 'asc',
       });
       timeTaken = Date.now() - fetchStart;
       console.log(
-        `[RCV] Fetched transactions from offset ${total}. Got ${
+        `[RCV] Fetched transactions from offset ${voteCount}. Got ${
           transactions.length
         } transactions, took ${timeTaken / 1000}s`
       );
     } catch (err) {
-      console.error('Error fetching from offset', total, err);
+      console.error('Error fetching from offset', voteCount, err);
       throw err;
     }
 
@@ -119,10 +119,11 @@ async function fetchVotesDistribution(candidates: Candidate[]) {
   // Distribute new votes into the right buckets
   const newVotes = Object.values(newVotesByRef);
   distributeVotes(newVotes, voteDistribution);
-  total += newVotes.length;
 
   // Save new votes into KV
-  await kv.lpush(allVotesKVKey, ...newVotes);
+  if (newVotes.length > 0) {
+    await kv.lpush(allVotesKVKey, ...newVotes);
+  }
 
   return voteDistribution;
 }

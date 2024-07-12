@@ -12,7 +12,7 @@ export default function VoteConfirmedModal({
 }) {
   return (
     <Modal open={open} close={close}>
-      <div className="absolute bottom-0 left-0 right-0 top-0 flex flex-col items-stretch px-6 py-7">
+      <div className="absolute bottom-0 left-0 right-0 top-0 flex flex-col items-stretch overflow-y-auto px-6 py-7">
         <div className="flex shrink grow items-center">
           <Image src={thumbsupImg} alt="" className="" />
         </div>
@@ -30,7 +30,7 @@ export default function VoteConfirmedModal({
           </a>{' '}
           to support the production of our fourth presidential debate.
         </p>
-        <BigButton className="mt-8" primary onClick={close}>
+        <BigButton className="mt-8 flex-shrink-0" primary onClick={close}>
           Close & continue
         </BigButton>
       </div>
