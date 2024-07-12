@@ -313,7 +313,7 @@ export default function CastVote() {
           a refresher,{' '}
           <a
             target="_blank"
-            href="https://freeandequal.org/debate/2024-free-equal-presidential-debate/"
+            href="https://freeandequal.org/debate/free-equal-presidential-debate-july-12-2024/"
             className="text-darkBlue underline underline-offset-2 active:text-darkBlue/90"
           >
             click here to watch

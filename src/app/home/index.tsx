@@ -41,11 +41,12 @@ export default function HomePage() {
           />
         </div>
       </div>
-      <div className="flex flex-col items-center pt-6">
+      <div className="flex flex-col items-center px-8 pt-6">
         <div
-          className={`${oswald.className} mb-4 text-xl font-bold uppercase text-white`}
+          className={`${oswald.className} mb-4 text-center text-xl font-bold uppercase text-white`}
         >
-          Who won the debate?
+          Who won the debate
+          <br /> at FreedomFest?
         </div>
         <Link
           href={pollEnded ? 'result/poll3' : '/vote'}
@@ -54,17 +55,22 @@ export default function HomePage() {
           {pollEnded ? 'See Result' : 'Vote Now'}
         </Link>
 
-        <Link
-          href="/result/poll1"
-          className={`${oswald.className} mt-12 text-sm font-medium uppercase text-lightBlue/90 underline underline-offset-2 active:text-lightBlue/80`}
+        <div
+          className={`${oswald.className} mt-16 font-bold uppercase text-lightBlue/90`}
         >
-          See Candidate Selection poll&#39;s result
-        </Link>
+          See previous polls results
+        </div>
         <Link
           href="/result/poll2"
-          className={`${oswald.className} mt-4 text-sm font-medium uppercase text-lightBlue/90 underline underline-offset-2 active:text-lightBlue/80`}
+          className={`${oswald.className} mt-5 text-sm uppercase text-lightBlue/90 underline underline-offset-2 active:text-lightBlue/80`}
         >
-          See Debate Winner poll&#39;s result
+          Second Debate Winner poll
+        </Link>
+        <Link
+          href="/result/poll1"
+          className={`${oswald.className} mt-4 text-sm uppercase text-lightBlue/90 underline underline-offset-2 active:text-lightBlue/80`}
+        >
+          Second debate Candidate Selection poll
         </Link>
 
         <a
