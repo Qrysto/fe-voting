@@ -18,8 +18,9 @@ export default function VoteConfirmedModal({
         </div>
         <h1 className="text-4xl uppercase">Vote confirmed</h1>
         <p className="mt-[10px]">
-          Thank you for participating! Did your candidate miss out on this
-          debate stage? Here&#39;s how you can help:{' '}
+          Thank you for your vote! Do you believe Americans deserve debates with
+          more candidates and audience participation? Here&#39;s how you can
+          help:{' '}
           <a
             target="_blank"
             href="https://freeandequal.org/donate"
@@ -27,7 +28,7 @@ export default function VoteConfirmedModal({
           >
             Donate to Free & Equal
           </a>{' '}
-          to support the production of our third presidential debate.
+          to support the production of our fourth presidential debate.
         </p>
         <BigButton className="mt-8" primary onClick={close}>
           Close & continue
