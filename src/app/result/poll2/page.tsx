@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { revalidateTag } from 'next/cache';
 import { kv } from '@vercel/kv';
 import { Candidate, RCVResult } from '@/types';
 import Round from './Round';
@@ -21,6 +22,7 @@ export const metadata: Metadata = {
 };
 
 async function loadRCVCandidates() {
+  revalidateTag('allPoll2Candidates');
   const candidates: Candidate[] = await callNexusPrivate(
     'assets/list/accounts',
     {
