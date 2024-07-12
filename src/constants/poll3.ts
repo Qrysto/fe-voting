@@ -11,6 +11,6 @@ export const allVotesKVKey = 'poll3AllVotes';
 
 export const rcvResultKVKey = 'poll3RCVResult';
 
-export const endTime = 1721620740000; // 2024 July 21st, 11:59pm EST
+export const endTime = 1721093400000; // 2024 July 15th, 6:30pm PDT
 
-export const endTimeString = '11:59PM on July 21st, 2024 EST';
+export const endTimeString = '6:30PM on July 15th, 2024 PDT';

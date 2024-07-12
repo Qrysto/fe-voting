@@ -48,7 +48,7 @@ export default async function RankingPage() {
       <h2 className="mt-4 text-xl uppercase">
         2024 Free and Equal Presidential Debate at FreedomFest Winner Poll
       </h2>
-      <div className="mb-3">July 12nd - July 21st, 2024</div>
+      <div className="mb-3">July 12nd - July 15th, 2024</div>
       <EndingTime />
 
       <h1 className="mt-4 text-3xl uppercase text-darkBlue">Current result</h1>
