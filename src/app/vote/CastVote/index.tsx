@@ -455,8 +455,12 @@ export default function CastVote() {
             try {
               await axios.post('/api/vote', { jwtToken, votes });
             } catch (err: any) {
-              console.error(err);
-              alert('ERROR! ' + err?.message);
+              console.log(err);
+              alert(
+                'ERROR! ' + err?.response.data?.message ||
+                  err?.message ||
+                  'Unknown error'
+              );
               return;
             }
             setConfirmModalOpen(false);
