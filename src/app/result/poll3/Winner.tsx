@@ -62,7 +62,7 @@ export default function Winner({
         <div
           className={`text-center uppercase text-orange ${oswald.className}`}
         >
-          Winner
+          Current Winner
         </div>
       </div>
     </li>
