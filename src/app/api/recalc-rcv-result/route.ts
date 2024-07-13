@@ -120,6 +120,7 @@ async function fetchVotesDistribution(candidates: Candidate[]) {
       }
       newVotes = [...newVotes, ...Object.values(newVotesByRef)];
     }
+    voteCount += transactions.length;
   } while (transactions.length === limit);
 
   // Distribute new votes into the right buckets
