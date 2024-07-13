@@ -112,7 +112,7 @@ async function fetchVotesDistribution(candidates: Candidate[]) {
           console.error(
             `[RCV] Already had the same choice for the same number, reference=${reference} index=${index}`
           );
-          throw new Error('Invalid data!');
+          // throw new Error('Invalid data!');
         }
         newVotesByRef[reference][index] = address;
       }
