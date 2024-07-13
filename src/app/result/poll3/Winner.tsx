@@ -57,7 +57,7 @@ export default function Winner({
           )}
         </div>
       </div>
-      <div className="shrink-0 grow-0">
+      <div className="flex shrink-0 grow-0 flex-col items-center">
         <Image src={crownImg} width={48} height={48} alt="" />
         <div
           className={`text-center uppercase text-orange ${oswald.className}`}
