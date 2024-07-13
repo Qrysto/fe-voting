@@ -37,7 +37,7 @@ function RankedCandidate({
               <span
                 className={`text-[12px] font-bold uppercase text-red ${oswald.className}`}
               >
-                Eliminated
+                Not Enough Votes
               </span>
             </span>
           ) : (
@@ -49,7 +49,7 @@ function RankedCandidate({
               <span
                 className={`text-[12px] font-bold uppercase text-orange ${oswald.className}`}
               >
-                Winner!
+                Current Winner!
               </span>
             </span>
           ) : (
