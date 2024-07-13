@@ -4,6 +4,7 @@ import {
   maxChoices,
   ticker,
   allVotesKVKey,
+  txCountKVKey,
   rcvResultKVKey,
 } from '@/constants/activePoll';
 import type { Candidate, RCVResult, Round } from '@/types';
@@ -11,7 +12,7 @@ import { callNexusMain } from '@/app/lib/api';
 
 export const maxDuration = 300;
 
-const limit = 10;
+const limit = 100;
 
 function sleep(miliseconds: number) {
   return new Promise((resolve) =>
@@ -46,15 +47,14 @@ async function fetchVotesDistribution(candidates: Candidate[]) {
   });
 
   // 1. Fetch cached votes from KV
-  let voteCount = 0;
   const votes = await kv.lrange<Vote>(allVotesKVKey, 0, -1);
   if (votes) {
     console.log(`[RCV] Fetched ${votes.length} votes from KV cache.`);
     distributeVotes(votes, voteDistribution);
-    voteCount = votes.length;
   } else {
     console.log(`[RCV] No votes found in KV cache!`);
   }
+  let txCount = (await kv.get<number>(txCountKVKey)) || 0;
 
   // 2. Fetch newer votes from Nexus blockchain
   let transactions: any = null;
@@ -75,19 +75,19 @@ async function fetchVotesDistribution(candidates: Candidate[]) {
           where: `results.contracts.ticker=${ticker} AND results.contracts.OP=DEBIT`,
           verbose: 'summary',
           limit,
-          offset: voteCount,
+          offset: txCount,
           sort: 'timestamp',
           order: 'asc',
         }
       );
       timeTaken = Date.now() - fetchStart;
       console.log(
-        `[RCV] Fetched transactions from offset ${voteCount}. Got ${
+        `[RCV] Fetched transactions from offset ${txCount}. Got ${
           transactions.length
         } transactions, took ${timeTaken / 1000}s`
       );
     } catch (err) {
-      console.error('Error fetching from offset', voteCount, err);
+      console.error('Error fetching from offset', txCount, err);
       throw err;
     }
 
@@ -120,7 +120,7 @@ async function fetchVotesDistribution(candidates: Candidate[]) {
       }
       newVotes = [...newVotes, ...Object.values(newVotesByRef)];
     }
-    voteCount += transactions.length;
+    txCount += transactions.length;
   } while (transactions.length === limit);
 
   // Distribute new votes into the right buckets
@@ -128,7 +128,10 @@ async function fetchVotesDistribution(candidates: Candidate[]) {
 
   // Save new votes into KV
   if (newVotes.length > 0) {
-    await kv.lpush(allVotesKVKey, ...newVotes);
+    await Promise.all([
+      kv.lpush(allVotesKVKey, ...newVotes),
+      kv.set(txCountKVKey, txCount),
+    ]);
   }
 
   return voteDistribution;
