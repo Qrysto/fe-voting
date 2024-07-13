@@ -47,14 +47,19 @@ async function fetchVotesDistribution(candidates: Candidate[]) {
   });
 
   // 1. Fetch cached votes from KV
-  const votes = await kv.lrange<Vote>(allVotesKVKey, 0, -1);
+  let [votes, txCount] = await Promise.all([
+    kv.lrange<Vote>(allVotesKVKey, 0, -1),
+    kv.get<number>(txCountKVKey),
+  ]);
+  txCount = txCount || 0;
   if (votes) {
-    console.log(`[RCV] Fetched ${votes.length} votes from KV cache.`);
+    console.log(
+      `[RCV] Fetched ${votes.length} votes from KV cache, txCount=${txCount}`
+    );
     distributeVotes(votes, voteDistribution);
   } else {
-    console.log(`[RCV] No votes found in KV cache!`);
+    console.log(`[RCV] No votes found in KV cache! txCount=${txCount}`);
   }
-  let txCount = (await kv.get<number>(txCountKVKey)) || 0;
 
   // 2. Fetch newer votes from Nexus blockchain
   let transactions: any = null;
@@ -241,7 +246,7 @@ export async function GET(request: NextRequest) {
   const candidates: Candidate[] = await callNexusMain('assets/list/accounts', {
     where: `results.ticker=${ticker} AND results.active=1`,
   });
-  console.log('[RCV] Finished fetching Choice assets', candidates);
+  console.log('[RCV] Finished fetching Candidate assets', candidates);
 
   const voteDistribution = await fetchVotesDistribution(candidates);
   console.log('[RCV] Finished fetching votes');
