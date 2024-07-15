@@ -6,6 +6,7 @@ import {
   allVotesKVKey,
   txCountKVKey,
   rcvResultKVKey,
+  endTime,
 } from '@/constants/activePoll';
 import type { Candidate, RCVResult, Round } from '@/types';
 import { callNexusMain } from '@/app/lib/api';
@@ -255,6 +256,7 @@ export async function GET(request: NextRequest) {
     roundNo: 0,
     rounds: {},
     timeStamp: Date.now(),
+    final: Date.now() > endTime,
   };
   const eliminatedAddresses: string[] = [];
 

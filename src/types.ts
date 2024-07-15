@@ -36,4 +36,5 @@ export interface RCVResult {
     [roundNo: number]: Round;
   };
   timeStamp: number;
+  final: boolean;
 }
