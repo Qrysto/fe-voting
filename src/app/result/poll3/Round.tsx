@@ -13,12 +13,14 @@ function RankedCandidate({
   voteCount,
   eliminated,
   winner,
+  final,
 }: {
   candidate: Candidate;
   total: number;
   voteCount: number;
   eliminated: boolean;
   winner: boolean;
+  final: boolean;
 }) {
   return (
     <li className="flex items-center px-4 py-2">
@@ -49,7 +51,7 @@ function RankedCandidate({
               <span
                 className={`text-[12px] font-bold uppercase text-orange ${oswald.className}`}
               >
-                Current Winner!
+                {final ? 'Winner!' : 'Current Winner!'}
               </span>
             </span>
           ) : (
@@ -93,10 +95,12 @@ export default function Round({
   candidates,
   roundNo,
   round,
+  final,
 }: {
   candidates: Candidate[];
   roundNo: number;
   round: Round;
+  final: boolean;
 }) {
   const total = Object.values(round.voteCount).reduce(
     (total, voteCount) => total + voteCount,
@@ -132,6 +136,7 @@ export default function Round({
                 total={total}
                 eliminated={round.eliminated === candidate.address}
                 winner={round.winner === candidate.address}
+                final={final}
               />
             ))}
         </ul>

@@ -8,9 +8,11 @@ import crownImg from './crown.png';
 export default function Winner({
   candidates,
   result,
+  final,
 }: {
   candidates: Candidate[];
   result: RCVResult;
+  final: boolean;
 }) {
   let winnerAddress: string | undefined = undefined;
   for (const round of Object.values(result.rounds)) {
@@ -62,7 +64,7 @@ export default function Winner({
         <div
           className={`text-center uppercase text-orange ${oswald.className}`}
         >
-          Current Winner
+          {final ? 'Winner' : 'Current Winner'}
         </div>
       </div>
     </li>
