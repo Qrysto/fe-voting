@@ -67,4 +67,4 @@ export async function callNexusMain(
   );
 }
 
-export const callNexus = callNexusPrivate;
+export const callNexus = callNexusMain;
