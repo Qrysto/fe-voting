@@ -4,14 +4,16 @@ import {
   maxChoices,
   ticker,
   allVotesKVKey,
+  txCountKVKey,
   rcvResultKVKey,
+  endTime,
 } from '@/constants/activePoll';
 import type { Candidate, RCVResult, Round } from '@/types';
 import { callNexusPrivate } from '@/app/lib/api';
 
 export const maxDuration = 300;
 
-const limit = 10;
+const limit = 100;
 
 function sleep(miliseconds: number) {
   return new Promise((resolve) =>
@@ -46,20 +48,25 @@ async function fetchVotesDistribution(candidates: Candidate[]) {
   });
 
   // 1. Fetch cached votes from KV
-  let voteCount = 0;
-  const votes = await kv.lrange<Vote>(allVotesKVKey, 0, -1);
+  let [votes, txCount] = await Promise.all([
+    kv.lrange<Vote>(allVotesKVKey, 0, -1),
+    kv.get<number>(txCountKVKey),
+  ]);
+  txCount = txCount || 0;
   if (votes) {
-    console.log(`[RCV] Fetched ${votes.length} votes from KV cache.`);
+    console.log(
+      `[RCV] Fetched ${votes.length} votes from KV cache, txCount=${txCount}`
+    );
     distributeVotes(votes, voteDistribution);
-    voteCount = votes.length;
   } else {
-    console.log(`[RCV] No votes found in KV cache!`);
+    console.log(`[RCV] No votes found in KV cache! txCount=${txCount}`);
   }
 
   // 2. Fetch newer votes from Nexus blockchain
   let transactions: any = null;
   let timeTaken: number = 0;
-  const newVotesByRef: { [reference: string]: Vote } = {};
+  // const newVotesByRef: { [reference: string]: Vote } = {};
+  let newVotes: Vote[] = [];
   do {
     if (timeTaken > 1000) {
       await sleep(5000);
@@ -74,24 +81,25 @@ async function fetchVotesDistribution(candidates: Candidate[]) {
           where: `results.contracts.ticker=${ticker} AND results.contracts.OP=DEBIT`,
           verbose: 'summary',
           limit,
-          offset: voteCount,
+          offset: txCount,
           sort: 'timestamp',
           order: 'asc',
         }
       );
       timeTaken = Date.now() - fetchStart;
       console.log(
-        `[RCV] Fetched transactions from offset ${voteCount}. Got ${
+        `[RCV] Fetched transactions from offset ${txCount}. Got ${
           transactions.length
         } transactions, took ${timeTaken / 1000}s`
       );
     } catch (err) {
-      console.error('Error fetching from offset', voteCount, err);
+      console.error('Error fetching from offset', txCount, err);
       throw err;
     }
 
     // Extract votes from transactions
     for (const tx of transactions) {
+      const newVotesByRef: { [reference: string]: Vote } = {};
       for (const contract of tx.contracts) {
         const {
           reference,
@@ -112,20 +120,24 @@ async function fetchVotesDistribution(candidates: Candidate[]) {
           console.error(
             `[RCV] Already had the same choice for the same number, reference=${reference} index=${index}`
           );
-          throw new Error('Invalid data!');
+          // throw new Error('Invalid data!');
         }
         newVotesByRef[reference][index] = address;
       }
+      newVotes = [...newVotes, ...Object.values(newVotesByRef)];
     }
+    txCount += transactions.length;
   } while (transactions.length === limit);
 
   // Distribute new votes into the right buckets
-  const newVotes = Object.values(newVotesByRef);
   distributeVotes(newVotes, voteDistribution);
 
   // Save new votes into KV
   if (newVotes.length > 0) {
-    await kv.lpush(allVotesKVKey, ...newVotes);
+    await Promise.all([
+      kv.lpush(allVotesKVKey, ...newVotes),
+      kv.set(txCountKVKey, txCount),
+    ]);
   }
 
   return voteDistribution;
@@ -247,6 +259,7 @@ export async function GET(request: NextRequest) {
     roundNo: 0,
     rounds: {},
     timeStamp: Date.now(),
+    final: Date.now() > endTime,
   };
   const eliminatedAddresses: string[] = [];
 

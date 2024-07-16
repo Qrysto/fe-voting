@@ -49,15 +49,39 @@ export default async function RankingPage() {
         2024 Free and Equal Presidential Debate at FreedomFest Winner Poll
       </h2>
       <div className="mb-3">July 12nd - July 15th, 2024</div>
-      <EndingTime />
+      {!result?.final && <EndingTime />}
 
-      <h1 className="mt-4 text-3xl uppercase text-darkBlue">Current result</h1>
+      <div className="text-lg leading-6">
+        Do you want to see more non-partisan debates with audience
+        participation?{' '}
+        <strong>
+          <a
+            className="text-darkBlue underline underline-offset-2 active:text-darkBlue/90"
+            href="https://givebutter.com/free-and-equal-debate"
+            target="_blank"
+          >
+            Donate to Free & Equal
+          </a>
+        </strong>{' '}
+        to support the production of our fourth presidential debate in
+        September!
+      </div>
+
+      <h1 className="mt-8 text-3xl uppercase text-darkBlue">
+        {result?.final ? 'Final result' : 'Current result'}
+      </h1>
       {result ? (
         <>
-          <UpdatedTime timeStamp={result.timeStamp} />
+          {!result.final && <UpdatedTime timeStamp={result.timeStamp} />}
           <div className="mt-6">
-            <h2 className="text-2xl uppercase text-darkBlue">Current winner</h2>
-            <Winner candidates={candidates} result={result} />
+            <h2 className="text-2xl uppercase text-darkBlue">
+              {result.final ? 'Winner' : 'Current winner'}
+            </h2>
+            <Winner
+              candidates={candidates}
+              result={result}
+              final={result.final}
+            />
           </div>
 
           <div className="mt-10">
@@ -79,6 +103,7 @@ export default async function RankingPage() {
                 roundNo={parseInt(roundNo)}
                 round={result.rounds[parseInt(roundNo)]}
                 candidates={candidates}
+                final={result.final}
               />
             ))}
           </div>

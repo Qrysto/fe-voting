@@ -49,10 +49,10 @@ export default function HomePage() {
           <br /> at FreedomFest?
         </div>
         <Link
-          href={pollEnded ? 'result/poll3' : '/vote'}
+          href="result/poll3"
           className={`block h-12 w-44 rounded-md text-center leading-[48px] ${oswald.className} bg-lightBlue font-bold uppercase text-blue active:bg-lightBlue/90`}
         >
-          {pollEnded ? 'See Result' : 'Vote Now'}
+          See Result
         </Link>
 
         <div

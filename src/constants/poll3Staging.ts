@@ -1,3 +1,5 @@
+export const pollName = 'poll3';
+
 export const maxChoices = 7;
 
 export const ticker = 'poll3';
@@ -8,6 +10,8 @@ export const tokenAddress =
 export const phoneNumbersTable = 'phonePoll3Test';
 
 export const allVotesKVKey = 'poll3AllVotesTest';
+
+export const txCountKVKey = 'poll3TxCount';
 
 export const rcvResultKVKey = 'Poll3RCVResultTest';
 
