@@ -51,7 +51,23 @@ export default async function RankingPage() {
       <div className="mb-3">July 12nd - July 15th, 2024</div>
       {!result?.final && <EndingTime />}
 
-      <h1 className="mt-4 text-3xl uppercase text-darkBlue">
+      <div className="text-lg leading-6">
+        Do you want to see more non-partisan debates with audience
+        participation?{' '}
+        <strong>
+          <a
+            className="text-darkBlue underline underline-offset-2 active:text-darkBlue/90"
+            href="https://givebutter.com/free-and-equal-debate"
+            target="_blank"
+          >
+            Donate to Free & Equal
+          </a>
+        </strong>{' '}
+        to support the production of our fourth presidential debate in
+        September!
+      </div>
+
+      <h1 className="mt-8 text-3xl uppercase text-darkBlue">
         {result?.final ? 'Final result' : 'Current result'}
       </h1>
       {result ? (
