@@ -1,3 +1,5 @@
+export const pollName = 'poll3';
+
 export const maxChoices = 7;
 
 export const ticker = 'poll3';
