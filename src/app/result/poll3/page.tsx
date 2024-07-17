@@ -6,7 +6,7 @@ import Round from './Round';
 import UpdatedTime from './UpdatedTime';
 import Winner from './Winner';
 import EndingTime from './EndingTime';
-import { callNexusMain } from '@/app/lib/api';
+import { callNexus } from '@/app/lib/api';
 
 export const metadata: Metadata = {
   title: 'Results | Free And Equal',
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 };
 
 async function loadRCVCandidates() {
-  const candidates: Candidate[] = await callNexusMain(
+  const candidates: Candidate[] = await callNexus(
     'assets/list/accounts',
     {
       where: `results.ticker=${ticker} AND results.active=1`,
