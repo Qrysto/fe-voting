@@ -2,13 +2,13 @@ import jwt from 'jsonwebtoken';
 import { type NextRequest } from 'next/server';
 import { maxChoices, ticker, endTime } from '@/constants/activePoll';
 import type { Candidate } from '@/types';
-import { callNexusMain } from '@/app/lib/api';
+import { callNexus } from '@/app/lib/api';
 import { markNumberVoted, markNumberNotVoted } from '@/app/lib/phone';
 
 const jwtSecret = process.env.JWT_SECRET || 'secret';
 
 async function fetchCandidateAddresses() {
-  const result: Candidate[] = await callNexusMain(
+  const result: Candidate[] = await callNexus(
     'assets/list/accounts',
     { where: `results.ticker=${ticker} AND results.active=1` },
     { revalidate: 60, tags: ['allCandidates'] }
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const result = await callNexusMain('finance/debit/token', {
+    const result = await callNexus('finance/debit/token', {
       from: ticker,
       recipients: votes.map((address, i) => ({
         to: address,

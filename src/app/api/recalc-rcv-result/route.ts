@@ -9,7 +9,7 @@ import {
   endTime,
 } from '@/constants/activePoll';
 import type { Candidate, RCVResult, Round } from '@/types';
-import { callNexusMain } from '@/app/lib/api';
+import { callNexus } from '@/app/lib/api';
 
 export const maxDuration = 300;
 
@@ -75,7 +75,7 @@ async function fetchVotesDistribution(candidates: Candidate[]) {
 
     // Fetch transactions
     try {
-      transactions = await callNexusMain(
+      transactions = await callNexus(
         `profiles/transactions/master/txid,contracts.reference,contracts.amount,contracts.to.address`,
         {
           where: `results.contracts.ticker=${ticker} AND results.contracts.OP=DEBIT`,
@@ -244,7 +244,7 @@ export async function GET(request: NextRequest) {
   console.log('[RCV] Start Recalculation');
   const startTime = Date.now();
 
-  const candidates: Candidate[] = await callNexusMain('assets/list/accounts', {
+  const candidates: Candidate[] = await callNexus('assets/list/accounts', {
     where: `results.ticker=${ticker} AND results.active=1`,
   });
   console.log('[RCV] Finished fetching Candidate assets', candidates);

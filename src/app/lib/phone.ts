@@ -1,5 +1,5 @@
 import { phoneNumbersTable } from '@/constants/activePoll';
-import { callNexusMain } from '@/app/lib/api';
+import { callNexus } from '@/app/lib/api';
 
 const regex = /^\d{10}$/;
 
@@ -15,7 +15,7 @@ export async function markNumberVoted(phoneNo: string, votes: string) {
     key: phoneNo,
     value: votes,
   };
-  const result = await callNexusMain('local/push/record', params);
+  const result = await callNexus('local/push/record', params);
 
   if (typeof result?.success !== 'boolean') {
     console.error('local/push/record', params, result);
@@ -30,7 +30,7 @@ export async function markNumberNotVoted(phoneNo: string) {
     table: phoneNumbersTable,
     key: phoneNo,
   };
-  const result = await callNexusMain('local/erase/record', params);
+  const result = await callNexus('local/erase/record', params);
 
   return result?.success;
 }
@@ -40,7 +40,7 @@ export async function isVoted(phoneNo: string) {
     table: phoneNumbersTable,
     key: phoneNo,
   };
-  const result = await callNexusMain('local/has/record', params);
+  const result = await callNexus('local/has/record', params);
 
   if (typeof result?.exists !== 'boolean') {
     console.error('local/has/record', params, result);
