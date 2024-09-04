@@ -20,11 +20,11 @@ export const metadata: Metadata = {
 };
 
 export default async function VotePage() {
-  const pollEnded = Date.now() > endTime;
-  if (pollEnded) {
-    redirect(`/result/${pollName}`);
-    return <div className="mt-12 text-center">The poll has ended.</div>;
-  }
+  // const pollEnded = Date.now() > endTime;
+  // if (pollEnded) {
+  //   redirect(`/result/${pollName}`);
+  //   return <div className="mt-12 text-center">The poll has ended.</div>;
+  // }
 
   const result = await callNexus(
     'assets/list/accounts',

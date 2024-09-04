@@ -453,7 +453,7 @@ export default function CastVote() {
           }}
           confirmVote={async () => {
             try {
-              await axios.post('/api/vote', { jwtToken, votes });
+              // await axios.post('/api/vote', { jwtToken, votes });
             } catch (err: any) {
               console.log(err);
               alert(
