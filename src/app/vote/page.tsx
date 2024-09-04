@@ -1,8 +1,7 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { Candidate } from '@/types';
-import { endTime, ticker, pollName } from '@/constants/activePoll';
-import { callNexus } from '@/app/lib/api';
+import { endTime, ticker, pollName, callNexus } from '@/constants/activePoll';
 import Steps from './Steps';
 
 export const metadata: Metadata = {

@@ -163,7 +163,7 @@ export function VotedCandidate({
       data-handler-id={handlerId}
     >
       <div
-        className={`relative mr-3 h-[45px] w-[45px] shrink-0 grow-0 rounded-full bg-lightGreen pr-1 text-center text-[25px] font-semibold leading-[45px] text-green ${oswald.className}`}
+        className={`bg-lighterGreen relative mr-3 h-[45px] w-[45px] shrink-0 grow-0 rounded-full pr-1 text-center text-[25px] font-semibold leading-[45px] text-green ${oswald.className}`}
         ref={drag}
       >
         <span>{rank}</span>

@@ -52,12 +52,12 @@ function RankedCandidate({
 
         <div className="relative mt-2 h-6 rounded-[4px] bg-gray/15">
           <div
-            className="absolute inset-y-0 left-0 h-6 rounded-[4px] bg-green"
+            className="absolute inset-y-0 left-0 h-6 rounded-[4px] bg-lightGreen"
             style={{ width: (100 * voteCount) / total + '%' }}
           ></div>
 
           <div
-            className={`absolute inset-y-0 left-2 h-6 text-sm font-medium leading-6 text-darkBlue [text-shadow:_0_0_3px_#fff] ${oswald.className}`}
+            className={`absolute inset-y-0 left-2 h-6 text-sm font-medium leading-6 text-darkBlue ${oswald.className}`}
           >
             {format(voteCount)} votes
             {eliminated ? (
@@ -136,7 +136,7 @@ export default function Round({
     <div className="mt-6">
       <h3 className="flex items-center px-4 text-xl uppercase">
         <div
-          className={`relative mr-3 h-[45px] w-[45px] shrink-0 grow-0 rounded-full bg-lightGreen pr-1 text-center text-[25px] font-semibold leading-[45px] text-green ${oswald.className}`}
+          className={`bg-lighterGreen relative mr-3 h-[45px] w-[45px] shrink-0 grow-0 rounded-full pr-1 text-center text-[25px] font-semibold leading-[45px] text-green ${oswald.className}`}
         >
           <span>{roundNo}</span>
           <span className="absolute top-[-5px] text-[10px]">{superscript}</span>

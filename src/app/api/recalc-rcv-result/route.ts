@@ -9,7 +9,7 @@ import {
   endTime,
 } from '@/constants/activePoll';
 import type { Candidate, RCVResult, Round } from '@/types';
-import { callNexus } from '@/app/lib/api';
+import { callNexus } from '@/constants/activePoll';
 
 export const maxDuration = 300;
 

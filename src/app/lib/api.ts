@@ -6,7 +6,7 @@ async function callNexusGeneric(
   baseUrl: string,
   endpoint: string,
   params?: object,
-  nextCache?: object
+  nextCache?: NextFetchRequestConfig
 ) {
   const body = JSON.stringify(params);
   const res = await fetch(
@@ -44,7 +44,7 @@ function toQueryString(params?: object) {
 export async function callNexusPrivate(
   endpoint: string,
   params?: object,
-  nextCache?: object
+  nextCache?: NextFetchRequestConfig
 ) {
   return await callNexusGeneric(
     'http://node5.nexus.io:7080',
@@ -57,7 +57,7 @@ export async function callNexusPrivate(
 export async function callNexusMain(
   endpoint: string,
   params?: object,
-  nextCache?: object
+  nextCache?: NextFetchRequestConfig
 ) {
   return await callNexusGeneric(
     'http://node2.nexus.io:8080',
@@ -67,4 +67,4 @@ export async function callNexusMain(
   );
 }
 
-export const callNexus = callNexusPrivate;
+export type CallNexus = typeof callNexusMain;

@@ -1,47 +1,89 @@
 import type { Metadata } from 'next';
 import { kv } from '@vercel/kv';
+import { redirect } from 'next/navigation';
 import { Candidate, RCVResult } from '@/types';
-import { rcvResultKVKey, ticker } from '@/constants/activePoll';
+// import { rcvResultKVKey, ticker } from '@/constants/activePoll';
+import * as poll2 from '@/constants/poll2';
+import * as poll3 from '@/constants/poll3Staging';
+import type { CallNexus } from '@/app/lib/api';
 import Round from './Round';
 import UpdatedTime from './UpdatedTime';
 import Winner from './Winner';
 import EndingTime from './EndingTime';
-import { callNexus } from '@/app/lib/api';
+import Poll1RankingPage from './poll1';
 
-export const metadata: Metadata = {
-  title: 'Results | Free And Equal',
-  description: 'View the results of the current vote! Powered by nexus.io.',
-  openGraph: {
-    title: 'Results | Free And Equal',
-    description: 'View the results of the current vote! Powered by nexus.io.',
-    url: 'https://vote.freeandequal.org/result/poll3',
-    type: 'website',
-    siteName: 'Free And Equal Voting App',
-  },
+type Props = {
+  params: { poll: string };
 };
 
-async function loadRCVCandidates() {
+const pollConstants: Record<string, any> = {
+  poll2,
+  poll3,
+};
+
+export async function generateMetadata({
+  params: { poll },
+}: Props): Promise<Metadata> {
+  return {
+    title: 'Results | Free And Equal',
+    description: 'View the results of the current vote! Powered by nexus.io.',
+    openGraph: {
+      title: 'Results | Free And Equal',
+      description: 'View the results of the current vote! Powered by nexus.io.',
+      url: `https://vote.freeandequal.org/result/${poll}`,
+      type: 'website',
+      siteName: 'Free And Equal Voting App',
+    },
+  };
+}
+
+async function loadRCVCandidates({
+  callNexus,
+  poll,
+  ticker,
+  final,
+}: {
+  callNexus: CallNexus;
+  poll: string;
+  ticker: string;
+  final: boolean;
+}) {
   const candidates: Candidate[] = await callNexus(
     'assets/list/accounts',
     {
       where: `results.ticker=${ticker} AND results.active=1`,
     },
-    { revalidate: 60 /* 1 minute */, tags: ['allPoll3Candidates'] }
+    {
+      revalidate: final ? 86400 /* 24 hours */ : 60 /* 1 minute */,
+      tags: [`allCandidates-${poll}`],
+    }
   );
 
   return candidates;
 }
 
-async function loadRCVResult() {
+async function loadRCVResult(rcvResultKVKey: string) {
   const result = await kv.get(rcvResultKVKey);
   return result as RCVResult | null;
 }
 
-export default async function RankingPage() {
-  const [candidates, result] = await Promise.all([
-    loadRCVCandidates(),
-    loadRCVResult(),
-  ]);
+export default async function RankingPage({ params: { poll } }: Props) {
+  if (poll === 'poll1') {
+    return <Poll1RankingPage />;
+  }
+  if (!Object.keys(pollConstants).includes(poll)) {
+    redirect('/');
+  }
+
+  const { rcvResultKVKey, ticker, endTime, callNexus } = pollConstants[poll];
+  const result = await loadRCVResult(rcvResultKVKey);
+  const final = result?.final !== false; // old polls that doesn't have final property is also final
+  const candidates = await loadRCVCandidates({
+    callNexus,
+    poll,
+    ticker,
+    final,
+  });
 
   return (
     <div className="mt-6">
@@ -49,7 +91,7 @@ export default async function RankingPage() {
         2024 Free and Equal Presidential Debate at FreedomFest Winner Poll
       </h2>
       <div className="mb-3">July 12nd - July 15th, 2024</div>
-      {!result?.final && <EndingTime />}
+      {!final && <EndingTime endTime={endTime} />}
 
       <div className="text-lg leading-6">
         Do you want to see more non-partisan debates with audience
@@ -68,20 +110,16 @@ export default async function RankingPage() {
       </div>
 
       <h1 className="mt-8 text-3xl uppercase text-darkBlue">
-        {result?.final ? 'Final result' : 'Current result'}
+        {final ? 'Final result' : 'Current result'}
       </h1>
       {result ? (
         <>
-          {!result.final && <UpdatedTime timeStamp={result.timeStamp} />}
+          {!final && <UpdatedTime timeStamp={result.timeStamp} />}
           <div className="mt-6">
             <h2 className="text-2xl uppercase text-darkBlue">
-              {result.final ? 'Winner' : 'Current winner'}
+              {final ? 'Winner' : 'Current winner'}
             </h2>
-            <Winner
-              candidates={candidates}
-              result={result}
-              final={result.final}
-            />
+            <Winner candidates={candidates} result={result} final={final} />
           </div>
 
           <div className="mt-10">
@@ -103,7 +141,7 @@ export default async function RankingPage() {
                 roundNo={parseInt(roundNo)}
                 round={result.rounds[parseInt(roundNo)]}
                 candidates={candidates}
-                final={result.final}
+                final={final}
               />
             ))}
           </div>

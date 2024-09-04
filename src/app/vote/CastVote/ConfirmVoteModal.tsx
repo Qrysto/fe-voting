@@ -39,7 +39,7 @@ function VotedCandidate({ address, rank }: { address: string; rank: number }) {
         </div>
       </div>
       <div
-        className={`relative h-[45px] w-[45px] shrink-0 grow-0 rounded-full bg-lightGreen pr-1 text-center text-[25px] font-semibold leading-[45px] text-green ${oswald.className}`}
+        className={`bg-lighterGreen relative h-[45px] w-[45px] shrink-0 grow-0 rounded-full pr-1 text-center text-[25px] font-semibold leading-[45px] text-green ${oswald.className}`}
       >
         <span>{rank}</span>
         <span className="absolute top-[-5px] text-[10px]">{superscript}</span>

@@ -1,5 +1,8 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
+import { useParams } from 'next/navigation';
 import logo from './full-logo@2x.png';
 import shareIcon from './shareIcon.svg';
 
@@ -19,6 +22,8 @@ function IconButton({
 }
 
 export default function Header() {
+  const { poll } = useParams();
+
   return (
     <header className="relative py-2">
       <Link href="/">
@@ -34,7 +39,7 @@ export default function Header() {
       <div className="absolute inset-y-0 right-0 flex items-center object-right-top">
         <IconButton
           className="ml-4"
-          href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fvote.freeandequal.org%2Fresult%2Fpoll2"
+          href={`https://twitter.com/intent/tweet?url=https%3A%2F%2Fvote.freeandequal.org%2Fresult%2F${poll}`}
           target="_blank"
         >
           <Image src={shareIcon} height={23} alt="Share" />

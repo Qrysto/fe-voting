@@ -1,5 +1,5 @@
 import { phoneNumbersTable } from '@/constants/activePoll';
-import { callNexus } from '@/app/lib/api';
+import { callNexus } from '@/constants/activePoll';
 
 const regex = /^\d{10}$/;
 

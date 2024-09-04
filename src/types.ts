@@ -38,3 +38,5 @@ export interface RCVResult {
   timeStamp: number;
   final: boolean;
 }
+
+export type { CallNexus } from '@/app/lib/api';
