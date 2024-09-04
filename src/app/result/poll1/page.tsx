@@ -48,7 +48,6 @@ function RankedCandidate({ candidate }: { candidate: Candidate }) {
 }
 
 export default async function RankingPage() {
-  return null;
   const result = await callNexusPrivate(
     'assets/list/accounts',
     { where: 'results.ticker=votes AND results.active=1' },
