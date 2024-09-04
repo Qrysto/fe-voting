@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Results | Free And Equal',
     description: 'View the results of the current vote! Powered by nexus.io.',
-    url: 'https://vote.freeandequal.org/result/poll2',
+    url: 'https://vote.freeandequal.org/result/poll3',
     type: 'website',
     siteName: 'Free And Equal Voting App',
   },
