@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { Candidate } from '@/types';
-import { endTime, ticker, pollName, callNexus } from '@/constants/activePoll';
+import { endTime, ticker, pollId, callNexus } from '@/constants/activePoll';
 import Steps from './Steps';
 
 export const metadata: Metadata = {
@@ -21,8 +21,7 @@ export const metadata: Metadata = {
 export default async function VotePage() {
   const pollEnded = Date.now() > endTime;
   if (pollEnded) {
-    redirect(`/result/${pollName}`);
-    return <div className="mt-12 text-center">The poll has ended.</div>;
+    redirect(`/result/${pollId}`);
   }
 
   const result = await callNexus(

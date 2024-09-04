@@ -1,3 +1,9 @@
+export const pollName = 'February 2024 Debate Winner Poll';
+
+export const pollTime = 'February 29th - March 7th, 2024';
+
+export const pollId = 'poll2';
+
 export const maxChoices = 5;
 
 export const ticker = 'poll2';

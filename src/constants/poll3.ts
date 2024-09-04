@@ -1,4 +1,9 @@
-export const pollName = 'poll3';
+export const pollName =
+  '2024 Free and Equal Presidential Debate at FreedomFest Winner Poll';
+
+export const pollTime = 'July 12nd - July 15th, 2024';
+
+export const pollId = 'poll3';
 
 export const maxChoices = 7;
 

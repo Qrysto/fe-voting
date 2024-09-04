@@ -75,7 +75,8 @@ export default async function RankingPage({ params: { poll } }: Props) {
     redirect('/');
   }
 
-  const { rcvResultKVKey, ticker, endTime, callNexus } = pollConstants[poll];
+  const { pollName, pollTime, rcvResultKVKey, ticker, endTime, callNexus } =
+    pollConstants[poll];
   const result = await loadRCVResult(rcvResultKVKey);
   const final = result?.final !== false; // old polls that doesn't have final property is also final
   const candidates = await loadRCVCandidates({
@@ -87,10 +88,8 @@ export default async function RankingPage({ params: { poll } }: Props) {
 
   return (
     <div className="mt-6">
-      <h2 className="mt-4 text-xl uppercase">
-        2024 Free and Equal Presidential Debate at FreedomFest Winner Poll
-      </h2>
-      <div className="mb-3">July 12nd - July 15th, 2024</div>
+      <h2 className="mt-4 text-xl uppercase">{pollName}</h2>
+      <div className="mb-3">{pollTime}</div>
       {!final && <EndingTime endTime={endTime} />}
 
       <div className="text-lg leading-6">
