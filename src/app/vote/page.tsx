@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { Candidate } from '@/types';
 import { endTime, ticker, pollName } from '@/constants/activePoll';
-import { callNexusMain } from '@/app/lib/api';
+import { callNexus } from '@/app/lib/api';
 import Steps from './Steps';
 
 export const metadata: Metadata = {
@@ -26,7 +26,7 @@ export default async function VotePage() {
   //   return <div className="mt-12 text-center">The poll has ended.</div>;
   // }
 
-  const result = await callNexusMain(
+  const result = await callNexus(
     'assets/list/accounts',
     {
       where: `results.ticker=${ticker} AND results.active=1`,
