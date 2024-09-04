@@ -49,4 +49,45 @@ function RankedCandidate({ candidate }: { candidate: Candidate }) {
 
 export default async function RankingPage() {
   return null;
+  const result = await callNexusPrivate(
+    'assets/list/accounts',
+    { where: 'results.ticker=votes AND results.active=1' },
+    { revalidate: 86400 /* 24 hours */, tags: ['allPoll1Candidates'] }
+  );
+
+  const allCandidates: Candidate[] = result
+    ?.filter((c: Candidate) => c.active)
+    .sort((c1: Candidate, c2: Candidate) => c2.balance - c1.balance);
+  const totalVotes = allCandidates.reduce(
+    (total, candidate) => total + candidate.balance,
+    0
+  );
+  allCandidates.forEach((candidate) => {
+    candidate.percentage =
+      Math.round((10000 * candidate.balance) / totalVotes) / 100;
+  });
+
+  return (
+    <div className="mt-10">
+      <h2 className="mt-4 px-4 text-xl uppercase">Candidate Selection Poll</h2>
+      <div className="mb-3 px-4">January 18th - February 1st, 2024</div>
+      <p className="mb-3 mt-2 px-4">
+        This poll used Borda count voting. Each voter can choose at most 6
+        candidates to vote. First choice of each vote worths 6 points, second
+        choice worths 5 points, and so on... Candidates will then be ranked by
+        the total number of points they receive.
+      </p>
+      <h2 className="mt-4 px-4 text-2xl uppercase">Final ranking</h2>
+      <div className="mb-3 px-4 font-bold">
+        Total allocated points: {format(totalVotes)}
+      </div>
+      <div className="rounded-md bg-almostWhite py-[10px]">
+        <ul>
+          {allCandidates.map((candidate) => (
+            <RankedCandidate key={candidate.address} candidate={candidate} />
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
 }
