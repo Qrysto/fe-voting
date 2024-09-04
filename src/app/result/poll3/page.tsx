@@ -38,6 +38,7 @@ async function loadRCVResult() {
 }
 
 export default async function RankingPage() {
+  return null;
   const [candidates, result] = await Promise.all([
     loadRCVCandidates(),
     loadRCVResult(),
