@@ -6,7 +6,7 @@ import BigButton from '@/components/BigButton';
 import LinkButton from '@/components/LinkButton';
 import { useStore } from '@/store';
 import { codeDigitCount } from '@/constants';
-import { toE164US } from '../lib/phone';
+import { toE164US } from '@/lib/phone';
 
 function CodeInput({ focusConfirmBtn }: { focusConfirmBtn: () => void }) {
   const digits = useStore((state) => state.codeDigits);
