@@ -1,6 +1,7 @@
 import { oswald } from '@/fonts';
 import type { Candidate, Round } from '@/types';
 import CandidateImage from '@/components/CandidateImage';
+import { partyColor } from '@/app/lib/utils';
 
 const format = Intl.NumberFormat('en-US').format;
 
@@ -28,40 +29,65 @@ function RankedCandidate({
             {`${candidate.First} ${candidate.Last}`}
           </span>
         </div>
-        <div className={`text-sm font-medium ${oswald.className}`}>
-          {format(voteCount)} votes
-          {eliminated ? (
-            <span>
-              &nbsp;&nbsp;-&nbsp;&nbsp;
-              <span
-                className={`text-[12px] font-bold uppercase text-red ${oswald.className}`}
-              >
-                Not Enough Votes
-              </span>
+
+        <div className={`${oswald.className} text-xs font-bold uppercase`}>
+          <span className={`${partyColor(candidate.Party)}`}>
+            {candidate.Party}
+          </span>
+          &nbsp;
+          {candidate.Website === 'NONE' ? (
+            <span className="ml-2 text-gray underline underline-offset-2">
+              Website
             </span>
           ) : (
-            ''
-          )}
-          {winner ? (
-            <span>
-              &nbsp;&nbsp;-&nbsp;&nbsp;
-              <span
-                className={`text-[12px] font-bold uppercase text-orange ${oswald.className}`}
-              >
-                {final ? 'Winner!' : 'Current Winner!'}
-              </span>
-            </span>
-          ) : (
-            ''
+            <a
+              href={candidate.Website}
+              target="_blank"
+              className={'ml-2 text-blue underline underline-offset-2'}
+            >
+              Website
+            </a>
           )}
         </div>
-        <div className="relative h-4 rounded-[4px] bg-gray/15">
+
+        <div className="relative mt-2 h-6 rounded-[4px] bg-gray/15">
           <div
-            className="absolute inset-y-0 left-0 h-4 rounded-[4px] bg-green"
+            className="absolute inset-y-0 left-0 h-6 rounded-[4px] bg-green"
             style={{ width: (100 * voteCount) / total + '%' }}
           ></div>
+
+          <div
+            className={`absolute inset-y-0 left-2 h-6 text-sm font-medium leading-6 text-darkBlue [text-shadow:_0_0_3px_#fff] ${oswald.className}`}
+          >
+            {format(voteCount)} votes
+            {eliminated ? (
+              <span>
+                &nbsp;&nbsp;-&nbsp;&nbsp;
+                <span
+                  className={`text-[12px] font-bold uppercase ${oswald.className}`}
+                >
+                  Least Votes
+                </span>
+              </span>
+            ) : (
+              ''
+            )}
+            {winner ? (
+              <span>
+                &nbsp;&nbsp;-&nbsp;&nbsp;
+                <span
+                  className={`text-[12px] font-bold uppercase ${oswald.className}`}
+                >
+                  {final ? 'Winner!' : 'Current Winner!'}
+                </span>
+              </span>
+            ) : (
+              ''
+            )}
+          </div>
         </div>
       </div>
+
       <div
         className={`w-14 shrink-0 grow-0 rounded-full text-right font-bold ${oswald.className}`}
       >
