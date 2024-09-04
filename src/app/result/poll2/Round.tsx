@@ -1,11 +1,8 @@
-import TimeAgo from 'javascript-time-ago';
-import en from 'javascript-time-ago/locale/en';
 import { oswald } from '@/fonts';
 import type { Candidate, Round } from '@/types';
 import CandidateImage from '@/components/CandidateImage';
 
 const format = Intl.NumberFormat('en-US').format;
-TimeAgo.addDefaultLocale(en);
 
 function RankedCandidate({
   candidate,

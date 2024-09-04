@@ -1,10 +1,6 @@
 'use client';
 
-import TimeAgo from 'javascript-time-ago';
-import en from 'javascript-time-ago/locale/en';
-import ReactTimeAgo from 'react-time-ago';
-
-TimeAgo.addDefaultLocale(en);
+import { ReactTimeAgo } from '@/app/lib/timeAgo';
 
 export default function UpdatedTime({ timeStamp }: { timeStamp: number }) {
   return (
