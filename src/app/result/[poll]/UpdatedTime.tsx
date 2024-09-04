@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactTimeAgo } from '@/app/lib/timeAgo';
+import { ReactTimeAgo } from '@/lib/timeAgo';
 
 export default function UpdatedTime({ timeStamp }: { timeStamp: number }) {
   return (

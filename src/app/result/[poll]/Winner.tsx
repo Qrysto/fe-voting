@@ -2,7 +2,7 @@ import { oswald } from '@/fonts';
 import { Candidate, RCVResult } from '@/types';
 import Image from 'next/image';
 import CandidateImage from '@/components/CandidateImage';
-import { partyColor } from '@/app/lib/utils';
+import { partyColor } from '@/lib/utils';
 import crownImg from './crown.png';
 
 export default function Winner({

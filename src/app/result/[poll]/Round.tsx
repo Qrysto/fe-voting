@@ -1,7 +1,7 @@
 import { oswald } from '@/fonts';
 import type { Candidate, Round } from '@/types';
 import CandidateImage from '@/components/CandidateImage';
-import { partyColor } from '@/app/lib/utils';
+import { partyColor } from '@/lib/utils';
 
 const format = Intl.NumberFormat('en-US').format;
 

@@ -3,7 +3,7 @@ import Modal from '@/components/Modal';
 import BigButton from '@/components/BigButton';
 import CandidateImage from '@/components/CandidateImage';
 import Image from 'next/image';
-import { partyColor } from '@/app/lib/utils';
+import { partyColor } from '@/lib/utils';
 import { oswald } from '@/fonts';
 import thumbsupImg from './thumbsup-small.svg';
 

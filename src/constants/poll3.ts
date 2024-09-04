@@ -19,4 +19,4 @@ export const endTime = 1721093400000; // 2024 July 15th, 6:30pm PDT
 
 export const endTimeString = '6:30PM on July 15th, 2024 PDT';
 
-export { callNexusMain as callNexus } from '@/app/lib/api';
+export { callNexusMain as callNexus } from '@/lib/api';

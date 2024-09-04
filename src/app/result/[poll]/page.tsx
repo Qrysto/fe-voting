@@ -5,7 +5,7 @@ import { Candidate, RCVResult } from '@/types';
 // import { rcvResultKVKey, ticker } from '@/constants/activePoll';
 import * as poll2 from '@/constants/poll2';
 import * as poll3 from '@/constants/poll3Staging';
-import type { CallNexus } from '@/app/lib/api';
+import type { CallNexus } from '@/lib/api';
 import Round from './Round';
 import UpdatedTime from './UpdatedTime';
 import Winner from './Winner';

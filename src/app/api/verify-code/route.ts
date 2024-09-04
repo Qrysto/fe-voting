@@ -1,8 +1,8 @@
 import jwt from 'jsonwebtoken';
 import { type NextRequest } from 'next/server';
 import { verifyService } from '../twilio';
-import { isValidPhoneNumber } from '@/app/lib/phone';
-import { toE164US } from '@/app/lib/phone';
+import { isValidPhoneNumber } from '@/lib/phone';
+import { toE164US } from '@/lib/phone';
 
 const jwtSecret = process.env.JWT_SECRET || 'secret';
 

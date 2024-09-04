@@ -1,6 +1,6 @@
 import { type NextRequest } from 'next/server';
 import { verifyService, lookup } from '../twilio';
-import { isValidPhoneNumber, toE164US, isVoted } from '@/app/lib/phone';
+import { isValidPhoneNumber, toE164US, isVoted } from '@/lib/phone';
 
 export async function POST(request: NextRequest) {
   const body = await request.json();

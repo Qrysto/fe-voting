@@ -16,8 +16,8 @@ import { oswald } from '@/fonts';
 import { maxChoices } from '@/constants/activePoll';
 import type { Candidate } from '@/types';
 import { useStore } from '@/store';
-import { toE164US } from '@/app/lib/phone';
-import { partyColor } from '@/app/lib/utils';
+import { toE164US } from '@/lib/phone';
+import { partyColor } from '@/lib/utils';
 import searchIcon from './search.svg';
 import filterIcon from './filter.svg';
 

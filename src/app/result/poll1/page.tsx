@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { oswald } from '@/fonts';
 import { Candidate } from '@/types';
 import CandidateImage from '@/components/CandidateImage';
-import { callNexusPrivate } from '@/app/lib/api';
+import { callNexusPrivate } from '@/lib/api';
 
 const format = Intl.NumberFormat('en-US').format;
 

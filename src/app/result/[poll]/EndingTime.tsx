@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactTimeAgo } from '@/app/lib/timeAgo';
+import { ReactTimeAgo } from '@/lib/timeAgo';
 
 export default function EndingTime({ endTime }: { endTime: number }) {
   const pollEnded = Date.now() > endTime;

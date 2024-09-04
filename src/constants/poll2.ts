@@ -15,4 +15,4 @@ export const endTime = 1709866800000;
 
 export const endTimeString = '10PM on March 7th, 2024 EST';
 
-export { callNexusPrivate as callNexus } from '@/app/lib/api';
+export { callNexusPrivate as callNexus } from '@/lib/api';

@@ -39,4 +39,4 @@ export interface RCVResult {
   final: boolean;
 }
 
-export type { CallNexus } from '@/app/lib/api';
+export type { CallNexus } from '@/lib/api';
