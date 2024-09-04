@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
 import { kv } from '@vercel/kv';
-import { redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import { Candidate, RCVResult } from '@/types';
-// import { rcvResultKVKey, ticker } from '@/constants/activePoll';
 import * as poll2 from '@/constants/poll2';
 import * as poll3 from '@/constants/poll3Staging';
+import * as poll4 from '@/constants/poll4Staging';
 import type { CallNexus } from '@/lib/api';
 import Round from './Round';
 import UpdatedTime from './UpdatedTime';
@@ -19,6 +19,7 @@ type Props = {
 const pollConstants: Record<string, any> = {
   poll2,
   poll3,
+  poll4,
 };
 
 export async function generateMetadata({
@@ -35,6 +36,10 @@ export async function generateMetadata({
       siteName: 'Free And Equal Voting App',
     },
   };
+}
+
+export async function generateStaticParams() {
+  return Object.keys(pollConstants);
 }
 
 async function loadRCVCandidates({
@@ -72,7 +77,7 @@ export default async function RankingPage({ params: { poll } }: Props) {
     return <Poll1RankingPage />;
   }
   if (!Object.keys(pollConstants).includes(poll)) {
-    redirect('/');
+    notFound();
   }
 
   const { pollName, pollTime, rcvResultKVKey, ticker, endTime, callNexus } =
