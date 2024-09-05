@@ -29,12 +29,14 @@ export async function POST(request: NextRequest) {
   }
 
   const fullPhoneNumber = toE164US(phoneNumber);
+  let type = undefined;
   try {
     const phoneLookup = await lookup
       .phoneNumbers(fullPhoneNumber)
       .fetch({ fields: 'line_type_intelligence' });
     console.log('Phone lookup result', phoneLookup);
-    if (phoneLookup?.lineTypeIntelligence?.type === 'nonFixedVoip') {
+    type = phoneLookup?.lineTypeIntelligence?.type;
+    if (type === 'nonFixedVoip') {
       return Response.json(
         { message: 'VOIP numbers are not allowed', phoneNumber },
         { status: 400 }
@@ -58,5 +60,5 @@ export async function POST(request: NextRequest) {
     console.error(error);
     return Response.json({ message: error?.message, error }, { status: 400 });
   }
-  return Response.json({ ok: true, phoneNumber });
+  return Response.json({ ok: true, phoneNumber, type });
 }

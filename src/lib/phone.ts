@@ -9,11 +9,14 @@ export function isValidPhoneNumber(phoneNo: string) {
 
 export const toE164US = (phoneNo: string) => '+1' + phoneNo;
 
-export async function markNumberVoted(phoneNo: string, votes: string) {
+export async function markNumberVoted(
+  phoneNo: string,
+  { votes, optedIn }: { votes: string[]; optedIn: boolean }
+) {
   const params = {
     table: phoneNumbersTable,
     key: phoneNo,
-    value: votes,
+    value: JSON.stringify({ votes, optedIn }),
   };
   const result = await callNexus('local/push/record', params);
 

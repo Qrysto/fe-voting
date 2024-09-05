@@ -163,7 +163,7 @@ export function VotedCandidate({
       data-handler-id={handlerId}
     >
       <div
-        className={`bg-lighterGreen relative mr-3 h-[45px] w-[45px] shrink-0 grow-0 rounded-full pr-1 text-center text-[25px] font-semibold leading-[45px] text-green ${oswald.className}`}
+        className={`relative mr-3 h-[45px] w-[45px] shrink-0 grow-0 rounded-full bg-lighterGreen pr-1 text-center text-[25px] font-semibold leading-[45px] text-green ${oswald.className}`}
         ref={drag}
       >
         <span>{rank}</span>
@@ -236,8 +236,8 @@ export default function CastVote() {
   //   [allCandidates]
   // );
   const phoneNumber = useStore((state) => state.phoneNumber);
-  const jwtToken = useStore((state) => state.jwtToken);
   const votes = useStore((state) => state.votes);
+  const sendVote = useStore((state) => state.sendVote);
   const resetPhoneNumber = useStore((state) => state.resetPhoneNumber);
   const unconfirmCode = useStore((state) => state.unconfirmCode);
   const resetVote = useStore((state) => state.resetVote);
@@ -453,7 +453,7 @@ export default function CastVote() {
           }}
           confirmVote={async () => {
             try {
-              await axios.post('/api/vote', { jwtToken, votes });
+              await sendVote();
             } catch (err: any) {
               console.log(err);
               alert(

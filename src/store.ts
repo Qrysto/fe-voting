@@ -15,6 +15,7 @@ type State = {
   jwtToken: string | null;
   votes: string[];
   allCandidates: Candidate[];
+  optedIn: boolean;
 };
 
 type Actions = {
@@ -34,6 +35,8 @@ type Actions = {
   goBack: () => void;
   loadCandidates: (allCandidates: Candidate[]) => void;
   checkJWT: (jwtToken: string) => Promise<void>;
+  switchOptedIn: (value: boolean) => void;
+  sendVote: () => Promise<void>;
 };
 
 const defaultCodeDigits = Array(codeDigitCount).fill('');
@@ -47,6 +50,7 @@ export const useStore = create<State & Actions>((set, get) => ({
   jwtToken: null,
   votes: [],
   allCandidates: [],
+  optedIn: false,
 
   setPhoneDigit: (index: number, digit: string) =>
     set((state) => {
@@ -185,6 +189,17 @@ export const useStore = create<State & Actions>((set, get) => ({
         });
       }
     }
+  },
+
+  switchOptedIn: (value: boolean) => {
+    set({
+      optedIn: value,
+    });
+  },
+
+  sendVote: async () => {
+    const { jwtToken, votes, optedIn } = get();
+    await axios.post('/api/vote', { jwtToken, votes, optedIn });
   },
 }));
 

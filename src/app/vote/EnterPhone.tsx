@@ -85,6 +85,8 @@ export default function EnterPhone() {
   const confirmPhoneNumber = useStore((state) => state.confirmPhoneNumber);
   const confirmBtnRef: React.MutableRefObject<HTMLButtonElement | null> =
     useRef(null);
+  const optedIn = useStore((state) => state.optedIn);
+  const switchOptedIn = useStore((state) => state.switchOptedIn);
 
   const part1Ref = useRef<HTMLDivElement>(null);
   const part2Ref = useRef<HTMLDivElement>(null);
@@ -101,7 +103,7 @@ export default function EnterPhone() {
   }, []);
 
   return (
-    <div>
+    <div className="mb-40">
       <div ref={part1Ref}>
         <p className="text-lg leading-6">
           Thank you for watching the Free & Equal Presidential Debate. Who do
@@ -118,28 +120,45 @@ export default function EnterPhone() {
         >
           {phoneError || 'Please enter your mobile phone number below'}
         </h2>
+
         <PhoneInput
           focusConfirmBtn={() => {
             confirmBtnRef.current?.focus();
           }}
         />
+        <div className="mx-auto mt-6 max-w-md text-center">
+          <input
+            type="checkbox"
+            id="opt-out"
+            checked={optedIn}
+            onChange={(evt) => switchOptedIn(evt.target.checked)}
+            className="align-middle"
+          />
+          &nbsp;
+          <label htmlFor="opt-out" className="align-middle">
+            Receive texts from Free & Equal Elections Foundation about debates
+            and voting information
+          </label>
+        </div>
       </div>
 
       <div
-        className={`py-8 ${
-          smallScreen ? 'px-4' : 'absolute bottom-0 left-0 right-0 px-8'
+        className={`py-8 [background:_linear-gradient(transparent,rgba(0,0,0,0.4))] ${
+          smallScreen ? 'px-4' : 'fixed bottom-0 left-0 right-0 px-8'
         }`}
         ref={part2Ref}
       >
-        <BigButton
-          primary
-          disabled={!phoneFilled}
-          className="mt-8"
-          ref={confirmBtnRef}
-          action={confirmPhoneNumber}
-        >
-          Send code to me
-        </BigButton>
+        <div className="container px-0 md:max-w-3xl">
+          <BigButton
+            primary
+            disabled={!phoneFilled}
+            className="mt-8 shadow-md"
+            ref={confirmBtnRef}
+            action={confirmPhoneNumber}
+          >
+            Send code to me
+          </BigButton>
+        </div>
       </div>
     </div>
   );

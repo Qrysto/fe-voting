@@ -23,13 +23,17 @@ export async function POST(request: NextRequest) {
   }
 
   const body = await request.json();
-  const jwtToken: string = body?.jwtToken;
-  const votes: string[] = body?.votes;
+  const jwtToken: string | undefined = body?.jwtToken;
+  const votes: string[] | undefined = body?.votes;
+  const optedIn: boolean | undefined = body?.optedIn;
   if (!jwtToken) {
     return Response.json(
       { message: 'You need to verify your phone number' },
       { status: 401 }
     );
+  }
+  if (!votes) {
+    return Response.json({ message: 'Votes are missing' }, { status: 400 });
   }
   if (votes?.length > maxChoices) {
     return Response.json(
@@ -50,10 +54,10 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const alreadyVoted = !(await markNumberVoted(
-      phoneNumber,
-      JSON.stringify(votes)
-    ));
+    const alreadyVoted = !(await markNumberVoted(phoneNumber, {
+      votes,
+      optedIn: !!optedIn,
+    }));
     if (alreadyVoted) {
       return Response.json(
         { message: 'This phone number has already voted', phoneNumber },
