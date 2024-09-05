@@ -3,7 +3,7 @@
 import { ReactNode } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useParams } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 import { Menu } from 'lucide-react';
 import {
   Sheet,
@@ -13,6 +13,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
+import { cn } from '@/lib/utils';
 import allPolls from '@/constants/allPolls';
 import { Button } from '@/components/ui/button';
 import logo from './full-logo@2x.png';
@@ -104,10 +105,16 @@ function PollMenuItem({
   title: ReactNode;
   date: ReactNode;
 }) {
+  const pathname = usePathname();
+  const href = `/result/${id}`;
+
   return (
     <Link
-      href={`/result/${id}`}
-      className="block cursor-pointer px-6 py-3 hover:bg-lightGray"
+      href={href}
+      className={cn(
+        'block cursor-pointer px-6 py-3 hover:bg-lightGray',
+        pathname === href && 'bg-lightBlue hover:bg-lightBlue'
+      )}
     >
       <div className="text-sm opacity-75">{date}</div>
       <h3 className="text-xl text-darkBlue">{title}</h3>
