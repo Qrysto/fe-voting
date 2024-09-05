@@ -2,10 +2,8 @@ import type { Metadata } from 'next';
 import { kv } from '@vercel/kv';
 import { notFound } from 'next/navigation';
 import { Candidate, RCVResult } from '@/types';
-import * as poll2 from '@/constants/poll2';
-import * as poll3 from '@/constants/poll3Staging';
-import * as poll4 from '@/constants/poll4Staging';
 import type { CallNexus } from '@/lib/api';
+import allPolls from '@/constants/allPolls';
 import Round from './Round';
 import UpdatedTime from './UpdatedTime';
 import Winner from './Winner';
@@ -14,12 +12,6 @@ import Poll1RankingPage from './poll1';
 
 type Props = {
   params: { poll: string };
-};
-
-const pollConstants: Record<string, any> = {
-  poll2,
-  poll3,
-  poll4,
 };
 
 export async function generateMetadata({
@@ -39,7 +31,7 @@ export async function generateMetadata({
 }
 
 export async function generateStaticParams() {
-  return Object.keys(pollConstants);
+  return Object.keys(allPolls).map((poll) => ({ poll }));
 }
 
 async function loadRCVCandidates({
@@ -76,12 +68,12 @@ export default async function RankingPage({ params: { poll } }: Props) {
   if (poll === 'poll1') {
     return <Poll1RankingPage />;
   }
-  if (!Object.keys(pollConstants).includes(poll)) {
+  if (!Object.keys(allPolls).includes(poll)) {
     notFound();
   }
 
   const { pollName, pollTime, rcvResultKVKey, ticker, endTime, callNexus } =
-    pollConstants[poll];
+    allPolls[poll];
   const result = await loadRCVResult(rcvResultKVKey);
   const final = result?.final !== false; // old polls that doesn't have final property is also final
   const candidates = await loadRCVCandidates({

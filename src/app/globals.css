@@ -15,3 +15,9 @@ h5 {
   font-weight: bold;
   @apply text-darkBlue;
 }
+
+@layer base {
+  :root {
+    --radius: 0.5rem
+  }
+}
