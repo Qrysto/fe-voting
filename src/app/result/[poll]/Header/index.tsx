@@ -1,21 +1,18 @@
 'use client';
 
-import { ReactNode } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useParams, usePathname } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { Menu } from 'lucide-react';
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import { cn } from '@/lib/utils';
-import allPolls from '@/constants/allPolls';
 import { Button } from '@/components/ui/button';
+import ResultLinks from '@/components/ResultLinks';
 import logo from './full-logo@2x.png';
 import shareIcon from './shareIcon.svg';
 
@@ -82,42 +79,9 @@ function PollMenu() {
           </SheetTitle>
         </SheetHeader>
         <div className="mx-[-1.5rem] mt-8">
-          {Object.entries(allPolls).map(([pollId, { pollName, pollTime }]) => (
-            <PollMenuItem
-              key={pollId}
-              id={pollId}
-              title={pollName}
-              date={pollTime}
-            />
-          ))}
+          <ResultLinks />
         </div>
       </SheetContent>
     </Sheet>
-  );
-}
-
-function PollMenuItem({
-  id,
-  title,
-  date,
-}: {
-  id: string;
-  title: ReactNode;
-  date: ReactNode;
-}) {
-  const pathname = usePathname();
-  const href = `/result/${id}`;
-
-  return (
-    <Link
-      href={href}
-      className={cn(
-        'block cursor-pointer px-6 py-3 hover:bg-lightGray',
-        pathname === href && 'bg-lightBlue hover:bg-lightBlue'
-      )}
-    >
-      <div className="text-sm opacity-75">{date}</div>
-      <h3 className="text-xl text-darkBlue">{title}</h3>
-    </Link>
   );
 }

@@ -7,6 +7,7 @@ import iconImg from './icon@2x.png';
 import bannerImg from './banner@2x.png';
 import shareIcon from './shareIcon.svg';
 import { endTime } from '@/constants/activePoll';
+import ResultLinksDrawer from './ResultLinksDrawer';
 
 export default function HomePage() {
   const pollEnded = Date.now() > endTime;
@@ -55,23 +56,9 @@ export default function HomePage() {
           See Result
         </Link>
 
-        <div
-          className={`${oswald.className} mt-16 font-bold uppercase text-lightBlue/90`}
-        >
-          See previous polls results
+        <div className="mt-8">
+          <ResultLinksDrawer />
         </div>
-        <Link
-          href="/result/poll2"
-          className={`${oswald.className} mt-5 text-sm uppercase text-lightBlue/90 underline underline-offset-2 active:text-lightBlue/80`}
-        >
-          Second Debate Winner poll
-        </Link>
-        <Link
-          href="/result/poll1"
-          className={`${oswald.className} mt-4 text-sm uppercase text-lightBlue/90 underline underline-offset-2 active:text-lightBlue/80`}
-        >
-          Second debate Candidate Selection poll
-        </Link>
 
         <a
           href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fvote.freeandequal.org"
