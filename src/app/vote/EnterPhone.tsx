@@ -3,6 +3,7 @@
 import { useRef, Fragment, useState, useEffect } from 'react';
 import DigitInput from '@/components/DigitInput';
 import BigButton from '@/components/BigButton';
+import { Checkbox } from '@/components/ui/checkbox';
 import { useStore } from '@/store';
 import { phoneDigitCount } from '@/constants';
 
@@ -126,12 +127,11 @@ export default function EnterPhone() {
             confirmBtnRef.current?.focus();
           }}
         />
-        <div className="mx-auto mt-6 max-w-md text-center">
-          <input
-            type="checkbox"
+        <div className="mx-auto mt-6 max-w-md space-x-2 text-center">
+          <Checkbox
             id="opt-out"
             checked={optedIn}
-            onChange={(evt) => switchOptedIn(evt.target.checked)}
+            onCheckedChange={(checked) => switchOptedIn(!!checked)}
             className="align-middle"
           />
           &nbsp;
