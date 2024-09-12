@@ -19,10 +19,10 @@ export const metadata: Metadata = {
 };
 
 export default async function VotePage() {
-  // const pollEnded = Date.now() > endTime;
-  // if (pollEnded) {
-  //   redirect(`/result/${pollId}`);
-  // }
+  const pollEnded = Date.now() > endTime;
+  if (pollEnded) {
+    redirect(`/result/${pollId}`);
+  }
 
   const result = await callNexus(
     'assets/list/accounts',
