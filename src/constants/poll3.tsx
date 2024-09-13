@@ -1,7 +1,10 @@
-export const pollName =
-  '2024 Free and Equal Presidential Debate at FreedomFest Winner Poll';
+export const pollName = 'July 2024 Debate Winner Poll - FreedomFest';
 
-export const pollTime = 'July 12nd - July 15th, 2024';
+export const pollTime = (
+  <span>
+    July 12<sup>nd</sup> - July 15<sup>th</sup>, 2024
+  </span>
+);
 
 export const pollId = 'poll3';
 

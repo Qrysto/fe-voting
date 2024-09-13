@@ -1,6 +1,10 @@
-export const pollName = 'October 2024 Debate Winner Poll';
+export const pollName = 'Oct 2024 Debate Winner Poll';
 
-export const pollTime = 'Oct 23rd - ..., 2024';
+export const pollTime = (
+  <span>
+    Oct 23<sup>rd</sup> - ..., 2024
+  </span>
+);
 
 export const pollId = 'poll4';
 
