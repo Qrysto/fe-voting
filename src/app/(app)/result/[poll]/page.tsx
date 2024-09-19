@@ -64,7 +64,7 @@ async function loadRCVResult(rcvResultKVKey: string) {
   return result as RCVResult | null;
 }
 
-export default async function RankingPage({ params: { poll } }: Props) {
+export default async function ResultPage({ params: { poll } }: Props) {
   if (poll === 'poll1') {
     return <Poll1RankingPage />;
   }
@@ -84,7 +84,7 @@ export default async function RankingPage({ params: { poll } }: Props) {
   });
 
   return (
-    <div className="mt-6">
+    <main className="mt-6">
       <h2 className="mt-4 text-xl uppercase">{pollName}</h2>
       <div className="mb-3">{pollTime}</div>
       {!final && <EndingTime endTime={endTime} />}
@@ -158,6 +158,6 @@ export default async function RankingPage({ params: { poll } }: Props) {
         </a>{' '}
         with any feedback.
       </div>
-    </div>
+    </main>
   );
 }
