@@ -1,5 +1,7 @@
 'use client';
 
+import { useState } from 'react';
+import axios from 'axios';
 import { TabsContent } from '@/components/ui/tabs';
 import {
   Card,
@@ -9,10 +11,10 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import BigButton from '@/components/BigButton';
+import Spinner from '@/components/Spinner';
 import { useSearchParams } from 'next/navigation';
 import allPolls from '@/constants/allPolls';
 import * as activePoll from '@/constants/activePoll';
@@ -30,7 +32,33 @@ export default function VerifyPage() {
   );
 }
 
-function OnlineTab({ poll }: { poll: any }) {
+function OnlineTab({ poll: { callNexus, token, pollId } }: { poll: any }) {
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [fetching, setFetching] = useState(false);
+  // undefined = initial state
+  // null = transaction not found
+  const [transaction, setTransaction] = useState<object | null | undefined>(
+    undefined
+  );
+  const findVote = async (phoneNumber: string) => {
+    setFetching(true);
+    try {
+      const { data } = await axios.get(
+        `/api/vote?poll=${pollId}&phone=${phoneNumber}`
+      );
+      setTransaction(data.transaction || null);
+    } catch (err: any) {
+      console.log(err);
+      alert(
+        'ERROR! ' + err?.response.data?.message ||
+          err?.message ||
+          'Unknown error'
+      );
+    } finally {
+      setFetching(false);
+    }
+  };
+
   return (
     <TabsContent value="online" className="space-y-6">
       <Card>
@@ -41,16 +69,38 @@ function OnlineTab({ poll }: { poll: any }) {
           </CardDescription>
         </CardHeader>
         <CardContent className="mb-2 space-y-2">
-          <div className="space-y-1">
-            <Label htmlFor="name">Phone number</Label>
+          <form
+            id="find-vote"
+            className="space-y-1"
+            onSubmit={(evt) => {
+              evt.preventDefault();
+              findVote(phoneNumber);
+            }}
+          >
+            <Label htmlFor="phone">Phone number</Label>
             <Input
               id="phone"
-              placeholder="Enter the phone number you used to vote"
+              value={phoneNumber}
+              onChange={(evt) => {
+                setPhoneNumber(evt.target.value);
+              }}
+              placeholder="Enter your phone number"
+              required
             />
-          </div>
+          </form>
+          {transaction === null && (
+            <div className="text-destructive mt-2">
+              Cannot find any vote associated to this phone number! Please make
+              sure you selected the right poll and entered the exact phone
+              number that you used to vote on this poll.
+            </div>
+          )}
         </CardContent>
         <CardFooter>
-          <BigButton primary>Find your vote</BigButton>
+          <BigButton primary disabled={fetching} type="submit" form="find-vote">
+            {fetching && <Spinner inverse className="mr-2 inline-block" />}
+            Find your vote
+          </BigButton>
         </CardFooter>
       </Card>
 
