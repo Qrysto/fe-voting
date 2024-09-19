@@ -12,17 +12,19 @@ export default function VerifyLayout({
   const tab = searchParams.get('tab');
 
   return (
-    <Tabs
-      value={tab === 'local' ? 'local' : 'online'}
-      onValueChange={(val) => {
-        updateSearchParams('tab', val);
-      }}
-    >
-      <TabsList className="grid w-full grid-cols-2">
-        <TabsTrigger value="online">Verify online</TabsTrigger>
-        <TabsTrigger value="local">Verify locally</TabsTrigger>
-      </TabsList>
-      {children}
-    </Tabs>
+    <div className="py-6">
+      <Tabs
+        value={tab === 'local' ? 'local' : 'online'}
+        onValueChange={(val) => {
+          updateSearchParams('tab', val);
+        }}
+      >
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="online">Verify online</TabsTrigger>
+          <TabsTrigger value="local">Verify locally</TabsTrigger>
+        </TabsList>
+        {children}
+      </Tabs>
+    </div>
   );
 }

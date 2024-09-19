@@ -25,10 +25,10 @@ export default function VerifyPage() {
 
 function OnlineTab() {
   return (
-    <TabsContent value="online">
+    <TabsContent value="online" className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>Verify your vote online</CardTitle>
+          <CardTitle>Verify your vote</CardTitle>
           <CardDescription>
             See if your vote has been recorded correctly on Nexus blockchain.
           </CardDescription>
@@ -43,15 +43,15 @@ function OnlineTab() {
           </div>
         </CardContent>
         <CardFooter>
-          <Button>Find your vote</Button>
+          <Button variant="primary">Find your vote</Button>
         </CardFooter>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>Verify all votes online</CardTitle>
+          <CardTitle>Verify poll result</CardTitle>
           <CardDescription>
-            See if all votes have been counted correctly on Nexus blockchain.
+            See if poll result have been calculated correctly.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-2"></CardContent>
