@@ -7,3 +7,5 @@ export const pollTime = (
 );
 
 export const pollId = 'poll1';
+
+export const verifiable = false;

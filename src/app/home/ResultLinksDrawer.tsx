@@ -30,7 +30,7 @@ export default function ResultLinksDrawer() {
               Poll results
             </DrawerTitle>
           </DrawerHeader>
-          <div className="mx-[-1.5rem] flex-1 overflow-auto pb-10">
+          <div className="mx-[-1.5rem] flex-1 overflow-auto pb-6">
             <ResultLinks />
           </div>
         </div>

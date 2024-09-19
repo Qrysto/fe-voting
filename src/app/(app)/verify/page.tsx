@@ -9,21 +9,28 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import BigButton from '@/components/BigButton';
 import { useSearchParams } from 'next/navigation';
+import allPolls from '@/constants/allPolls';
+import * as activePoll from '@/constants/activePoll';
 
 export default function VerifyPage() {
+  const searchParams = useSearchParams();
+  const pollId = searchParams.get('poll');
+  const poll = (pollId && allPolls[pollId]) || activePoll;
+
   return (
     <main>
-      <OnlineTab />
+      <OnlineTab poll={poll} />
       <LocalTab />
     </main>
   );
 }
 
-function OnlineTab() {
+function OnlineTab({ poll }: { poll: any }) {
   return (
     <TabsContent value="online" className="space-y-6">
       <Card>
@@ -33,7 +40,7 @@ function OnlineTab() {
             See if your vote has been recorded correctly on Nexus blockchain.
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-2">
+        <CardContent className="mb-2 space-y-2">
           <div className="space-y-1">
             <Label htmlFor="name">Phone number</Label>
             <Input
@@ -43,7 +50,7 @@ function OnlineTab() {
           </div>
         </CardContent>
         <CardFooter>
-          <Button variant="primary">Find your vote</Button>
+          <BigButton primary>Find your vote</BigButton>
         </CardFooter>
       </Card>
 
