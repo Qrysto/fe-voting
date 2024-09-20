@@ -102,8 +102,8 @@ export const useStore = create<State & Actions>((set, get) => ({
   requestCode: async ({ phoneNumber }: { phoneNumber: string }) => {
     phoneNumber = phoneNumber || get().phoneNumber;
     try {
-      // const { data } = await axios.post('/api/verify-phone', { phoneNumber });
-      // console.log('verify-phone', phoneNumber, data);
+      const { data } = await axios.post('/api/verify-phone', { phoneNumber });
+      console.log('verify-phone', phoneNumber, data);
       set({
         phoneNumber,
         phoneError: null,
@@ -124,18 +124,18 @@ export const useStore = create<State & Actions>((set, get) => ({
   confirmCode: async () => {
     const code = get().codeDigits.join('');
     try {
-      // const { data } = await axios.post('/api/verify-code', {
-      //   phoneNumber: get().phoneNumber,
-      //   code,
-      // });
-      // console.log('data', data);
+      const { data } = await axios.post('/api/verify-code', {
+        phoneNumber: get().phoneNumber,
+        code,
+      });
+      console.log('data', data);
       set({
-        jwtToken: null, // data.token,
+        jwtToken: data.token,
         codeError: null,
       });
-      // if (typeof localStorage === 'object') {
-      //   localStorage.setItem(jwtKey, data.token);
-      // }
+      if (typeof localStorage === 'object') {
+        localStorage.setItem(jwtKey, data.token);
+      }
     } catch (err: any) {
       console.error(err);
       set({
@@ -199,7 +199,7 @@ export const useStore = create<State & Actions>((set, get) => ({
 
   sendVote: async () => {
     const { jwtToken, votes, optedIn } = get();
-    // await axios.post('/api/vote', { jwtToken, votes, optedIn });
+    await axios.post('/api/vote', { jwtToken, votes, optedIn });
   },
 }));
 
