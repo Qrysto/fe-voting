@@ -8,11 +8,6 @@ import { useStep, useStore } from '@/store';
 import { Candidate } from '@/types';
 import { jwtKey } from '@/constants';
 
-let jwtToken: string | null = null;
-if (typeof localStorage === 'object') {
-  jwtToken = localStorage.getItem(jwtKey);
-}
-
 export default function Steps({
   allCandidates,
 }: {
@@ -20,14 +15,19 @@ export default function Steps({
 }) {
   const loadCandidates = useStore((state) => state.loadCandidates);
   const checkJWT = useStore((state) => state.checkJWT);
-  const [checkingJWT, setChecking] = useState(!!jwtToken);
+  const [checkingJWT, setChecking] = useState(true);
   useEffect(() => {
     loadCandidates(allCandidates);
-    if (jwtToken) {
-      checkJWT(jwtToken).finally(() => {
-        setChecking(false);
-      });
+    if (typeof localStorage === 'object') {
+      const jwtToken = localStorage.getItem(jwtKey);
+      if (jwtToken) {
+        checkJWT(jwtToken).finally(() => {
+          setChecking(false);
+        });
+        return;
+      }
     }
+    setChecking(false);
   }, []);
   const step = useStep();
 
