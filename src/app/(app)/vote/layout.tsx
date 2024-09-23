@@ -1,6 +1,5 @@
 'use client';
 
-import Header from './Header';
 import StepCircle from './StepCircle';
 import { useStep } from '@/store';
 
@@ -35,12 +34,9 @@ export default function VoteLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div>
-      <Header />
-      <main>
-        <Steps />
-        {children}
-      </main>
-    </div>
+    <>
+      <Steps />
+      <main>{children}</main>
+    </>
   );
 }

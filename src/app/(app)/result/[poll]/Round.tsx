@@ -1,5 +1,7 @@
 import { oswald } from '@/fonts';
 import type { Candidate, Round } from '@/types';
+import { Card } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 import CandidateImage from '@/components/CandidateImage';
 import { partyColor } from '@/lib/utils';
 
@@ -21,7 +23,7 @@ function RankedCandidate({
   final: boolean;
 }) {
   return (
-    <li className="flex items-center px-4 py-2">
+    <li className="flex items-center py-2">
       <CandidateImage candidate={candidate} className="shrink-0 grow-0" />
       <div className="shrink grow px-4">
         <div>
@@ -133,37 +135,36 @@ export default function Round({
     roundNo === 1 ? 'ST' : roundNo === 2 ? 'ND' : roundNo === 3 ? 'RD' : 'TH';
 
   return (
-    <div className="mt-6">
-      <h3 className="flex items-center px-4 text-xl uppercase">
+    <Card className="mt-6 px-4">
+      <h3 className="flex items-center py-4 text-xl uppercase">
         <div
-          className={`bg-lighterGreen relative mr-3 h-[45px] w-[45px] shrink-0 grow-0 rounded-full pr-1 text-center text-[25px] font-semibold leading-[45px] text-green ${oswald.className}`}
+          className={`relative mr-3 h-[45px] w-[45px] shrink-0 grow-0 rounded-full bg-lighterGreen pr-1 text-center text-[25px] font-semibold leading-[45px] text-green ${oswald.className}`}
         >
           <span>{roundNo}</span>
           <span className="absolute top-[-5px] text-[10px]">{superscript}</span>
         </div>
         <div className="">{toOrdinal(roundNo)} Round</div>
       </h3>
-      <div className="mt-2 rounded-md bg-almostWhite py-[10px]">
-        <ul>
-          {candidates
-            .filter((c) => round.voteCount[c.address] !== undefined)
-            .sort(
-              (c1, c2) =>
-                round.voteCount[c2.address] - round.voteCount[c1.address]
-            )
-            .map((candidate) => (
-              <RankedCandidate
-                key={candidate.address}
-                candidate={candidate}
-                voteCount={round.voteCount[candidate.address]}
-                total={total}
-                eliminated={round.eliminated === candidate.address}
-                winner={round.winner === candidate.address}
-                final={final}
-              />
-            ))}
-        </ul>
-      </div>
-    </div>
+      <Separator />
+      <ul className="mt-2 pb-6">
+        {candidates
+          .filter((c) => round.voteCount[c.address] !== undefined)
+          .sort(
+            (c1, c2) =>
+              round.voteCount[c2.address] - round.voteCount[c1.address]
+          )
+          .map((candidate) => (
+            <RankedCandidate
+              key={candidate.address}
+              candidate={candidate}
+              voteCount={round.voteCount[candidate.address]}
+              total={total}
+              eliminated={round.eliminated === candidate.address}
+              winner={round.winner === candidate.address}
+              final={final}
+            />
+          ))}
+      </ul>
+    </Card>
   );
 }

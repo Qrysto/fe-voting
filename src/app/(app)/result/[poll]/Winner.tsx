@@ -1,6 +1,7 @@
 import { oswald } from '@/fonts';
 import { Candidate, RCVResult } from '@/types';
 import Image from 'next/image';
+import { Card } from '@/components/ui/card';
 import CandidateImage from '@/components/CandidateImage';
 import { partyColor } from '@/lib/utils';
 import crownImg from './crown.png';
@@ -30,7 +31,7 @@ export default function Winner({
   }
 
   return (
-    <li className="mt-2 flex items-center rounded-md bg-almostWhite px-4 py-[18px]">
+    <Card className="mt-2 flex items-center px-4 py-[18px]">
       <CandidateImage
         candidate={winner}
         size={60}
@@ -67,6 +68,6 @@ export default function Winner({
           {final ? 'Winner' : 'Current Winner'}
         </div>
       </div>
-    </li>
+    </Card>
   );
 }

@@ -3,6 +3,7 @@ import { type NextRequest } from 'next/server';
 import { maxChoices, ticker, endTime } from '@/constants/activePoll';
 import type { Candidate } from '@/types';
 import { callNexus } from '@/constants/activePoll';
+import allPolls from '@/constants/allPolls';
 import { markNumberVoted, markNumberNotVoted } from '@/lib/phone';
 
 const jwtSecret = process.env.JWT_SECRET || 'secret';
@@ -98,4 +99,42 @@ export async function POST(request: NextRequest) {
   }
 
   return Response.json({ ok: true });
+}
+
+export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams;
+  const pollId = searchParams.get('poll');
+  const poll = pollId && allPolls[pollId];
+  if (!poll) {
+    return Response.json({ message: 'Invalid poll ID' }, { status: 400 });
+  }
+  const { callNexus, tokenAddress, countryCode } = poll;
+
+  const phone = searchParams.get('phone');
+  if (!phone) {
+    return Response.json({ message: 'Invalid phone number' }, { status: 400 });
+  }
+  const phoneNumber =
+    countryCode === false && phone.startsWith('+1')
+      ? phone.substring(2)
+      : phone;
+
+  try {
+    const txs = await callNexus(
+      'finance/transactions/token/txid,contracts.reference,contracts.amount,contracts.to.address',
+      {
+        address: tokenAddress,
+        limit: 1,
+        where: `results.contracts.OP=DEBIT AND results.contracts.reference=checksum(\`${phoneNumber}\`);`,
+      }
+    );
+    const transaction = txs[0];
+    return Response.json({ transaction });
+  } catch (err: any) {
+    console.error(err);
+    return Response.json(
+      { message: err?.message, error: err },
+      { status: 500 }
+    );
+  }
 }
