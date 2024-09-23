@@ -4,3 +4,5 @@ export const jwtKey = 'feVotingJWT';
 export const phoneDigitCount = 10;
 
 export const codeDigitCount = 6;
+
+export const lookupResultsTable = 'lookupResults';

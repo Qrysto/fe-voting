@@ -1,6 +1,12 @@
 import { type NextRequest } from 'next/server';
 import { verifyService, lookup } from '../twilio';
-import { isValidPhoneNumber, toE164US, isVoted } from '@/lib/phone';
+import {
+  isValidPhoneNumber,
+  toE164US,
+  isVoted,
+  getLookup,
+  saveLookup,
+} from '@/lib/phone';
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
@@ -29,13 +35,19 @@ export async function POST(request: NextRequest) {
   }
 
   const fullPhoneNumber = toE164US(phoneNumber);
-  let type = undefined;
   try {
-    const phoneLookup = await lookup
-      .phoneNumbers(fullPhoneNumber)
-      .fetch({ fields: 'line_type_intelligence' });
-    console.log('Phone lookup result', phoneLookup);
-    type = phoneLookup?.lineTypeIntelligence?.type;
+    let lookup = await getLookup(fullPhoneNumber);
+    if (!lookup) {
+      lookup = await lookup
+        .phoneNumbers(fullPhoneNumber)
+        .fetch({ fields: 'line_type_intelligence' });
+      await saveLookup(fullPhoneNumber, lookup);
+      console.log('Lookup result', lookup);
+    } else {
+      console.log('Lookup result (cached)', lookup);
+    }
+
+    const type = lookup?.lineTypeIntelligence?.type;
     if (type === 'nonFixedVoip') {
       return Response.json(
         { message: 'VOIP numbers are not allowed', phoneNumber },
@@ -60,5 +72,5 @@ export async function POST(request: NextRequest) {
     console.error(error);
     return Response.json({ message: error?.message, error }, { status: 400 });
   }
-  return Response.json({ ok: true, phoneNumber, type });
+  return Response.json({ ok: true, phoneNumber });
 }
