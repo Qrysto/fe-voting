@@ -1,3 +1,5 @@
+'use client';
+
 import { useStore } from '@/store';
 import Modal from '@/components/Modal';
 import BigButton from '@/components/BigButton';
@@ -39,7 +41,7 @@ function VotedCandidate({ address, rank }: { address: string; rank: number }) {
         </div>
       </div>
       <div
-        className={`bg-lighterGreen relative h-[45px] w-[45px] shrink-0 grow-0 rounded-full pr-1 text-center text-[25px] font-semibold leading-[45px] text-green ${oswald.className}`}
+        className={`relative h-[45px] w-[45px] shrink-0 grow-0 rounded-full bg-lighterGreen pr-1 text-center text-[25px] font-semibold leading-[45px] text-green ${oswald.className}`}
       >
         <span>{rank}</span>
         <span className="absolute top-[-5px] text-[10px]">{superscript}</span>

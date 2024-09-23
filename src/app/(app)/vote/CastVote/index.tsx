@@ -1,6 +1,7 @@
+'use client';
+
 import { useState, useRef, useMemo } from 'react';
 import type { MouseEvent } from 'react';
-import axios from 'axios';
 import Image from 'next/image';
 import { TouchBackend } from 'react-dnd-touch-backend';
 import { DndProvider } from 'react-dnd';

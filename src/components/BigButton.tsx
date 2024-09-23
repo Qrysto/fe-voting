@@ -1,3 +1,5 @@
+'use client';
+
 import { oswald } from '@/fonts';
 import Spinner from './Spinner';
 import { cn } from '@/lib/utils';

@@ -1,3 +1,5 @@
+'use client';
+
 import Modal from '@/components/Modal';
 import BigButton from '@/components/BigButton';
 import Image from 'next/image';
