@@ -1,6 +1,6 @@
 'use client';
 
-import { HTMLAttributes, useState } from 'react';
+import { ReactNode, ComponentPropsWithoutRef, useState } from 'react';
 import axios from 'axios';
 import { TabsContent } from '@/components/ui/tabs';
 import {
@@ -16,9 +16,9 @@ import { Input } from '@/components/ui/input';
 import BigButton from '@/components/BigButton';
 import Spinner from '@/components/Spinner';
 import { useSearchParams } from 'next/navigation';
-import { useToast } from '@/lib/useToast';
+import { toast } from '@/lib/useToast';
 import allPolls from '@/constants/allPolls';
-import { ExternalLink, Copy } from 'lucide-react';
+import { ExternalLinkIcon, Copy } from 'lucide-react';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import * as activePoll from '@/constants/activePoll';
@@ -93,7 +93,7 @@ function OnlineTab({ poll: { pollId } }: { poll: any }) {
             />
           </form>
           {transaction === null && (
-            <div className="mt-2 text-destructive">
+            <div className="text-destructive mt-2">
               Cannot find any vote associated to this phone number! Please make
               sure you selected the right poll and entered the exact phone
               number that you used to vote on this poll.
@@ -121,9 +121,11 @@ function OnlineTab({ poll: { pollId } }: { poll: any }) {
   );
 }
 
-function LocalTab({ poll: { countryCode, ticker, pollId } }: { poll: any }) {
-  const { toast } = useToast();
-  const verifyVoteCode = `finance/transactions/token/txid,contracts.reference,contracts.amount,contracts.to.address ticker=${ticker} limit=1 where=results.contracts.OP=DEBIT AND results.contracts.reference=checksum(\`<your_phone_number>\`);`;
+function LocalTab({
+  poll: { countryCode, ticker, pollId, maxChoices },
+}: {
+  poll: any;
+}) {
   console.log(pollId, countryCode);
 
   return (
@@ -140,13 +142,9 @@ function LocalTab({ poll: { countryCode, ticker, pollId } }: { poll: any }) {
               </UListItem>
               <UListItem>
                 Basic knowledge about how to read data in{' '}
-                <a
-                  href="https://en.wikipedia.org/wiki/JSON"
-                  target="_blank"
-                  className="text-blue underline underline-offset-1"
-                >
+                <ExternalLink href="https://en.wikipedia.org/wiki/JSON">
                   JSON format
-                </a>
+                </ExternalLink>
                 .
               </UListItem>
               <UListItem>
@@ -170,7 +168,7 @@ function LocalTab({ poll: { countryCode, ticker, pollId } }: { poll: any }) {
           >
             <span className="flex items-center justify-center space-x-2">
               <span>Nexus Wallet download page</span>
-              <ExternalLink className="h-4 w-4" />
+              <ExternalLinkIcon className="h-4 w-4" />
             </span>
           </BigButton>
           <p className="mt-4">
@@ -213,7 +211,15 @@ function LocalTab({ poll: { countryCode, ticker, pollId } }: { poll: any }) {
             <strong>Step 4:</strong> When the{' '}
             <Emphasize>Download recent database?</Emphasize> dialog pops up,
             click <Emphasize>Yes, let&#39;s bootstrap it</Emphasize> and wait
-            for it to finish.
+            for it to finish. The bootstrap process usually takes 1-3 hours
+            depending on your internet speed.
+          </p>
+          <p className="mt-4">
+            <strong>Step 5:</strong> After the recent database bootstrap process
+            completes, click <Emphasize>Console</Emphasize> icon in the bottom
+            navigation bar. Here under the <Emphasize>Nexus API</Emphasize> tab,
+            you can run commands and query data from Nexus blockchain as guided
+            below.
           </p>
         </CardContent>
       </Card>
@@ -222,53 +228,32 @@ function LocalTab({ poll: { countryCode, ticker, pollId } }: { poll: any }) {
         <CardHeader>
           <CardTitle>Verify your vote</CardTitle>
           <CardDescription>
-            After finishing the setup steps, here's how you can check if your
-            vote has been recorded correctly on Nexus blockchain.
+            Check if your vote has been recorded correctly on Nexus blockchain.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <p>
-            <strong>Step 1:</strong> Click <Emphasize>Console</Emphasize> icon
-            in the bottom navigation bar.
-          </p>
-          <p className="mt-4">
-            <strong>Step 2:</strong> In <Emphasize>Nexus API</Emphasize> tab,
-            enter the following command:
-            <div className="my-2 flex items-stretch ">
-              <ScrollArea className="flex-1 rounded-l-sm bg-accent text-accent-foreground">
-                <code className="block whitespace-nowrap px-4 py-3">
-                  {verifyVoteCode}
-                </code>
-                <ScrollBar orientation="horizontal" />
-              </ScrollArea>
-              <button
-                className="flex flex-shrink-0 items-center rounded-r-sm border-l border-lightGray/50 bg-accent px-4 text-accent-foreground transition-colors hover:bg-accent/80"
-                onClick={() => {
-                  if (!navigator?.clipboard) return;
-                  navigator.clipboard.writeText(verifyVoteCode);
-                  toast({
-                    title: 'Copied!',
-                    description: 'The code has been copied to the clipboard.',
-                  });
-                }}
-              >
-                <Copy className="h-4 w-4" />
-              </button>
-            </div>
+            <strong>Step 1:</strong> Under{' '}
+            <Emphasize>Console/Nexus API</Emphasize>, enter the following
+            command into the command input (CLI syntax):
+            <BlockCode
+              content={`finance/transactions/token/txid,contracts.reference,contracts.amount,contracts.to.address ticker=${ticker} limit=1 where=results.contracts.OP=DEBIT AND results.contracts.reference=checksum(\`<your_phone_number>\`);`}
+            />
             replacing <InlineCode>&lt;your_phone_number&gt;</InlineCode> with
             the phone number you used to vote (
             {countryCode === false ? 'without' : 'with'} the &quot;+1&quot;
             country code
-            {countryCode === false ? '' : ', e.g. +11234567890'}).
+            {countryCode === false ? '' : ', e.g. +11234567890'}). The
+            transaction data containing your vote will be printed to the output
+            box in JSON format.
           </p>
           <p className="mt-4">
-            <strong>Step 3:</strong> The transaction data containing your vote
-            will be printed to the output box in JSON format. Here you would
-            want to pay attention to the `contracts.to` and `contracts.amount`
-            fields.
-            <UList>
-              <UListItem></UListItem>
-            </UList>
+            <strong>Step 2:</strong> Check if the data matches the vote you've
+            submitted. Read more on{' '}
+            <ExternalLink href="#intepretation" target="_self">
+              How to intepret transactions data
+            </ExternalLink>
+            .
           </p>
         </CardContent>
       </Card>
@@ -277,14 +262,41 @@ function LocalTab({ poll: { countryCode, ticker, pollId } }: { poll: any }) {
         <CardHeader>
           <CardTitle>Verify the entire poll result</CardTitle>
           <CardDescription>
-            Follow the instructions below to See if your vote has been recorded
-            correctly on Nexus blockchain.
+            Fetch all votes and re-calculate the poll result yourself.
           </CardDescription>
         </CardHeader>
-        <CardContent></CardContent>
+        <CardContent>
+          <p>
+            <strong>Step 1:</strong> Under{' '}
+            <Emphasize>Console/Nexus API</Emphasize>, enter the following
+            command into the command input (CLI syntax):
+            <BlockCode content="ledger/list/transactions/txid,contracts.reference,contracts.amount,contracts.to.address ticker=${ticker} limit=100 page=1 where=results.contracts.OP=DEBIT" />
+            The first page of transactions data (max. 100 transactions) will be
+            printed to the output box in JSON format. Save this data somewhere
+            to process later on.
+          </p>
+          <p className="mt-4">
+            <strong>Step 2:</strong> Repeat step 1, replacing{' '}
+            <InlineCode>page=1</InlineCode> with{' '}
+            <InlineCode>page=&lt;increment_number&gt;</InlineCode> until there
+            are less than 100 transactions returned (indicating the last page).
+          </p>
+          <p className="mt-4">
+            <strong>Step 3:</strong> Use any tool to calculate the poll result
+            from the transactions data. Read more on{' '}
+            <ExternalLink href="#intepretation" target="_self">
+              How to intepret transactions data
+            </ExternalLink>{' '}
+            and{' '}
+            <ExternalLink href="https://fairvote.org/our-reforms/ranked-choice-voting/">
+              How Ranked Choice Voting results are calculated
+            </ExternalLink>
+            .
+          </p>
+        </CardContent>
       </Card>
 
-      <IntepretationCard />
+      <IntepretationCard maxChoices={maxChoices} />
     </TabsContent>
   );
 }
@@ -297,35 +309,68 @@ const txShape = `{
     reference: number;
   }
 }`;
-function IntepretationCard() {
+function IntepretationCard({ maxChoices }: { maxChoices: number }) {
   return (
-    <Card>
+    <Card id="intepretation">
       <CardHeader>
-        <CardTitle>How to intepret transaction data</CardTitle>
-        <CardDescription></CardDescription>
+        <CardTitle>How to intepret transactions data</CardTitle>
+        <CardDescription>
+          If you follow the instructions above exactly, you will get transaction
+          outputs in the following shape:
+        </CardDescription>
       </CardHeader>
       <CardContent>
-        <p>
-          If you follow the instructions above exactly, the transaction output
-          you get will be in the following shape:
-        </p>
-        <code className="my-2 block rounded-l-sm bg-accent px-4 py-2 text-accent-foreground">
+        <code className="bg-accent text-accent-foreground my-2 block whitespace-pre rounded-l-sm px-4 py-2">
           {txShape}
         </code>
-        <p>
-          <InlineCode>txid</InlineCode> is the transaction's unique identifier
-          in Nexus blockchain. You can use this to look up the transaction on{' '}
-          <a href="https://explorer.nexus.io/" target="_blank">
-            Nexus Explorer
-          </a>
-          .
-        </p>
+
+        <p></p>
+        <UList>
+          <UListItem>
+            <InlineCode>txid</InlineCode>: transaction's unique identifier in
+            Nexus blockchain. You can use <InlineCode>txid</InlineCode> to look
+            up the transaction details on{' '}
+            <ExternalLink href="https://explorer.nexus.io/">
+              Nexus Explorer
+            </ExternalLink>
+            .
+          </UListItem>
+          <UListItem>
+            <InlineCode>contracts</InlineCode>: With Ranked Choice Voting, your
+            vote can consist of multiple candidates. Each object in{' '}
+            <InlineCode>contracts</InlineCode> array represents one of the
+            candidates you voted for.
+          </UListItem>
+          <UListItem>
+            <InlineCode>contracts.to</InlineCode>: candidate's register address
+            on Nexus blockchain. You can use it to lookup candidate's details
+            with the following command:
+            <BlockCode content="assets/get/account address=<register_address>" />
+            replacing <InlineCode>&lt;register_address&gt;</InlineCode> with the
+            value from <InlineCode>contracts.to</InlineCode>.
+          </UListItem>
+          <UListItem>
+            <InlineCode>contracts.amount</InlineCode>: represents the order of
+            preference of the candidate in your vote. If{' '}
+            <InlineCode>amount</InlineCode> equals {maxChoices}, it's your most
+            preferred candidate. If <InlineCode>amount</InlineCode> equals{' '}
+            {maxChoices - 1}, it's your second most preferred candidate, and so
+            on...
+          </UListItem>
+          <UListItem>
+            <InlineCode>contracts.reference</InlineCode>: checksum of your phone
+            number. One Nexus transaction can contain multiple votes from
+            different voters due to batching mechanism to improve system
+            performance, so <InlineCode>reference</InlineCode> can be used to
+            distinguish votes from different voters.
+          </UListItem>
+        </UList>
       </CardContent>
     </Card>
   );
 }
 
-function UList({ className, ...props }: HTMLAttributes<HTMLUListElement>) {
+function UList({ className, ...props }: ComponentPropsWithoutRef<'ul'>) {
   return (
     <ul
       {...props}
@@ -338,7 +383,7 @@ function UListItem({
   className,
   children,
   ...props
-}: HTMLAttributes<HTMLLIElement>) {
+}: ComponentPropsWithoutRef<'li'>) {
   return (
     <li {...props} className={cn('list-inside', className)}>
       <span className="ml-[-10px]">{children}</span>
@@ -346,15 +391,15 @@ function UListItem({
   );
 }
 
-function Emphasize({ className, ...props }: HTMLAttributes<HTMLLIElement>) {
+function Emphasize({ className, ...props }: ComponentPropsWithoutRef<'span'>) {
   return <span className={cn('font-semibold', className)} {...props} />;
 }
 
-function InlineCode({ className, ...props }: HTMLAttributes<HTMLSpanElement>) {
+function InlineCode({ className, ...props }: ComponentPropsWithoutRef<'code'>) {
   return (
     <code
       className={cn(
-        'inline-block rounded-sm bg-accent text-accent-foreground',
+        'bg-accent text-accent-foreground inline-block rounded-sm px-1',
         className
       )}
       {...props}
@@ -362,36 +407,46 @@ function InlineCode({ className, ...props }: HTMLAttributes<HTMLSpanElement>) {
   );
 }
 
-function ExternalLink({
+function BlockCode({
   className,
-  href,
-  target,
+  content,
   ...props
-}: HTMLAttributes<HTMLAnchorElement>) {
+}: ComponentPropsWithoutRef<'code'> & { content: string }) {
   return (
-    <a
-      href="https://en.wikipedia.org/wiki/JSON"
-      target="_blank"
-      className="text-blue underline underline-offset-1"
-    />
+    <div className={cn('my-2 flex items-stretch', className)} {...props}>
+      <ScrollArea className="bg-accent text-accent-foreground flex-1 rounded-l-sm">
+        <code className="block whitespace-nowrap px-4 py-3">{content}</code>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
+      <button
+        className="bg-accent text-accent-foreground hover:bg-accent/80 flex flex-shrink-0 items-center rounded-r-sm border-l border-lightGray/50 px-4 transition-colors"
+        onClick={() => {
+          if (!navigator?.clipboard) return;
+          navigator.clipboard.writeText(content);
+          toast({
+            title: 'Copied!',
+            description: 'The code has been copied to the clipboard.',
+          });
+        }}
+      >
+        <Copy className="h-4 w-4" />
+      </button>
+    </div>
   );
 }
 
-/*
-Prerequisites: In order to verify the votes on Nexus blockchain locally, you need a desktop or laptop computer running either Windows, MacOS, or Linux.
-If you want to verify the whole poll's result, you also need some basic data processing skill (in JSON format) to calculate the poll's result from a large amount of votes.
-
-Step 1: Download and install the latest Nexus Wallet desktop app.
-
-Step 2: Run Nexus Wallet and go through the onboarding screens
-
-Step 3: Don't choose lite mode, and choose bootstrap the database.
-
-Verify your vote:
-Go to Terminal tab, type the command
-
-Verify all votes:
-Step 4: Go to Terminal tab, type the command. Save the results somewhere
-
-Step 5: Repeat step 4 for as many pages as needed.
-*/
+function ExternalLink({
+  className,
+  href,
+  target = '_blank',
+  ...props
+}: ComponentPropsWithoutRef<'a'>) {
+  return (
+    <a
+      href={href}
+      target={target}
+      className={cn('text-blue underline underline-offset-1', className)}
+      {...props}
+    />
+  );
+}
