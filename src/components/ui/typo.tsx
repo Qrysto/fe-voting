@@ -87,7 +87,7 @@ export function ExternalLink({
     <a
       href={href}
       target={target}
-      className={cn('text-blue underline underline-offset-1', className)}
+      className={cn('text-blue underline underline-offset-2', className)}
       {...props}
     />
   );
