@@ -10,15 +10,16 @@ import { useDrag, useDrop } from 'react-dnd';
 import { useRouter } from 'next/navigation';
 import BigButton from '@/components/BigButton';
 import CandidateImage from '@/components/CandidateImage';
-import ConfirmVoteModal from './ConfirmVoteModal';
-import VoteConfirmedModal from './VoteConfirmedModal';
-import CustomDragLayer from './CustomDragLayer';
+import { toast } from '@/lib/useToast';
 import { oswald } from '@/fonts';
 import { maxChoices } from '@/constants/activePoll';
 import type { Candidate } from '@/types';
 import { useStore } from '@/store';
 import { toE164US } from '@/lib/phone';
 import { partyColor } from '@/lib/utils';
+import ConfirmVoteModal from './ConfirmVoteModal';
+import VoteConfirmedModal from './VoteConfirmedModal';
+import CustomDragLayer from './CustomDragLayer';
 import searchIcon from './search.svg';
 import filterIcon from './filter.svg';
 
@@ -457,11 +458,13 @@ export default function CastVote() {
               await sendVote();
             } catch (err: any) {
               console.log(err);
-              alert(
-                'ERROR! ' + err?.response.data?.message ||
+              toast({
+                title: 'ERROR!',
+                description:
+                  err?.response.data?.message ||
                   err?.message ||
-                  'Unknown error'
-              );
+                  'Unknown error',
+              });
               return;
             }
             setConfirmModalOpen(false);

@@ -17,6 +17,7 @@ import BigButton from '@/components/BigButton';
 import Spinner from '@/components/Spinner';
 import CandidateImage from '@/components/CandidateImage';
 import { ExternalLink } from '@/components/ui/typo';
+import { toast } from '@/lib/useToast';
 import { ExternalLinkIcon } from 'lucide-react';
 import { oswald } from '@/fonts';
 import { partyColor } from '@/lib/utils';
@@ -36,11 +37,12 @@ export default function OnlineTab({ pollId }: { pollId: string }) {
       setVote(data.vote || null);
     } catch (err: any) {
       console.log(err);
-      alert(
-        'ERROR! ' + err?.response.data?.message ||
-          err?.message ||
-          'Unknown error'
-      );
+      toast({
+        title: 'ERROR!',
+        description:
+          err?.response.data?.message || err?.message || 'Unknown error',
+        variant: 'destructive',
+      });
     } finally {
       setFetching(false);
     }
