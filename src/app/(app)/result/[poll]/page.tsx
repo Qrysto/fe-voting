@@ -1,9 +1,12 @@
 import type { Metadata } from 'next';
 import { kv } from '@vercel/kv';
 import { notFound } from 'next/navigation';
+import Link from 'next/link';
 import { Candidate, RCVResult } from '@/types';
 import type { CallNexus } from '@/lib/api';
+import { Button } from '@/components/ui/button';
 import allPolls from '@/constants/allPolls';
+import { oswald } from '@/fonts';
 import Round from './Round';
 import UpdatedTime from './UpdatedTime';
 import Winner from './Winner';
@@ -65,13 +68,48 @@ async function loadRCVResult(rcvResultKVKey: string) {
 }
 
 export default async function ResultPage({ params: { poll } }: Props) {
-  if (poll === 'poll1') {
-    return <Poll1RankingPage />;
-  }
   if (!Object.keys(allPolls).includes(poll)) {
     notFound();
   }
+  const { verifiable } = allPolls[poll];
 
+  return (
+    <main className="mt-6">
+      {poll === 'poll1' ? <Poll1RankingPage /> : renderPollResult({ poll })}
+
+      <div className="mt-16 text-center">
+        {verifiable !== false ? (
+          <Link
+            href={`/verify?poll=${poll}`}
+            className={`${oswald.className} mt-4 text-lg uppercase text-darkBlue underline underline-offset-2 active:text-darkBlue/80`}
+          >
+            Verify poll result
+          </Link>
+        ) : (
+          <div className="text-sm text-foreground/60">
+            This poll was beta tested on a private blockchain, therefore
+            verification instruction for this poll is not available.
+          </div>
+        )}
+      </div>
+
+      <div className="mt-16 pb-8 text-center text-sm">
+        Thank you for using the Free & Equal Election Assistant App Beta -
+        please email{' '}
+        <a
+          href="mailto:info@freeandequal.org"
+          target="_blank"
+          className="underline underline-offset-2"
+        >
+          info@freeandequal.org
+        </a>{' '}
+        with any feedback.
+      </div>
+    </main>
+  );
+}
+
+async function renderPollResult({ poll }: { poll: string }) {
   const { pollName, pollTime, rcvResultKVKey, ticker, endTime, callNexus } =
     allPolls[poll];
   const result = await loadRCVResult(rcvResultKVKey);
@@ -82,9 +120,8 @@ export default async function ResultPage({ params: { poll } }: Props) {
     ticker,
     final,
   });
-
   return (
-    <main className="mt-6">
+    <>
       <h2 className="mt-4 text-xl uppercase">{pollName}</h2>
       <div className="mb-3">{pollTime}</div>
       {!final && <EndingTime endTime={endTime} />}
@@ -145,19 +182,6 @@ export default async function ResultPage({ params: { poll } }: Props) {
       ) : (
         <p className="mt-4">Results will be calculated in a few minutes.</p>
       )}
-
-      <div className="mt-16 pb-8 text-center text-sm">
-        Thank you for using the Free & Equal Election Assistant App Beta -
-        please email{' '}
-        <a
-          href="mailto:info@freeandequal.org"
-          target="_blank"
-          className="underline underline-offset-2"
-        >
-          info@freeandequal.org
-        </a>{' '}
-        with any feedback.
-      </div>
-    </main>
+    </>
   );
 }
