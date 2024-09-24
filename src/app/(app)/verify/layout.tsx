@@ -34,8 +34,8 @@ export default function VerifyLayout({
       <p className="mb-4">
         Free and Equal Voting app is powered by{' '}
         <ExternalLink href="https://nexus.io/">Nexus blockchain</ExternalLink>,
-        meaning your votes are all kept on the blockchain for immutability and
-        verifiability.
+        ensuring that your votes are securely stored on the blockchain for
+        immutability and verifiability.
       </p>
 
       <div className="mb-2">

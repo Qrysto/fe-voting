@@ -28,14 +28,14 @@ export default function LocalTab({
         <CardHeader>
           <CardTitle>Setup instructions</CardTitle>
           <CardDescription>
-            <strong>Prerequisites:</strong> In order to locally verify votes on
-            the Nexus blockchain, you will need{' '}
+            <strong>Prerequisites:</strong> To locally verify votes on the Nexus
+            blockchain, you will need:
             <UList>
               <UListItem>
                 A computer with Windows, MacOS, or Linux operating system .
               </UListItem>
               <UListItem>
-                Basic knowledge about how to read data in{' '}
+                Basic knowledge of how to read data in{' '}
                 <ExternalLink href="https://en.wikipedia.org/wiki/JSON">
                   JSON format
                 </ExternalLink>
@@ -43,7 +43,7 @@ export default function LocalTab({
               </UListItem>
               <UListItem>
                 If you want to verify the entire poll result, you will also need
-                some basic data processing skills, including JSON data handling,
+                some basic data processing skills, including handling JSON data,
                 in order to process the large volume of votes.
               </UListItem>
             </UList>
@@ -67,13 +67,13 @@ export default function LocalTab({
           </BigButton>
           <p className="mt-4">
             <strong>Step 2:</strong> Run Nexus Wallet and go through the
-            onboarding screens
+            onboarding screens.
           </p>
           <UList>
             <UListItem>
               Select your preferred language. <Emphasize>English</Emphasize> is
-              recommended, other languages are contributed by the community and
-              might be inaccurate or not fully translated.
+              recommended, as other languages are contributed by the community
+              and might be inaccurate or not fully translated.
             </UListItem>
             <UListItem>
               Accept the <Emphasize>License Agreement</Emphasize>.
@@ -88,7 +88,7 @@ export default function LocalTab({
           </p>
           <UList>
             <UListItem>
-              Click <Emphasize>Settings</Emphasize> icon in the bottom
+              Click the <Emphasize>Settings</Emphasize> icon in the bottom
               navigation bar.
             </UListItem>
             <UListItem>
@@ -110,10 +110,10 @@ export default function LocalTab({
           </p>
           <p className="mt-4">
             <strong>Step 5:</strong> After the recent database bootstrap process
-            completes, click <Emphasize>Console</Emphasize> icon in the bottom
-            navigation bar. Here under the <Emphasize>Nexus API</Emphasize> tab,
-            you can run commands and query data from Nexus blockchain as guided
-            below.
+            is complete, click <Emphasize>Console</Emphasize> icon in the bottom
+            navigation bar. Here, under the <Emphasize>Nexus API</Emphasize>{' '}
+            tab, you can run commands and query data from Nexus blockchain as
+            guided below.
           </p>
         </CardContent>
       </Card>
@@ -122,7 +122,8 @@ export default function LocalTab({
         <CardHeader>
           <CardTitle>Verify your vote</CardTitle>
           <CardDescription>
-            Check if your vote has been recorded correctly on Nexus blockchain.
+            Check if your vote has been recorded correctly on the Nexus
+            blockchain.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -130,15 +131,17 @@ export default function LocalTab({
             <strong>Step 1:</strong> Under{' '}
             <Emphasize>Console/Nexus API</Emphasize>, enter the following
             command into the command input (CLI syntax):
-            <BlockCode
-              content={`finance/transactions/token/txid,contracts.reference,contracts.amount,contracts.to.address ticker=${ticker} limit=1 where=results.contracts.OP=DEBIT AND results.contracts.reference=checksum(\`<your_phone_number>\`);`}
-            />
-            replacing <InlineCode>&lt;your_phone_number&gt;</InlineCode> with
-            the phone number you used to vote (
+          </p>
+          <BlockCode
+            content={`finance/transactions/token/txid,contracts.reference,contracts.amount,contracts.to.address ticker=${ticker} limit=1 where=results.contracts.OP=DEBIT AND results.contracts.reference=checksum(\`<your_phone_number>\`);`}
+          />
+          <p>
+            Replace <InlineCode>&lt;your_phone_number&gt;</InlineCode> with the
+            phone number you used to vote (
             {countryCode === false ? 'without' : 'with'} the &quot;+1&quot;
             country code
             {countryCode === false ? '' : ', e.g. +11234567890'}). The
-            transaction data containing your vote will be printed to the output
+            transaction data containing your vote will be printed in the output
             box in JSON format.
           </p>
           <p className="mt-4">
@@ -156,7 +159,7 @@ export default function LocalTab({
         <CardHeader>
           <CardTitle>Verify the entire poll result</CardTitle>
           <CardDescription>
-            Fetch all votes and re-calculate the poll result yourself.
+            Fetch all votes and recalculate the poll result yourself.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -164,7 +167,9 @@ export default function LocalTab({
             <strong>Step 1:</strong> Under{' '}
             <Emphasize>Console/Nexus API</Emphasize>, enter the following
             command into the command input (CLI syntax):
-            <BlockCode content="ledger/list/transactions/txid,contracts.reference,contracts.amount,contracts.to.address ticker=${ticker} limit=100 page=1 where=results.contracts.OP=DEBIT" />
+          </p>
+          <BlockCode content="ledger/list/transactions/txid,contracts.reference,contracts.amount,contracts.to.address ticker=${ticker} limit=100 page=1 where=results.contracts.OP=DEBIT" />
+          <p>
             The first page of transactions data (max. 100 transactions) will be
             printed to the output box in JSON format. Save this data somewhere
             to process later on.
@@ -221,9 +226,9 @@ function IntepretationCard({ maxChoices }: { maxChoices: number }) {
         <p></p>
         <UList>
           <UListItem>
-            <InlineCode>txid</InlineCode>: transaction&apos;s unique identifier
-            in Nexus blockchain. You can use <InlineCode>txid</InlineCode> to
-            look up the transaction details on{' '}
+            <InlineCode>txid</InlineCode>: The transaction&apos;s unique
+            identifier in Nexus blockchain. You can use{' '}
+            <InlineCode>txid</InlineCode> to look up the transaction details on{' '}
             <ExternalLink href="https://explorer.nexus.io/">
               Nexus Explorer
             </ExternalLink>
@@ -236,16 +241,16 @@ function IntepretationCard({ maxChoices }: { maxChoices: number }) {
             candidates you voted for.
           </UListItem>
           <UListItem>
-            <InlineCode>contracts.to</InlineCode>: candidate&apos;s register
-            address on Nexus blockchain. You can use it to lookup
+            <InlineCode>contracts.to</InlineCode>: The candidate&apos;s register
+            address on Nexus blockchain. You can use it to look up the
             candidate&apos;s details with the following command:
             <BlockCode content="assets/get/account address=<register_address>" />
-            replacing <InlineCode>&lt;register_address&gt;</InlineCode> with the
+            Replace <InlineCode>&lt;register_address&gt;</InlineCode> with the
             value from <InlineCode>contracts.to</InlineCode>.
           </UListItem>
           <UListItem>
-            <InlineCode>contracts.amount</InlineCode>: represents the order of
-            preference of the candidate in your vote. If{' '}
+            <InlineCode>contracts.amount</InlineCode>: Represents the preference
+            order of the candidate in your vote. If{' '}
             <InlineCode>amount</InlineCode> equals {maxChoices}, it&apos;s your
             most preferred candidate. If <InlineCode>amount</InlineCode> equals{' '}
             {maxChoices - 1}, it&apos;s your second most preferred candidate,

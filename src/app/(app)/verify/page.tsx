@@ -4,12 +4,13 @@ import * as activePoll from '@/constants/activePoll';
 import OnlineTab from './OnlineTab';
 import LocalTab from './LocalTab';
 
-export default function VerifyPage(
-  params: any,
-  searchParams?: ReadonlyURLSearchParams
-) {
-  const pollId = searchParams?.get('poll');
-  const poll = (pollId && allPolls[pollId]) || activePoll;
+export default function VerifyPage({
+  searchParams,
+}: {
+  searchParams?: { [key: string]: string | string[] | undefined };
+}) {
+  const pollId = searchParams?.poll;
+  const poll = (typeof pollId === 'string' && allPolls[pollId]) || activePoll;
 
   return (
     <main>
