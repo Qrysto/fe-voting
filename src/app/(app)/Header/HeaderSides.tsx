@@ -11,9 +11,13 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
+import { ArrowLeft } from 'lucide-react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import ResultLinks from '@/components/ResultLinks';
 import { usePathname } from 'next/navigation';
+import { oswald } from '@/fonts';
+import { cn } from '@/lib/utils';
 import backIcon from './arrow-left.svg';
 import shareIcon from './shareIcon.svg';
 
@@ -25,6 +29,9 @@ export function HeaderLeft() {
   }
   if (pathname.startsWith('/result')) {
     return <ResultPageHeaderLeft />;
+  }
+  if (pathname.startsWith('/verify')) {
+    return <VerifyPageHeaderLeft />;
   }
   return null;
 }
@@ -73,6 +80,30 @@ function ResultPageHeaderLeft() {
   );
 }
 
+function VerifyPageHeaderLeft() {
+  const searchParams = useSearchParams();
+  const pollId = searchParams.get('poll');
+  const router = useRouter();
+
+  return (
+    <div className="absolute inset-y-0 left-0 flex items-center object-right-top">
+      <IconButton
+        onClick={() => {
+          router.push(`/result/${pollId}`);
+        }}
+        className="flex items-center"
+      >
+        <Image src={backIcon} height={16} alt="Back" />
+        <span
+          className={cn('ml-1 text-lg uppercase text-blue', oswald.className)}
+        >
+          Result
+        </span>
+      </IconButton>
+    </div>
+  );
+}
+
 export function HeaderRight() {
   const pathname = usePathname();
   const url = `https://vote.freeandequal.org${pathname}`;
@@ -98,7 +129,7 @@ function IconButton({
   className?: string;
 } & React.ComponentPropsWithoutRef<'a'>) {
   return (
-    <a className={'px-1 py-1 ' + (className || '')} {...rest}>
+    <a className={cn('px-1 py-1', className)} {...rest}>
       {children}
     </a>
   );

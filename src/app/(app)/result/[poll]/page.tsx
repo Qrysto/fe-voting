@@ -4,7 +4,6 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Candidate, RCVResult } from '@/types';
 import type { CallNexus } from '@/lib/api';
-import { Button } from '@/components/ui/button';
 import allPolls from '@/constants/allPolls';
 import { oswald } from '@/fonts';
 import Round from './Round';
