@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { useState } from 'react';
 import { useStore } from '@/store';
 import { Menu } from 'lucide-react';
 import {
@@ -44,9 +45,10 @@ function VotePageHeaderLeft() {
 }
 
 function ResultPageHeaderLeft() {
+  const [open, setOpen] = useState(false);
   return (
     <div className="absolute inset-y-0 left-[-1rem] flex items-center object-left-top">
-      <Sheet>
+      <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger>
           <Button variant="ghost">
             <Menu />
@@ -59,7 +61,11 @@ function ResultPageHeaderLeft() {
             </SheetTitle>
           </SheetHeader>
           <div className="mx-[-1.5rem] mt-8">
-            <ResultLinks />
+            <ResultLinks
+              onLinkClick={() => {
+                setOpen(false);
+              }}
+            />
           </div>
         </SheetContent>
       </Sheet>
