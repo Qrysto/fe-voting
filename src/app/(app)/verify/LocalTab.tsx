@@ -214,7 +214,7 @@ function IntepretationCard({ maxChoices }: { maxChoices: number }) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <code className="my-2 block whitespace-pre rounded-l-sm bg-accent px-4 py-2 text-accent-foreground">
+        <code className="my-2 block whitespace-pre rounded-sm bg-accent px-4 py-2 text-accent-foreground">
           {txShape}
         </code>
 
