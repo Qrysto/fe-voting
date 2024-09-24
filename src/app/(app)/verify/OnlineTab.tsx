@@ -21,51 +21,12 @@ import { ExternalLinkIcon } from 'lucide-react';
 import { oswald } from '@/fonts';
 import { partyColor } from '@/lib/utils';
 
-const mockVote = {
-  txid: '0103946712270f9a906bd4c4c4a00c5c196afc2be64d001277fa4dc572e3f2a4b4bd9292edd80a2276b427b9547c89f51aedb2847453b3889c4815a621fb8de7',
-  choices: [
-    {
-      First: 'Jill',
-      Last: 'Stein',
-      Party: 'Green',
-      Website: 'http://jillstein2024.com',
-      active: 1,
-      balance: 7463.0,
-      token: '8EMkAeF1h1D74HrdpypKQKxNMjbMQ6UThtooM9J3QerERuHVVG1',
-      ticker: 'poll3',
-      address: '8CPHob6tKeP1VtjdwzJnnzabupihBLPQoBoWizzYbFXX2NCLiry',
-    },
-    {
-      First: 'Randall',
-      Last: 'Terry',
-      Party: 'Constitution',
-      Website: 'https://www.terry2024.com',
-      active: 1,
-      balance: 3289.0,
-      token: '8EMkAeF1h1D74HrdpypKQKxNMjbMQ6UThtooM9J3QerERuHVVG1',
-      ticker: 'poll3',
-      address: '8BtVB88J1Gip9Ey5EPoWDmNBoVjdvPQ9efdCim87fGGua6M8miW',
-    },
-    {
-      First: 'Joseph',
-      Last: 'Biden',
-      Party: 'Democrat',
-      Website: 'http://joebiden.com',
-      active: 0,
-      balance: 0.0,
-      token: '8EMkAeF1h1D74HrdpypKQKxNMjbMQ6UThtooM9J3QerERuHVVG1',
-      ticker: 'poll3',
-      address: '8CdwXLs4XTgk2gwTqcDojVuzTBoDchXydVSKJrKBTSud8wev8a4',
-    },
-  ],
-};
-
 export default function OnlineTab({ pollId }: { pollId: string }) {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [fetching, setFetching] = useState(false);
   // undefined = initial state
   // null = transaction not found
-  const [vote, setVote] = useState<any | null | undefined>(mockVote);
+  const [vote, setVote] = useState<any | null | undefined>(undefined);
   const findVote = async (phoneNumber: string) => {
     setFetching(true);
     try {
