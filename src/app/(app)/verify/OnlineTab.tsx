@@ -98,7 +98,7 @@ export default function OnlineTab({ pollId }: { pollId: string }) {
         <CardHeader>
           <CardTitle>Verify poll result</CardTitle>
           <CardDescription>
-            See if poll result have been calculated correctly.
+            Fetch all votes and recalculate the poll result yourself.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-2"></CardContent>
