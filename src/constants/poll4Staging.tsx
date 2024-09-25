@@ -19,7 +19,7 @@ export const phoneNumbersTable = 'phonePoll4Test';
 
 export const allVotesKVKey = 'poll4AllVotesTest';
 
-export const txCountKVKey = 'poll4TxCount';
+export const txCountKVKey = 'poll4TxCountTest';
 
 export const rcvResultKVKey = 'Poll4RCVResultTest';
 
