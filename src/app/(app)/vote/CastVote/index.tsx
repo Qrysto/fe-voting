@@ -12,7 +12,7 @@ import BigButton from '@/components/BigButton';
 import CandidateImage from '@/components/CandidateImage';
 import { toast } from '@/lib/useToast';
 import { oswald } from '@/fonts';
-import { maxChoices } from '@/constants/activePoll';
+import { pollId, maxChoices } from '@/constants/activePoll';
 import type { Candidate } from '@/types';
 import { useStore } from '@/store';
 import { toE164US } from '@/lib/phone';
@@ -474,7 +474,7 @@ export default function CastVote() {
         <VoteConfirmedModal
           open={confirmedModalOpen}
           close={() => {
-            router.push('/result/poll3');
+            router.push(`/result/${pollId}`);
           }}
         />
       </div>
