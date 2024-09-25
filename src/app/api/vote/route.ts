@@ -25,6 +25,7 @@ export async function POST(request: NextRequest) {
 
   const body = await request.json();
   const jwtToken: string | undefined = body?.jwtToken;
+  const phoneNumber: string = body?.phoneNumber || '';
   const votes: string[] | undefined = body?.votes;
   const optedIn: boolean | undefined = body?.optedIn;
   if (!jwtToken) {
@@ -43,16 +44,16 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  let phoneNumber: string;
-  try {
-    const decoded: any = jwt.verify(jwtToken, jwtSecret);
-    phoneNumber = decoded.phoneNumber;
-  } catch (err: any) {
-    return Response.json(
-      { message: err?.message, error: err },
-      { status: 401 }
-    );
-  }
+  // let phoneNumber: string;
+  // try {
+  //   const decoded: any = jwt.verify(jwtToken, jwtSecret);
+  //   phoneNumber = decoded.phoneNumber;
+  // } catch (err: any) {
+  //   return Response.json(
+  //     { message: err?.message, error: err },
+  //     { status: 401 }
+  //   );
+  // }
 
   try {
     const alreadyVoted = !(await markNumberVoted(phoneNumber, {

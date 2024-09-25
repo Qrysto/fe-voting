@@ -102,13 +102,14 @@ export const useStore = create<State & Actions>((set, get) => ({
   requestCode: async ({ phoneNumber }: { phoneNumber: string }) => {
     phoneNumber = phoneNumber || get().phoneNumber;
     try {
-      const { data } = await axios.post('/api/verify-phone', { phoneNumber });
-      console.log('verify-phone', phoneNumber, data);
+      // const { data } = await axios.post('/api/verify-phone', { phoneNumber });
+      // console.log('verify-phone', phoneNumber, data);
       set({
         phoneNumber,
         phoneError: null,
         codeDigits: defaultCodeDigits,
         codeError: null,
+        jwtToken: 'ok',
       });
     } catch (err: any) {
       console.error(err);
@@ -198,8 +199,8 @@ export const useStore = create<State & Actions>((set, get) => ({
   },
 
   sendVote: async () => {
-    const { jwtToken, votes, optedIn } = get();
-    await axios.post('/api/vote', { jwtToken, votes, optedIn });
+    const { jwtToken, votes, optedIn, phoneNumber } = get();
+    await axios.post('/api/vote', { jwtToken, phoneNumber, votes, optedIn });
   },
 }));
 
