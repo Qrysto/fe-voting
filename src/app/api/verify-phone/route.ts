@@ -48,9 +48,9 @@ export async function POST(request: NextRequest) {
     }
 
     const type = lookup?.lineTypeIntelligence?.type;
-    if (type === 'nonFixedVoip') {
+    if (type !== 'mobile' && type !== 'personal') {
       return Response.json(
-        { message: 'VOIP numbers are not allowed', phoneNumber },
+        { message: `Phone number type is not allowed: ${type}`, phoneNumber },
         { status: 400 }
       );
     }
