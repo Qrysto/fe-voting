@@ -2,7 +2,7 @@ export const pollName = 'Oct 2024 Debate Winner Poll';
 
 export const pollTime = (
   <span>
-    Oct 23<sup>rd</sup> - ..., 2024
+    Oct 23<sup>rd</sup> - Oct 30<sup>th</sup>, 2024
   </span>
 );
 
@@ -23,8 +23,12 @@ export const txCountKVKey = 'poll4TxCountTest';
 
 export const rcvResultKVKey = 'Poll4RCVResultTest';
 
-export const endTime = 1729430878158; // 2024 July 21st, 11:59pm EST
+export const endTime = 1730358000000; // 2024 Oct 30th, 12:00pm PDT
 
-export const endTimeString = '11:59PM on July 21st, 2024 EST';
+export const endTimeString = (
+  <span>
+    October 30<sup>th</sup> 2024 24:00 PDT
+  </span>
+);
 
 export { callNexusPrivate as callNexus } from '@/lib/api';
