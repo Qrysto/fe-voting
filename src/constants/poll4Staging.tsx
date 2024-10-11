@@ -2,7 +2,7 @@ export const pollName = 'Oct 2024 Debate Winner Poll';
 
 export const pollTime = (
   <span>
-    Oct 23<sup>rd</sup> - Oct 30<sup>th</sup>, 2024
+    Oct 23<sup>rd</sup> - Nov 5<sup>th</sup>, 2024
   </span>
 );
 
@@ -23,11 +23,11 @@ export const txCountKVKey = 'poll4TxCountTest';
 
 export const rcvResultKVKey = 'Poll4RCVResultTest';
 
-export const endTime = 1730358000000; // 2024 Oct 30th, 12:00pm PDT
+export const endTime = 1730912340000; // 2024 Nov 5th, 11:59pm ET
 
 export const endTimeString = (
   <span>
-    October 30<sup>th</sup> 2024 24:00 PDT
+    November 5<sup>th</sup> 2024 23:59 ET
   </span>
 );
 
