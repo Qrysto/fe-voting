@@ -109,7 +109,7 @@ export async function GET(request: NextRequest) {
   if (!poll) {
     return Response.json({ message: 'Invalid poll ID' }, { status: 400 });
   }
-  const { callNexus, tokenAddress, countryCode } = poll;
+  const { callNexus, tokenAddress, countryCode, maxChoices } = poll;
 
   const phone = searchParams.get('phone');
   if (!phone) {
@@ -129,8 +129,19 @@ export async function GET(request: NextRequest) {
         where: `results.contracts.OP=DEBIT AND results.contracts.reference=checksum(\`${phoneNumber}\`);`,
       }
     );
+
     const transaction = txs[0];
-    return Response.json({ transaction });
+    const choices = await Promise.all(
+      transaction.contracts
+        .sort((a: any, b: any) => b.amount - a.amount)
+        .map((contract: any) =>
+          callNexus('finance/get/account/address,First,Last,Party,Website', {
+            address: contract.to.address,
+          })
+        )
+    );
+    const vote = { txid: transaction.txid, choices };
+    return Response.json({ vote });
   } catch (err: any) {
     console.error(err);
     return Response.json(

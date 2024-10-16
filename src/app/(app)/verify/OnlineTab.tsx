@@ -30,13 +30,14 @@ export default function OnlineTab({ pollId }: { pollId: string }) {
   const [vote, setVote] = useState<any | null | undefined>(undefined);
   const findVote = async (phoneNumber: string) => {
     setFetching(true);
+    setVote(undefined);
     try {
       const { data } = await axios.get(
-        `/api/vote?poll=${pollId}&phone=${phoneNumber}`
+        `/api/vote?poll=${pollId}&phone=${encodeURIComponent(phoneNumber)}`
       );
       setVote(data.vote || null);
     } catch (err: any) {
-      console.log(err);
+      console.error(err);
       toast({
         title: 'ERROR!',
         description:
