@@ -118,7 +118,7 @@ function Vote({ vote }: { vote: any }) {
             href={`https://explorer.nexus.io/scan/${vote.txid}`}
             className="flex items-center space-x-1 text-sm"
           >
-            <span>Check on explorer.nexus.io</span>
+            <span>See transaction details</span>
             <ExternalLinkIcon className="h-4 w-4" />
           </ExternalLink>
         </div>
@@ -174,9 +174,10 @@ function VotedCandidate({ candidate, rank }: { candidate: any; rank: number }) {
           <ExternalLink
             href={`https://explorer.nexus.io/scan/${candidate.address}`}
             target="_blank"
-            className="space-x-1"
+            className="inline-flex items-center space-x-1"
           >
-            <span>Check</span>
+            <span>Details</span>
+            <ExternalLinkIcon className="h-4 w-4" />
           </ExternalLink>
         </div>
       </div>
