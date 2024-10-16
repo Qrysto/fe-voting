@@ -94,16 +94,6 @@ export default function OnlineTab({ pollId }: { pollId: string }) {
           </BigButton>
         </CardFooter>
       </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Verify poll result</CardTitle>
-          <CardDescription>
-            Fetch all votes and recalculate the poll result yourself.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-2"></CardContent>
-      </Card>
     </TabsContent>
   );
 }
