@@ -1,8 +1,8 @@
-import { ReadonlyURLSearchParams } from 'next/navigation';
 import allPolls from '@/constants/allPolls';
 import * as activePoll from '@/constants/activePoll';
 import OnlineTab from './OnlineTab';
 import LocalTab from './LocalTab';
+import IntepretationCard from './IntepretationCard';
 
 export default function VerifyPage({
   searchParams,
@@ -16,6 +16,7 @@ export default function VerifyPage({
     <main>
       <OnlineTab pollId={poll.pollId} />
       <LocalTab poll={poll} />
+      <IntepretationCard maxChoices={poll.maxChoices} />
     </main>
   );
 }
