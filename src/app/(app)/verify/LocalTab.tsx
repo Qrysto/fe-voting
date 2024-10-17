@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/typo';
 
 export default function LocalTab({
-  poll: { countryCode, ticker },
+  poll: { countryCode, tokenAddress },
 }: {
   poll: any;
 }) {
@@ -133,7 +133,7 @@ export default function LocalTab({
             command into the command input (CLI syntax):
           </p>
           <BlockCode
-            content={`finance/transactions/token/txid,contracts.reference,contracts.amount,contracts.to.address ticker=${ticker} limit=1 where=results.contracts.OP=DEBIT AND results.contracts.reference=checksum(\`<your_phone_number>\`);`}
+            content={`ledger/list/transactions/txid,contracts.reference,contracts.amount,contracts.to.address username=free.and.equal.debates verbose=summary limit=1 where="results.contracts.token=${tokenAddress} AND results.contracts.OP=DEBIT AND results.contracts.reference=checksum(\`<your_phone_number>\`);"`}
           />
           <p>
             Replace <InlineCode>&lt;your_phone_number&gt;</InlineCode> with the
@@ -168,7 +168,9 @@ export default function LocalTab({
             <Emphasize>Console/Nexus API</Emphasize>, enter the following
             command into the command input (CLI syntax):
           </p>
-          <BlockCode content="ledger/list/transactions/txid,contracts.reference,contracts.amount,contracts.to.address ticker=${ticker} limit=100 page=1 where=results.contracts.OP=DEBIT" />
+          <BlockCode
+            content={`ledger/list/transactions/txid,contracts.reference,contracts.amount,contracts.to.address username=free.and.equal.debates verbose=summary limit=100 page=1 where="results.contracts.token=${tokenAddress} AND results.contracts.OP=DEBIT"`}
+          />
           <p>
             The first page of transactions data (max. 100 transactions) will be
             printed to the output box in JSON format. Save this data somewhere
