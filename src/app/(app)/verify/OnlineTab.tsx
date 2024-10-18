@@ -108,7 +108,7 @@ function Vote({ vote }: { vote: any }) {
             href={`https://explorer.nexus.io/scan/${vote.txid}`}
             className="flex items-center space-x-1 text-sm"
           >
-            <span>See transaction details</span>
+            <span>Look up the vote</span>
             <ExternalLinkIcon className="h-4 w-4" />
           </ExternalLink>
         </div>
@@ -166,7 +166,7 @@ function VotedCandidate({ candidate, rank }: { candidate: any; rank: number }) {
             target="_blank"
             className="inline-flex items-center space-x-1"
           >
-            <span>Details</span>
+            <span>Look up</span>
             <ExternalLinkIcon className="h-4 w-4" />
           </ExternalLink>
         </div>

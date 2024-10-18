@@ -62,7 +62,11 @@ export default function IntepretationCard({
           <UListItem>
             <InlineCode>contracts.to</InlineCode>: The candidate&apos;s register
             address on Nexus blockchain. You can use it to look up the
-            candidate&apos;s details with the following command:
+            candidate&apos;s details on{' '}
+            <ExternalLink href="https://explorer.nexus.io/">
+              Nexus Explorer
+            </ExternalLink>{' '}
+            or check locally with the following command:
             <BlockCode content="assets/get/account address=<register_address>" />
             Replace <InlineCode>&lt;register_address&gt;</InlineCode> with the
             value from <InlineCode>contracts.to</InlineCode>.
