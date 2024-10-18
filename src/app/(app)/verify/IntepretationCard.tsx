@@ -16,7 +16,9 @@ import {
 const txShape = `{
   txid: string;
   contracts: {
-    to: string;
+    to: {
+      address: string;
+    }
     amount: number;
     reference: number;
   }
@@ -60,8 +62,8 @@ export default function IntepretationCard({
             candidates you voted for.
           </UListItem>
           <UListItem>
-            <InlineCode>contracts.to</InlineCode>: The candidate&apos;s register
-            address on Nexus blockchain. You can use it to look up the
+            <InlineCode>contracts.to.address</InlineCode>: The candidate&apos;s
+            register address on Nexus blockchain. You can use it to look up the
             candidate&apos;s details on{' '}
             <ExternalLink href="https://explorer.nexus.io/">
               Nexus Explorer
