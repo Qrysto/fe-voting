@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, MouseEventHandler } from 'react';
 import axios from 'axios';
 import { TabsContent } from '@/components/ui/tabs';
 import {
@@ -13,41 +13,22 @@ import {
 } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
+import PhoneInput from '@/components/PhoneInput';
 import BigButton from '@/components/BigButton';
+import CodeInput from '@/components/CodeInput';
+import LinkButton from '@/components/LinkButton';
 import Spinner from '@/components/Spinner';
 import CandidateImage from '@/components/CandidateImage';
 import { ExternalLink } from '@/components/ui/typo';
 import { toast } from '@/lib/useToast';
 import { ExternalLinkIcon } from 'lucide-react';
 import { oswald } from '@/fonts';
-import { partyColor } from '@/lib/utils';
+import { partyColor, cn } from '@/lib/utils';
+import { toE164US } from '@/lib/phone';
+import { useStep, useStore } from '@/store';
 
 export default function OnlineTab({ pollId }: { pollId: string }) {
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [fetching, setFetching] = useState(false);
-  // undefined = initial state
-  // null = transaction not found
-  const [vote, setVote] = useState<any | null | undefined>(undefined);
-  const findVote = async (phoneNumber: string) => {
-    setFetching(true);
-    setVote(undefined);
-    try {
-      const { data } = await axios.get(
-        `/api/vote?poll=${pollId}&phone=${encodeURIComponent(phoneNumber)}`
-      );
-      setVote(data.vote || null);
-    } catch (err: any) {
-      console.error(err);
-      toast({
-        title: 'ERROR!',
-        description:
-          err?.response.data?.message || err?.message || 'Unknown error',
-        variant: 'destructive',
-      });
-    } finally {
-      setFetching(false);
-    }
-  };
+  const step = useStep();
 
   return (
     <TabsContent value="online" className="space-y-6">
@@ -58,62 +39,219 @@ export default function OnlineTab({ pollId }: { pollId: string }) {
             See if your vote has been recorded correctly on Nexus blockchain.
           </CardDescription>
         </CardHeader>
-        <CardContent className="mb-2 space-y-4">
-          <form
+        {step === 1 && <EnterPhone />}
+        {step === 2 && <ConfirmCode />}
+        {step === 3 && <FindVote pollId={pollId} />}
+      </Card>
+    </TabsContent>
+  );
+}
+
+function EnterPhone() {
+  const phoneFilled = useStore((state) =>
+    state.phoneDigits.every((digit) => digit)
+  );
+  const phoneError = useStore((state) => state.phoneError);
+  const confirmPhoneNumber = useStore((state) => state.confirmPhoneNumber);
+  const confirmBtnRef: React.MutableRefObject<HTMLButtonElement | null> =
+    useRef(null);
+  return (
+    <>
+      <CardContent>
+        <h2
+          className={`mb-6 mt-2 px-8 text-center text-xl uppercase ${
+            phoneError ? 'text-red' : ''
+          }`}
+        >
+          {phoneError || 'Please enter your mobile phone number below'}
+        </h2>
+        <PhoneInput
+          focusConfirmBtn={() => {
+            confirmBtnRef.current?.focus();
+          }}
+          fontSize={36}
+        />
+      </CardContent>
+      <CardFooter>
+        <BigButton
+          primary
+          disabled={!phoneFilled}
+          className="mt-6 shadow-md"
+          ref={confirmBtnRef}
+          action={confirmPhoneNumber}
+        >
+          Send code to me
+        </BigButton>
+      </CardFooter>
+    </>
+  );
+}
+
+function ConfirmCode() {
+  const codeFilled = useStore((state) =>
+    state.codeDigits.every((digit) => digit)
+  );
+  const phoneNumber = useStore((state) => state.phoneNumber);
+  const codeError = useStore((state) => state.codeError);
+  const confirmCode = useStore((state) => state.confirmCode);
+  const requestCode = useStore((state) => state.requestCode);
+  const confirmBtnRef: React.MutableRefObject<HTMLButtonElement | null> =
+    useRef(null);
+
+  return (
+    <>
+      <CardContent>
+        <h2
+          className={`mb-6 mt-2 px-4 text-center text-xl uppercase ${
+            codeError ? 'text-red' : ''
+          }`}
+        >
+          {codeError || 'Please enter your verification code'}
+        </h2>
+        <CodeInput
+          focusConfirmBtn={() => {
+            confirmBtnRef.current?.focus();
+          }}
+          fontSize={62}
+        />
+        <p className="mt-8 text-center">
+          We sent you a text to your phone number {toE164US(phoneNumber)}.
+          Please check and enter your code to confirm your identity.
+        </p>
+        <div className="mt-4 text-center">
+          <LinkButton
+            action={async () => {
+              await requestCode();
+              toast({
+                title: 'Code sent!',
+                description: 'A new code has been sent to your phone number!',
+              });
+            }}
+          >
+            Get a new code
+          </LinkButton>
+        </div>
+      </CardContent>
+      <CardFooter>
+        <BigButton
+          primary
+          disabled={!codeFilled}
+          className=""
+          ref={confirmBtnRef}
+          action={confirmCode}
+        >
+          Confirm code
+        </BigButton>
+      </CardFooter>
+    </>
+  );
+}
+
+function FindVote({ pollId }: { pollId: string }) {
+  // undefined = initial state
+  // null = transaction not found
+  const [vote, setVote] = useState<any | null | undefined>(undefined);
+  const phoneNumber = useStore((state) => state.phoneNumber);
+  const jwtToken = useStore((state) => state.jwtToken) || '';
+  const unconfirmCode = useStore((state) => state.unconfirmCode);
+  const resetPhoneNumber = useStore((state) => state.resetPhoneNumber);
+
+  const findVote = async () => {
+    setVote(undefined);
+    try {
+      const { data } = await axios.get(
+        `/api/vote?poll=${pollId}&token=${encodeURIComponent(jwtToken)}`
+      );
+      setVote(data.vote || null);
+    } catch (err: any) {
+      console.error(err);
+      toast({
+        title: 'ERROR!',
+        description:
+          err?.response.data?.message || err?.message || 'Unknown error',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  return (
+    <>
+      <CardContent className="mb-2 space-y-4">
+        {/* <form
             id="find-vote"
             className="space-y-1"
             onSubmit={(evt) => {
               evt.preventDefault();
               findVote(phoneNumber);
             }}
-          >
+            >
             <Label htmlFor="phone">Phone number</Label>
             <Input
-              id="phone"
-              value={phoneNumber}
-              onChange={(evt) => {
-                setPhoneNumber(evt.target.value);
+            id="phone"
+            value={phoneNumber}
+            onChange={(evt) => {
+              setPhoneNumber(evt.target.value);
               }}
               placeholder="Enter your phone number"
               required
-            />
-          </form>
-          {vote === null && (
-            <div className="mt-2 text-destructive">
-              Could not find any vote associated to this phone number! Please
-              make sure you selected the right poll and entered the exact phone
-              number that you used to vote on this poll.
-            </div>
-          )}
-          {!!vote && <Vote vote={vote} />}
-        </CardContent>
-        <CardFooter>
-          <BigButton primary disabled={fetching} type="submit" form="find-vote">
-            {fetching && <Spinner inverse className="mr-2 inline-block" />}
-            Find your vote
-          </BigButton>
-        </CardFooter>
-      </Card>
-    </TabsContent>
+              />
+              </form> */}
+        <p>
+          Your phone number: <strong>{toE164US(phoneNumber)}</strong>.<br />
+          <a
+            href="#"
+            className="underline underline-offset-2"
+            onClick={(e) => {
+              e.preventDefault();
+              resetPhoneNumber();
+              unconfirmCode();
+            }}
+          >
+            Change phone number
+          </a>
+        </p>
+        {vote === null && (
+          <div className="mt-2 text-destructive">
+            Could not find any vote associated to this phone number! Please make
+            sure you selected the right poll and entered the exact phone number
+            that you used to vote on this poll.
+          </div>
+        )}
+        {!!vote && <Vote vote={vote} />}
+      </CardContent>
+      <CardFooter>
+        <BigButton primary action={findVote}>
+          Find your vote
+        </BigButton>
+      </CardFooter>
+    </>
   );
 }
 
 function Vote({ vote }: { vote: any }) {
+  const contractCount = vote.contractIds.length;
   return (
     <div className="rounded-md border border-input bg-background shadow-none">
       <div className="px-4 pt-3">
         <h3 className="mb-2 text-2xl">Your vote</h3>
         <div>
-          <ExternalLink
-            href={`https://explorer.nexus.io/scan/${vote.txid}`}
-            className="flex items-center space-x-1 text-sm"
-          >
-            <span>Look up the vote</span>
-            <ExternalLinkIcon className="h-4 w-4" />
+          You can{' '}
+          <ExternalLink href={`https://explorer.nexus.io/scan/${vote.txid}`}>
+            <span>look up your vote on Nexus Explorer</span>
           </ExternalLink>
+          . Your vote was recorded in {contractCount} contract
+          {contractCount > 1 ? 's' : ''} with the following ID
+          {contractCount > 1 ? 's' : ''}:{' '}
+          {vote.contractIds?.map((id: number, index: number) => (
+            <span key={id}>
+              {index !== 0 && ', '}
+              <strong>{id}</strong>
+            </span>
+          ))}
+          .
         </div>
       </div>
-      <div className="px-4 py-3">
+      <div className="px-2 py-3">
         {vote.choices.map((candidate: any, i: number) => (
           <VotedCandidate
             key={candidate.address}
@@ -140,23 +278,25 @@ function VotedCandidate({ candidate, rank }: { candidate: any; rank: number }) {
         <span className="absolute top-[-5px] text-[10px]">{superscript}</span>
       </div>
       <CandidateImage candidate={candidate} className="shrink-0 grow-0" />
-      <div className="shrink grow px-4">
+      <div className="shrink grow pl-4">
         <div className="text-[17px] font-bold text-darkBlue">
           {`${candidate.First} ${candidate.Last}`}
         </div>
         <div
-          className={`space-x-3 text-[11px] font-bold uppercase ${oswald.className}`}
+          className={cn('text-[11px] font-bold uppercase ', oswald.className)}
         >
-          <span className={partyColor(candidate.Party)}>{candidate.Party}</span>
+          <span className={cn('mb-2 mr-3', partyColor(candidate.Party))}>
+            {candidate.Party}
+          </span>
           {candidate.Website === 'NONE' ? (
-            <span className="text-gray underline underline-offset-2">
+            <span className="mb-2 mr-3 text-gray underline underline-offset-2">
               Website
             </span>
           ) : (
             <a
               href={candidate.Website}
               target="_blank"
-              className="text-blue underline underline-offset-2"
+              className="mb-2 mr-3 text-blue underline underline-offset-2"
             >
               Website
             </a>

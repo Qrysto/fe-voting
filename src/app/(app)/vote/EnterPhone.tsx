@@ -1,82 +1,10 @@
 'use client';
 
-import { useRef, Fragment, useState, useEffect } from 'react';
-import DigitInput from '@/components/DigitInput';
+import { useRef, useState, useEffect } from 'react';
 import BigButton from '@/components/BigButton';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useStore } from '@/store';
-import { phoneDigitCount } from '@/constants';
-
-function PhoneInput({ focusConfirmBtn }: { focusConfirmBtn: () => void }) {
-  const digits = useStore((state) => state.phoneDigits);
-  const phoneError = useStore((state) => state.phoneError);
-  const setDigit = useStore((state) => state.setPhoneDigit);
-  const setDigits = useStore((state) => state.setPhoneDigits);
-  const inputDivs: React.MutableRefObject<Array<HTMLDivElement | null>> =
-    useRef(Array(phoneDigitCount).fill(null));
-
-  return (
-    <div className="mx-auto mt-10 flex max-w-md items-center justify-between">
-      {digits.map((digit, i) => (
-        <Fragment key={i}>
-          <DigitInput
-            autoFocus={i === 0}
-            passRef={(el) => {
-              inputDivs.current[i] = el;
-            }}
-            value={digit}
-            setValue={(value) => {
-              setDigit(i, value);
-              if (value) {
-                if (i < phoneDigitCount - 1) {
-                  inputDivs.current[i + 1]?.focus();
-                } else {
-                  // After the last digit is entered
-                  // Check if there is any blank digit input
-                  const firstEmptyIndex = digits.findIndex((digit) => !digit);
-                  // The last digit hasn't been recorded so ignore it if it's the first one found
-                  if (
-                    firstEmptyIndex === -1 ||
-                    firstEmptyIndex === phoneDigitCount - 1
-                  ) {
-                    focusConfirmBtn();
-                  }
-                }
-              }
-            }}
-            paste={(value) => {
-              const newIndex = setDigits(i, value);
-              if (value) {
-                if (newIndex < phoneDigitCount) {
-                  inputDivs.current[newIndex]?.focus();
-                } else {
-                  // After the last digit is entered
-                  // Check if there is any blank digit input
-                  const firstEmptyIndex = digits.findIndex((digit) => !digit);
-                  // The newly pasted digits haven't been updated so ignore it if it's the first one found
-                  if (firstEmptyIndex === -1 || firstEmptyIndex === i) {
-                    focusConfirmBtn();
-                  }
-                }
-              }
-            }}
-            deletePreviousDigit={() => {
-              if (i > 0) {
-                inputDivs.current[i - 1]?.focus();
-                if (digits[i - 1] !== '') {
-                  setDigit(i - 1, '');
-                }
-              }
-            }}
-            className="text-5xl"
-            error={!!phoneError}
-          />
-          {(i === 2 || i === 5) && <div className="w-1"></div>}
-        </Fragment>
-      ))}
-    </div>
-  );
-}
+import PhoneInput from '@/components/PhoneInput';
 
 export default function EnterPhone() {
   const phoneFilled = useStore((state) =>
@@ -115,7 +43,7 @@ export default function EnterPhone() {
           avoid the use of VOIP numbers for voting.
         </p>
         <h2
-          className={`mt-6 px-8 text-center text-2xl uppercase ${
+          className={`mb-10 mt-6 px-8 text-center text-2xl uppercase ${
             phoneError ? 'text-red' : ''
           }`}
         >

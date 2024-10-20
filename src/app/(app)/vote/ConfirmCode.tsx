@@ -1,81 +1,12 @@
 'use client';
 
 import { useRef, useEffect, useState } from 'react';
-import DigitInput from '@/components/DigitInput';
 import BigButton from '@/components/BigButton';
 import LinkButton from '@/components/LinkButton';
 import { useStore } from '@/store';
-import { codeDigitCount } from '@/constants';
+import { toast } from '@/lib/useToast';
 import { toE164US } from '@/lib/phone';
-
-function CodeInput({ focusConfirmBtn }: { focusConfirmBtn: () => void }) {
-  const digits = useStore((state) => state.codeDigits);
-  const setDigit = useStore((state) => state.setCodeDigit);
-  const setDigits = useStore((state) => state.setCodeDigits);
-  const codeError = useStore((state) => state.codeError);
-  const inputDivs: React.MutableRefObject<Array<HTMLDivElement | null>> =
-    useRef(Array(codeDigitCount).fill(null));
-
-  return (
-    <div className="mx-auto mt-10 flex max-w-md items-center justify-between">
-      {digits.map((digit, i) => (
-        <DigitInput
-          key={i}
-          autoFocus={i === 0}
-          passRef={(el) => {
-            inputDivs.current[i] = el;
-          }}
-          value={digit}
-          setValue={(value) => {
-            setDigit(i, value);
-            if (value) {
-              if (i < codeDigitCount - 1) {
-                inputDivs.current[i + 1]?.focus();
-              } else {
-                // After the last digit is entered
-                // Check if there is any blank digit input
-                const firstEmptyIndex = digits.findIndex((digit) => !digit);
-                // The last digit hasn't been recorded so ignore it if it's the first one found
-                if (
-                  firstEmptyIndex === -1 ||
-                  firstEmptyIndex === codeDigitCount - 1
-                ) {
-                  focusConfirmBtn();
-                }
-              }
-            }
-          }}
-          paste={(value) => {
-            const newIndex = setDigits(i, value);
-            if (value) {
-              if (newIndex < codeDigitCount) {
-                inputDivs.current[newIndex]?.focus();
-              } else {
-                // After the last digit is entered
-                // Check if there is any blank digit input
-                const firstEmptyIndex = digits.findIndex((digit) => !digit);
-                // The newly pasted digits haven't been updated so ignore it if it's the first one found
-                if (firstEmptyIndex === -1 || firstEmptyIndex === i) {
-                  focusConfirmBtn();
-                }
-              }
-            }
-          }}
-          deletePreviousDigit={() => {
-            if (i > 0) {
-              inputDivs.current[i - 1]?.focus();
-              if (digits[i - 1] !== '') {
-                setDigit(i - 1, '');
-              }
-            }
-          }}
-          className="text-[78px]"
-          error={!!codeError}
-        />
-      ))}
-    </div>
-  );
-}
+import CodeInput from '@/components/CodeInput';
 
 export default function ConfirmCode() {
   const codeFilled = useStore((state) =>
@@ -106,7 +37,7 @@ export default function ConfirmCode() {
     <div>
       <div className="pt-8" ref={part1Ref}>
         <h2
-          className={`px-4 text-center text-2xl uppercase ${
+          className={`mb-10 px-4 text-center text-2xl uppercase ${
             codeError ? 'text-red' : ''
           }`}
         >
@@ -118,7 +49,17 @@ export default function ConfirmCode() {
           }}
         />
         <div className="mt-8 text-center">
-          <LinkButton action={requestCode}>Get a new code</LinkButton>
+          <LinkButton
+            action={async () => {
+              await requestCode();
+              toast({
+                title: 'Code sent!',
+                description: 'A new code has been sent to your phone number!',
+              });
+            }}
+          >
+            Get a new code
+          </LinkButton>
         </div>
       </div>
 

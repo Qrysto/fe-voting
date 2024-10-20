@@ -3,6 +3,7 @@ import { type NextRequest } from 'next/server';
 import { maxChoices, ticker, endTime } from '@/constants/activePoll';
 import type { Candidate } from '@/types';
 import { callNexus } from '@/constants/activePoll';
+import { toE164US } from '@/lib/phone';
 import allPolls from '@/constants/allPolls';
 import { markNumberVoted, markNumberNotVoted } from '@/lib/phone';
 
@@ -109,20 +110,37 @@ export async function GET(request: NextRequest) {
   if (!poll) {
     return Response.json({ message: 'Invalid poll ID' }, { status: 400 });
   }
-  const { callNexus, tokenAddress, countryCode, maxChoices } = poll;
+  const { callNexus, tokenAddress, countryCode } = poll;
 
-  const phone = searchParams.get('phone');
-  if (!phone) {
-    return Response.json({ message: 'Invalid phone number' }, { status: 400 });
+  const jwtToken = searchParams.get('token');
+  if (!jwtToken) {
+    return Response.json(
+      { message: 'You need to verify your phone number' },
+      { status: 401 }
+    );
   }
-  const phoneNumber =
-    countryCode === false && phone.startsWith('+1')
-      ? phone.substring(2)
-      : phone;
+
+  let phoneNumber;
+  try {
+    const decoded: any = jwt.verify(jwtToken, jwtSecret);
+    phoneNumber = decoded.phoneNumber;
+  } catch (err: any) {
+    return Response.json(
+      { message: err?.message, error: err },
+      { status: 401 }
+    );
+  }
+
+  if (countryCode === false && phoneNumber.startsWith('+1')) {
+    phoneNumber = phoneNumber.substring(2);
+  }
+  if (countryCode !== false && !phoneNumber.startsWith('+1')) {
+    phoneNumber = toE164US(phoneNumber);
+  }
 
   try {
     const txs = await callNexus(
-      'finance/transactions/token/txid,contracts.reference,contracts.amount,contracts.to.address',
+      'finance/transactions/token/txid,contracts.id,contracts.reference,contracts.amount,contracts.to.address',
       {
         address: tokenAddress,
         limit: 1,
@@ -140,7 +158,11 @@ export async function GET(request: NextRequest) {
           })
         )
     );
-    const vote = { txid: transaction.txid, choices };
+    const vote = {
+      txid: transaction.txid,
+      choices,
+      contractIds: transaction.contracts.map((contract: any) => contract.id),
+    };
     return Response.json({ vote });
   } catch (err: any) {
     console.error(err);

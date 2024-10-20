@@ -24,7 +24,7 @@ type Actions = {
   setPhoneDigits: (startIndex: number, digits: string) => number;
   setCodeDigits: (startIndex: number, digits: string) => number;
   confirmPhoneNumber: () => Promise<void>;
-  requestCode: (params: { phoneNumber: string }) => Promise<void>;
+  requestCode: (phoneNumber?: string) => Promise<void>;
   resetPhoneNumber: () => void;
   confirmCode: () => Promise<void>;
   unconfirmCode: () => void;
@@ -96,10 +96,10 @@ export const useStore = create<State & Actions>((set, get) => ({
 
   confirmPhoneNumber: async () => {
     const phoneNumber = get().phoneDigits.join('');
-    return await get().requestCode({ phoneNumber });
+    return await get().requestCode(phoneNumber);
   },
 
-  requestCode: async ({ phoneNumber }: { phoneNumber: string }) => {
+  requestCode: async (phoneNumber?: string) => {
     phoneNumber = phoneNumber || get().phoneNumber;
     try {
       // const { data } = await axios.post('/api/verify-phone', { phoneNumber });
