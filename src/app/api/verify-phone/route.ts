@@ -36,18 +36,18 @@ export async function POST(request: NextRequest) {
 
   const fullPhoneNumber = toE164US(phoneNumber);
   try {
-    let lookup = await getLookup(fullPhoneNumber);
-    if (!lookup) {
-      lookup = await lookup
+    let lookupResult: any = await getLookup(fullPhoneNumber);
+    if (!lookupResult) {
+      lookupResult = await lookup
         .phoneNumbers(fullPhoneNumber)
         .fetch({ fields: 'line_type_intelligence' });
-      await saveLookup(fullPhoneNumber, lookup);
-      console.log('Lookup result', lookup);
+      await saveLookup(fullPhoneNumber, lookupResult);
+      console.log('Lookup result', lookupResult);
     } else {
-      console.log('Lookup result (cached)', lookup);
+      console.log('Lookup result (cached)', lookupResult);
     }
 
-    const type = lookup?.lineTypeIntelligence?.type;
+    const type = lookupResult?.lineTypeIntelligence?.type;
     if (type !== 'mobile' && type !== 'personal') {
       return Response.json(
         { message: `Phone number type is not allowed: ${type}`, phoneNumber },

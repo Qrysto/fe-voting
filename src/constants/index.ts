@@ -6,3 +6,5 @@ export const phoneDigitCount = 10;
 export const codeDigitCount = 6;
 
 export const lookupResultsTable = 'lookupResults';
+
+export const lookupKvKey = 'lookupResults';
