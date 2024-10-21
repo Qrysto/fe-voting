@@ -110,7 +110,7 @@ export async function GET(request: NextRequest) {
   if (!poll) {
     return Response.json({ message: 'Invalid poll ID' }, { status: 400 });
   }
-  const { callNexus, tokenAddress, countryCode } = poll;
+  const { callNexus, tokenAddress } = poll;
 
   const jwtToken = searchParams.get('token');
   if (!jwtToken) {
@@ -131,11 +131,8 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  if (countryCode === false && phoneNumber.startsWith('+1')) {
+  if (phoneNumber.startsWith('+1')) {
     phoneNumber = phoneNumber.substring(2);
-  }
-  if (countryCode !== false && !phoneNumber.startsWith('+1')) {
-    phoneNumber = toE164US(phoneNumber);
   }
 
   try {
