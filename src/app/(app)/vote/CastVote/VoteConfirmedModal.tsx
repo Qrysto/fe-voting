@@ -44,7 +44,8 @@ export default function VoteConfirmedModal({
         </BigButton>
         <div className="mt-4 text-center text-sm">
           <ExternalLink onClick={close}>
-            Or jump to the results page, if you promise you'll support us later
+            Or jump to the results page, if you promise you&#39;ll support us
+            later
           </ExternalLink>
         </div>
       </div>

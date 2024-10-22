@@ -28,7 +28,7 @@ export default function Steps({
       }
     }
     setChecking(false);
-  }, []);
+  }, [allCandidates, checkJWT, loadCandidates]);
   const step = useStep();
 
   if (checkingJWT) {
