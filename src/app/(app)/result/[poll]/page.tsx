@@ -126,10 +126,10 @@ async function renderPollResult({ poll }: { poll: string }) {
   return (
     <>
       <h2 className="mt-4 text-xl uppercase">{pollName}</h2>
-      <div className="mb-3">{pollTime}</div>
+      <div>{pollTime}</div>
       {!final && <EndingTime endTime={endTime} />}
 
-      <div className="text-lg leading-6">
+      <div className="mt-4 text-lg leading-6">
         Do you want to see more non-partisan debates with audience
         participation?{' '}
         <strong>
