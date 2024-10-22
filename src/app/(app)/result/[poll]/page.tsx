@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { kv } from '@vercel/kv';
+import { revalidatePath } from 'next/cache';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Candidate, RCVResult } from '@/types';
@@ -111,6 +112,9 @@ export default async function ResultPage({ params: { poll } }: Props) {
 async function renderPollResult({ poll }: { poll: string }) {
   const { pollName, pollTime, rcvResultKVKey, ticker, endTime, callNexus } =
     allPolls[poll];
+  if (endTime > Date.now()) {
+    revalidatePath(`/result/${poll}`, 'page');
+  }
   const result = await loadRCVResult(rcvResultKVKey);
   const final = result?.final !== false; // old polls that don't have final property are also final
   const candidates = await loadRCVCandidates({
