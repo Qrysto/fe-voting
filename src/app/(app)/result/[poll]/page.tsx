@@ -93,8 +93,8 @@ export default async function ResultPage({ params: { poll } }: Props) {
       </div>
 
       <div className="mt-16 pb-8 text-center text-sm">
-        Thank you for using the Free & Equal Election Assistant App Beta -
-        please email{' '}
+        Thank you for using the Free & Equal Election Assistant App - please
+        email{' '}
         <a
           href="mailto:info@freeandequal.org"
           target="_blank"
