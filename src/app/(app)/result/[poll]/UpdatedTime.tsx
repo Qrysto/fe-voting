@@ -1,14 +1,16 @@
 'use client';
 
 import { formatDistanceToNow } from 'date-fns';
+import { useUpdatedNow } from '@/lib/client';
 
 export default function UpdatedTime({ timeStamp }: { timeStamp: number }) {
+  useUpdatedNow(10000);
+
   return (
     <>
       <div className="mt-2 font-bold">
         Updated{' '}
         {formatDistanceToNow(timeStamp, {
-          includeSeconds: true,
           addSuffix: true,
         })}
         .

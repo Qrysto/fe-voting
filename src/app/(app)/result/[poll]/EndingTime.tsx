@@ -1,27 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
+import { useUpdatedNow } from '@/lib/client';
 
 export default function EndingTime({ endTime }: { endTime: number }) {
-  const [now, setNow] = useState(Date.now);
+  const now = useUpdatedNow(60000, endTime);
   const pollEnded = now > endTime;
-
-  // Refreshes the component every minute or until the endTime is reached
-  useEffect(() => {
-    let timerId: NodeJS.Timeout | undefined = undefined;
-    const refresh = () => {
-      const now = Date.now();
-      // Set a state to manually rerender the component
-      setNow(now);
-
-      if (now > endTime) return;
-      const ms = Math.min(endTime - now, 60000);
-      timerId = setTimeout(refresh, ms);
-    };
-    refresh();
-    return () => clearTimeout(timerId);
-  }, []);
 
   return (
     <div className="mt-1">
