@@ -4,10 +4,10 @@ import { useEffect, useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 
 export default function EndingTime({ endTime }: { endTime: number }) {
-  const pollEnded = Date.now() > endTime;
+  const [now, setNow] = useState(Date.now);
+  const pollEnded = now > endTime;
 
   // Refreshes the component every minute or until the endTime is reached
-  const [, setNow] = useState(Date.now());
   useEffect(() => {
     let timerId: NodeJS.Timeout | undefined = undefined;
     const refresh = () => {
