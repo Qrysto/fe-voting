@@ -137,8 +137,8 @@ async function renderPollResult({ poll }: { poll: string }) {
             Donate to Free & Equal
           </a>
         </strong>{' '}
-        to support the production of our fourth presidential debate in
-        September!
+        to support the production of our nationwide civic activism festival
+        United We Stand 2025!
       </div>
 
       <h1 className="mt-8 text-3xl uppercase text-darkBlue">

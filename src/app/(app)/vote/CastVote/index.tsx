@@ -296,7 +296,7 @@ export default function CastVote() {
           a refresher,{' '}
           <a
             target="_blank"
-            href="https://freeandequal.org/debate/free-equal-presidential-debate-july-12-2024/"
+            href="https://freeandequal.org/october-presidential-debate/"
             className="text-darkBlue underline underline-offset-2 active:text-darkBlue/90"
           >
             click here to watch

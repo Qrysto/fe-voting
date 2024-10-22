@@ -2,6 +2,7 @@
 
 import Modal from '@/components/Modal';
 import BigButton from '@/components/BigButton';
+import { ExternalLink } from '@/components/ui/typo';
 import Image from 'next/image';
 import thumbsupImg from './thumbsup.svg';
 
@@ -30,11 +31,22 @@ export default function VoteConfirmedModal({
           >
             Donate to Free & Equal
           </a>{' '}
-          to support the production of our fourth presidential debate.
+          to support the production of our nationwide civic activism festival
+          United We Stand 2025!
         </p>
-        <BigButton className="mt-8 flex-shrink-0" primary onClick={close}>
-          Close & continue
+        <BigButton
+          className="mt-8 flex-shrink-0"
+          primary
+          href="https://freeandequal.org/donate/"
+          target="_blank"
+        >
+          Support United We Stand
         </BigButton>
+        <div className="mt-4 text-center text-sm">
+          <ExternalLink onClick={close}>
+            Or jump to the results page, if you promise you'll support us later
+          </ExternalLink>
+        </div>
       </div>
     </Modal>
   );
