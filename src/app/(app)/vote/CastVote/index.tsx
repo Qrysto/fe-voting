@@ -305,7 +305,9 @@ export default function CastVote() {
         </p>
         <p className="mt-[10px] px-4 text-lg leading-6">
           Select the candidate you believe won the debate by clicking on their
-          name below. Take a moment to reflect on the debate performances.
+          name below. Remember that with ranked choice voting, you can choose to
+          rank several candidates, leave candidates unranked, or rank all of
+          them!
         </p>
         <p className="mt-4 px-4 italic">
           You&apos;re voting as <strong>{toE164US(phoneNumber)}</strong>.{' '}
