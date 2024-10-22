@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
     const type = lookupResult?.lineTypeIntelligence?.type;
     if (type !== 'mobile' && type !== 'personal') {
       return Response.json(
-        { message: `Phone number type is not allowed: ${type}`, phoneNumber },
+        { message: phoneTypeError(type), phoneNumber },
         { status: 400 }
       );
     }
@@ -73,4 +73,28 @@ export async function POST(request: NextRequest) {
     return Response.json({ message: error?.message, error }, { status: 400 });
   }
   return Response.json({ ok: true, phoneNumber });
+}
+
+function phoneTypeError(type: string | null) {
+  if (!type || type === 'unknown') {
+    return 'Number Not Usable for US Verification';
+  } else {
+    return `${displayType(type)} numbers are not allowed!`;
+  }
+}
+
+function displayType(type: string) {
+  switch (type) {
+    case 'fixedVoip':
+    case 'nonFixedVoip':
+      return 'VoIP';
+    case 'tollFree':
+      return 'Toll-Free';
+    case 'uan':
+      return 'Universal Access Number';
+    case 'sharedCost':
+      return 'Shared-Cost';
+    default:
+      return type.toUpperCase();
+  }
 }
