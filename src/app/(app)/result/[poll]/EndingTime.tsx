@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactTimeAgo } from '@/lib/timeAgo';
+import { formatDistanceToNow } from 'date-fns';
 
 export default function EndingTime({ endTime }: { endTime: number }) {
   const pollEnded = Date.now() > endTime;
@@ -10,7 +10,10 @@ export default function EndingTime({ endTime }: { endTime: number }) {
       {pollEnded ? (
         'This poll has ended'
       ) : (
-        <ReactTimeAgo date={endTime} locale="en-US" />
+        <span>
+          This poll will end in
+          {formatDistanceToNow(endTime, { includeSeconds: true })}
+        </span>
       )}
     </div>
   );

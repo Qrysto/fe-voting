@@ -112,7 +112,7 @@ async function renderPollResult({ poll }: { poll: string }) {
   const { pollName, pollTime, rcvResultKVKey, ticker, endTime, callNexus } =
     allPolls[poll];
   const result = await loadRCVResult(rcvResultKVKey);
-  const final = result?.final !== false; // old polls that doesn't have final property is also final
+  const final = result?.final !== false; // old polls that don't have final property are also final
   const candidates = await loadRCVCandidates({
     callNexus,
     poll,
