@@ -1,7 +1,7 @@
 import * as poll1 from './poll1';
 import * as poll2 from './poll2';
 import * as poll3 from './poll3';
-import * as poll4 from './poll4Staging';
+import * as poll4 from './poll4';
 
 const allPolls: Record<string, any> = {
   poll1,
