@@ -17,11 +17,26 @@ import {
   ExternalLink,
 } from '@/components/ui/typo';
 
-export default function LocalTab({
+export default function TempLocalTab({
   poll: { countryCode, tokenAddress },
 }: {
   poll: any;
 }) {
+  return (
+    <TabsContent value="local" className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>Setup instructions</CardTitle>
+          <CardDescription>
+            <div className="italic">Coming soon...</div>
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    </TabsContent>
+  );
+}
+
+function LocalTab({ poll: { countryCode, tokenAddress } }: { poll: any }) {
   return (
     <TabsContent value="local" className="space-y-6">
       <Card>
