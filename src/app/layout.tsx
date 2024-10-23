@@ -27,7 +27,7 @@ export default function RootLayout({
           montserrat.className
         )}
       >
-        <div className="container relative h-full overflow-y-auto md:max-w-3xl">
+        <div className="container relative h-full overflow-y-auto overflow-x-hidden md:max-w-3xl">
           {children}
         </div>
         <Toaster />
