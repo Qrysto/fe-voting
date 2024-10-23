@@ -18,7 +18,7 @@ import LinkButton from '@/components/LinkButton';
 import CandidateImage from '@/components/CandidateImage';
 import { ExternalLink } from '@/components/ui/typo';
 import { toast } from '@/lib/useToast';
-import { ExternalLinkIcon } from 'lucide-react';
+import { ExternalLinkIcon, ArrowLeft } from 'lucide-react';
 import { oswald } from '@/fonts';
 import { partyColor, cn } from '@/lib/utils';
 import { toE164US } from '@/lib/phone';
@@ -92,6 +92,7 @@ function ConfirmCode() {
   const codeError = useStore((state) => state.codeError);
   const confirmCode = useStore((state) => state.confirmCode);
   const requestCode = useStore((state) => state.requestCode);
+  const resetPhoneNumber = useStore((state) => state.resetPhoneNumber);
   const confirmBtnRef: React.MutableRefObject<HTMLButtonElement | null> =
     useRef(null);
 
@@ -115,7 +116,12 @@ function ConfirmCode() {
           We sent you a text to your phone number {toE164US(phoneNumber)}.
           Please check and enter your code to confirm your identity.
         </p>
-        <div className="mt-4 text-center">
+        <div className="mt-4 flex items-center justify-center space-x-10">
+          <LinkButton onClick={resetPhoneNumber}>
+            <ArrowLeft className="mr-1 inline-block h-4 w-4 align-middle" />
+            <span>Back</span>
+          </LinkButton>
+
           <LinkButton
             action={async () => {
               await requestCode(undefined, { forVoting: false });

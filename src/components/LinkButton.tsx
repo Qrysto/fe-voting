@@ -1,5 +1,6 @@
 import { oswald } from '@/fonts';
 import { forwardRef, useState } from 'react';
+import { cn } from '@/lib/utils';
 import Spinner from './Spinner';
 
 export default forwardRef(function LinkButton(
@@ -23,9 +24,12 @@ export default forwardRef(function LinkButton(
     <button
       ref={ref}
       disabled={disabled || busy}
-      className={`font-bold uppercase ${oswald.className}  ${className || ''} ${
-        disabled || busy ? 'text-gray' : 'text-blue active:text-blue/90'
-      }`}
+      className={cn(
+        'flex items-center font-bold uppercase',
+        disabled || busy ? 'text-gray' : 'text-blue active:text-blue/90',
+        oswald.className,
+        className
+      )}
       {...(action
         ? {
             onClick: async (...args) => {
@@ -40,8 +44,8 @@ export default forwardRef(function LinkButton(
         : null)}
       {...rest}
     >
-      {busy && <Spinner className="mr-2 inline-block" />}
-      <span className="align-middle underline underline-offset-2">
+      {busy && <Spinner className="mr-2" />}
+      <span className="flex items-center underline underline-offset-2">
         {children}
       </span>
     </button>

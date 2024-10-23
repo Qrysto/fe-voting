@@ -126,7 +126,8 @@ export const useStore = create<State & Actions>((set, get) => ({
     }
   },
 
-  resetPhoneNumber: () => set({ phoneNumber: '', phoneError: null }),
+  resetPhoneNumber: () =>
+    set({ phoneNumber: '', jwtToken: null, phoneError: null }),
 
   confirmCode: async () => {
     const code = get().codeDigits.join('');
