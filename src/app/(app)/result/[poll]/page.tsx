@@ -135,7 +135,7 @@ async function renderPollResult({ poll }: { poll: string }) {
         <strong>
           <a
             className="text-darkBlue underline underline-offset-2 active:text-darkBlue/90"
-            href="https://givebutter.com/free-and-equal-debate"
+            href=" https://freeandequal.org/donate/"
             target="_blank"
           >
             Donate to Free & Equal
