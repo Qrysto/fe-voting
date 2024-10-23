@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
     }
 
     const type = lookupResult?.lineTypeIntelligence?.type;
-    if (type !== 'mobile' && type !== 'personal' && type !== 'nonFixedVoip') {
+    if (type !== 'mobile' && type !== 'personal') {
       return Response.json(
         { message: phoneTypeError(type), phoneNumber },
         { status: 400 }
