@@ -1,7 +1,6 @@
 import { kv } from '@vercel/kv';
-import { phoneNumbersTable } from '@/constants/activePoll';
-import { callNexus } from '@/constants/activePoll';
-import { lookupResultsTable, lookupKvKey } from '@/constants';
+import { phoneNumbersTable, callNexus } from '@/constants/activePoll';
+import { lookupKvKey } from '@/constants';
 
 const regex = /^\d{10}$/;
 

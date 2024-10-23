@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, MouseEventHandler } from 'react';
+import { useState, useRef } from 'react';
 import axios from 'axios';
 import { TabsContent } from '@/components/ui/tabs';
 import {
@@ -11,13 +11,10 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
 import PhoneInput from '@/components/PhoneInput';
 import BigButton from '@/components/BigButton';
 import CodeInput from '@/components/CodeInput';
 import LinkButton from '@/components/LinkButton';
-import Spinner from '@/components/Spinner';
 import CandidateImage from '@/components/CandidateImage';
 import { ExternalLink } from '@/components/ui/typo';
 import { toast } from '@/lib/useToast';
@@ -78,7 +75,7 @@ function EnterPhone() {
           disabled={!phoneFilled}
           className="mt-6 shadow-md"
           ref={confirmBtnRef}
-          action={confirmPhoneNumber}
+          action={() => confirmPhoneNumber({ forVoting: false })}
         >
           Send code to me
         </BigButton>
@@ -121,7 +118,7 @@ function ConfirmCode() {
         <div className="mt-4 text-center">
           <LinkButton
             action={async () => {
-              await requestCode();
+              await requestCode(undefined, { forVoting: false });
               toast({
                 title: 'Code sent!',
                 description: 'A new code has been sent to your phone number!',

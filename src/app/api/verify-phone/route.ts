@@ -11,6 +11,8 @@ import {
 export async function POST(request: NextRequest) {
   const body = await request.json();
   const phoneNumber = body?.phoneNumber;
+  const skipVotedCheck = body?.skipVotedCheck;
+
   if (!phoneNumber) {
     return Response.json(
       { message: 'Missing phone number', phoneNumber },
@@ -24,7 +26,7 @@ export async function POST(request: NextRequest) {
     );
   }
   try {
-    if (await isVoted(phoneNumber)) {
+    if (!skipVotedCheck && (await isVoted(phoneNumber))) {
       return Response.json(
         { message: 'This phone number has already voted', phoneNumber },
         { status: 400 }
