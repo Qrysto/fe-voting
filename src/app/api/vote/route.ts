@@ -144,9 +144,9 @@ export async function GET(request: NextRequest) {
       }
     );
 
-    const transaction = txs[0];
+    const transaction = txs?.[0];
     const choices = await Promise.all(
-      transaction.contracts
+      transaction?.contracts
         .sort((a: any, b: any) => b.amount - a.amount)
         .map((contract: any) =>
           callNexus('finance/get/account/address,First,Last,Party,Website', {
@@ -154,11 +154,15 @@ export async function GET(request: NextRequest) {
           })
         )
     );
-    const vote = {
-      txid: transaction.txid,
-      choices,
-      contractIds: transaction.contracts.map((contract: any) => contract.id),
-    };
+    const vote = choices
+      ? {
+          txid: transaction.txid,
+          choices,
+          contractIds: transaction.contracts.map(
+            (contract: any) => contract.id
+          ),
+        }
+      : null;
     return Response.json({ vote });
   } catch (err: any) {
     console.error(err);
