@@ -147,8 +147,8 @@ export async function GET(request: NextRequest) {
     const transaction = txs?.[0];
     const choices = await Promise.all(
       transaction?.contracts
-        .sort((a: any, b: any) => b.amount - a.amount)
-        .map((contract: any) =>
+        ?.sort((a: any, b: any) => b.amount - a.amount)
+        ?.map((contract: any) =>
           callNexus('finance/get/account/address,First,Last,Party,Website', {
             address: contract.to.address,
           })
