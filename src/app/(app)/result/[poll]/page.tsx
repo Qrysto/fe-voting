@@ -135,7 +135,7 @@ async function renderPollResult({ poll }: { poll: string }) {
         <strong>
           <a
             className="text-darkBlue underline underline-offset-2 active:text-darkBlue/90"
-            href=" https://freeandequal.org/donate/"
+            href=" https://www.indiegogo.com/projects/united-we-stand-2025-empowering-civic-engagement/x/6103349#//"
             target="_blank"
           >
             Donate to Free & Equal

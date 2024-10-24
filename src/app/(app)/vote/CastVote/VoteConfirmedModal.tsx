@@ -26,7 +26,7 @@ export default function VoteConfirmedModal({
           help:{' '}
           <a
             target="_blank"
-            href="https://freeandequal.org/donate"
+            href="https://www.indiegogo.com/projects/united-we-stand-2025-empowering-civic-engagement/x/6103349#/"
             className="text-darkBlue underline underline-offset-2 active:text-darkBlue/90"
           >
             Donate to Free & Equal
@@ -37,7 +37,7 @@ export default function VoteConfirmedModal({
         <BigButton
           className="mt-8 flex-shrink-0"
           primary
-          href="https://freeandequal.org/donate/"
+          href="https://www.indiegogo.com/projects/united-we-stand-2025-empowering-civic-engagement/x/6103349#//"
           target="_blank"
         >
           Support United We Stand
