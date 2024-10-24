@@ -6,7 +6,8 @@ import headingImg from './heading@2x.png';
 import iconImg from './icon@2x.png';
 import bannerImg from './banner@2x.png';
 import shareIcon from './shareIcon.svg';
-import { endTime } from '@/constants/activePoll';
+import { endTime, pollId } from '@/constants/activePoll';
+import ResultLinksDrawer from './ResultLinksDrawer';
 
 export default function HomePage() {
   const pollEnded = Date.now() > endTime;
@@ -45,33 +46,29 @@ export default function HomePage() {
         <div
           className={`${oswald.className} mb-4 text-center text-xl font-bold uppercase text-white`}
         >
-          Who won the debate
-          <br /> at FreedomFest?
+          Who won the
+          <br />
+          October debate?
         </div>
-        <Link
-          href="result/poll3"
-          className={`block h-12 w-44 rounded-md text-center leading-[48px] ${oswald.className} bg-lightBlue font-bold uppercase text-blue active:bg-lightBlue/90`}
-        >
-          See Result
-        </Link>
+        {pollEnded ? (
+          <Link
+            href={`/result/${pollId}`}
+            className={`block h-12 w-44 rounded-md text-center leading-[48px] ${oswald.className} bg-lightBlue font-bold uppercase text-blue active:bg-lightBlue/90`}
+          >
+            See Result
+          </Link>
+        ) : (
+          <Link
+            href="/vote"
+            className={`block h-12 w-44 rounded-md text-center leading-[48px] ${oswald.className} bg-lightBlue font-bold uppercase text-blue active:bg-lightBlue/90`}
+          >
+            Vote now
+          </Link>
+        )}
 
-        <div
-          className={`${oswald.className} mt-16 font-bold uppercase text-lightBlue/90`}
-        >
-          See previous polls results
+        <div className="mt-8">
+          <ResultLinksDrawer />
         </div>
-        <Link
-          href="/result/poll2"
-          className={`${oswald.className} mt-5 text-sm uppercase text-lightBlue/90 underline underline-offset-2 active:text-lightBlue/80`}
-        >
-          Second Debate Winner poll
-        </Link>
-        <Link
-          href="/result/poll1"
-          className={`${oswald.className} mt-4 text-sm uppercase text-lightBlue/90 underline underline-offset-2 active:text-lightBlue/80`}
-        >
-          Second debate Candidate Selection poll
-        </Link>
 
         <a
           href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fvote.freeandequal.org"

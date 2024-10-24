@@ -1,10 +1,18 @@
 import { type NextRequest } from 'next/server';
 import { verifyService, lookup } from '../twilio';
-import { isValidPhoneNumber, toE164US, isVoted } from '@/app/lib/phone';
+import {
+  isValidPhoneNumber,
+  toE164US,
+  isVoted,
+  getLookup,
+  saveLookup,
+} from '@/lib/phone';
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
   const phoneNumber = body?.phoneNumber;
+  const skipVotedCheck = body?.skipVotedCheck;
+
   if (!phoneNumber) {
     return Response.json(
       { message: 'Missing phone number', phoneNumber },
@@ -18,7 +26,7 @@ export async function POST(request: NextRequest) {
     );
   }
   try {
-    if (await isVoted(phoneNumber)) {
+    if (!skipVotedCheck && (await isVoted(phoneNumber))) {
       return Response.json(
         { message: 'This phone number has already voted', phoneNumber },
         { status: 400 }
@@ -30,13 +38,21 @@ export async function POST(request: NextRequest) {
 
   const fullPhoneNumber = toE164US(phoneNumber);
   try {
-    const phoneLookup = await lookup
-      .phoneNumbers(fullPhoneNumber)
-      .fetch({ fields: 'line_type_intelligence' });
-    console.log('Phone lookup result', phoneLookup);
-    if (phoneLookup?.lineTypeIntelligence?.type === 'nonFixedVoip') {
+    let lookupResult: any = await getLookup(fullPhoneNumber);
+    if (!lookupResult) {
+      lookupResult = await lookup
+        .phoneNumbers(fullPhoneNumber)
+        .fetch({ fields: 'line_type_intelligence' });
+      await saveLookup(fullPhoneNumber, lookupResult);
+      console.log('Lookup result', lookupResult);
+    } else {
+      console.log('Lookup result (cached)', lookupResult);
+    }
+
+    const type = lookupResult?.lineTypeIntelligence?.type;
+    if (type !== 'mobile' && type !== 'personal') {
       return Response.json(
-        { message: 'VOIP numbers are not allowed', phoneNumber },
+        { message: phoneTypeError(type), phoneNumber },
         { status: 400 }
       );
     }
@@ -59,4 +75,28 @@ export async function POST(request: NextRequest) {
     return Response.json({ message: error?.message, error }, { status: 400 });
   }
   return Response.json({ ok: true, phoneNumber });
+}
+
+function phoneTypeError(type: string | null) {
+  if (!type || type === 'unknown') {
+    return 'Number Not Usable for US Verification';
+  } else {
+    return `${displayType(type)} numbers are not allowed!`;
+  }
+}
+
+function displayType(type: string) {
+  switch (type) {
+    case 'fixedVoip':
+    case 'nonFixedVoip':
+      return 'VoIP';
+    case 'tollFree':
+      return 'Toll-Free';
+    case 'uan':
+      return 'Universal Access Number';
+    case 'sharedCost':
+      return 'Shared-Cost';
+    default:
+      return type.toUpperCase();
+  }
 }

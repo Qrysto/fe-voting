@@ -15,6 +15,7 @@ type State = {
   jwtToken: string | null;
   votes: string[];
   allCandidates: Candidate[];
+  optedIn: boolean;
 };
 
 type Actions = {
@@ -22,8 +23,11 @@ type Actions = {
   setCodeDigit: (index: number, digit: string) => void;
   setPhoneDigits: (startIndex: number, digits: string) => number;
   setCodeDigits: (startIndex: number, digits: string) => number;
-  confirmPhoneNumber: () => Promise<void>;
-  requestCode: (params: { phoneNumber: string }) => Promise<void>;
+  confirmPhoneNumber: (options?: { forVoting: boolean }) => Promise<void>;
+  requestCode: (
+    phoneNumber?: string,
+    options?: { forVoting: boolean }
+  ) => Promise<void>;
   resetPhoneNumber: () => void;
   confirmCode: () => Promise<void>;
   unconfirmCode: () => void;
@@ -34,6 +38,8 @@ type Actions = {
   goBack: () => void;
   loadCandidates: (allCandidates: Candidate[]) => void;
   checkJWT: (jwtToken: string) => Promise<void>;
+  switchOptedIn: (value: boolean) => void;
+  sendVote: () => Promise<void>;
 };
 
 const defaultCodeDigits = Array(codeDigitCount).fill('');
@@ -47,6 +53,7 @@ export const useStore = create<State & Actions>((set, get) => ({
   jwtToken: null,
   votes: [],
   allCandidates: [],
+  optedIn: false,
 
   setPhoneDigit: (index: number, digit: string) =>
     set((state) => {
@@ -90,15 +97,19 @@ export const useStore = create<State & Actions>((set, get) => ({
     return newIndex;
   },
 
-  confirmPhoneNumber: async () => {
+  confirmPhoneNumber: async (options) => {
     const phoneNumber = get().phoneDigits.join('');
-    return await get().requestCode({ phoneNumber });
+    return await get().requestCode(phoneNumber, options);
   },
 
-  requestCode: async ({ phoneNumber }: { phoneNumber: string }) => {
+  requestCode: async (phoneNumber, options) => {
     phoneNumber = phoneNumber || get().phoneNumber;
+    const forVoting = options?.forVoting === false ? false : true;
     try {
-      const { data } = await axios.post('/api/verify-phone', { phoneNumber });
+      const { data } = await axios.post('/api/verify-phone', {
+        phoneNumber,
+        skipVotedCheck: !forVoting,
+      });
       console.log('verify-phone', phoneNumber, data);
       set({
         phoneNumber,
@@ -115,7 +126,8 @@ export const useStore = create<State & Actions>((set, get) => ({
     }
   },
 
-  resetPhoneNumber: () => set({ phoneNumber: '', phoneError: null }),
+  resetPhoneNumber: () =>
+    set({ phoneNumber: '', jwtToken: null, phoneError: null }),
 
   confirmCode: async () => {
     const code = get().codeDigits.join('');
@@ -185,6 +197,17 @@ export const useStore = create<State & Actions>((set, get) => ({
         });
       }
     }
+  },
+
+  switchOptedIn: (value: boolean) => {
+    set({
+      optedIn: value,
+    });
+  },
+
+  sendVote: async () => {
+    const { jwtToken, votes, optedIn } = get();
+    await axios.post('/api/vote', { jwtToken, votes, optedIn });
   },
 }));
 

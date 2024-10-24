@@ -2,8 +2,10 @@ import jwt from 'jsonwebtoken';
 import { type NextRequest } from 'next/server';
 import { maxChoices, ticker, endTime } from '@/constants/activePoll';
 import type { Candidate } from '@/types';
-import { callNexus } from '@/app/lib/api';
-import { markNumberVoted, markNumberNotVoted } from '@/app/lib/phone';
+import { callNexus } from '@/constants/activePoll';
+import { toE164US } from '@/lib/phone';
+import allPolls from '@/constants/allPolls';
+import { markNumberVoted, markNumberNotVoted } from '@/lib/phone';
 
 const jwtSecret = process.env.JWT_SECRET || 'secret';
 
@@ -23,13 +25,17 @@ export async function POST(request: NextRequest) {
   }
 
   const body = await request.json();
-  const jwtToken: string = body?.jwtToken;
-  const votes: string[] = body?.votes;
+  const jwtToken: string | undefined = body?.jwtToken;
+  const votes: string[] | undefined = body?.votes;
+  const optedIn: boolean | undefined = body?.optedIn;
   if (!jwtToken) {
     return Response.json(
       { message: 'You need to verify your phone number' },
       { status: 401 }
     );
+  }
+  if (!votes) {
+    return Response.json({ message: 'Votes are missing' }, { status: 400 });
   }
   if (votes?.length > maxChoices) {
     return Response.json(
@@ -50,10 +56,10 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const alreadyVoted = !(await markNumberVoted(
-      phoneNumber,
-      JSON.stringify(votes)
-    ));
+    const alreadyVoted = !(await markNumberVoted(phoneNumber, {
+      votes,
+      optedIn: !!optedIn,
+    }));
     if (alreadyVoted) {
       return Response.json(
         { message: 'This phone number has already voted', phoneNumber },
@@ -94,4 +100,71 @@ export async function POST(request: NextRequest) {
   }
 
   return Response.json({ ok: true });
+}
+
+export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams;
+  const pollId = searchParams.get('poll');
+  const poll = pollId && allPolls[pollId];
+  if (!poll) {
+    return Response.json({ message: 'Invalid poll ID' }, { status: 400 });
+  }
+  const { callNexus, tokenAddress } = poll;
+
+  const jwtToken = searchParams.get('token');
+  if (!jwtToken) {
+    return Response.json(
+      { message: 'You need to verify your phone number' },
+      { status: 401 }
+    );
+  }
+
+  let phoneNumber;
+  try {
+    const decoded: any = jwt.verify(jwtToken, jwtSecret);
+    phoneNumber = decoded.phoneNumber;
+  } catch (err: any) {
+    return Response.json(
+      { message: err?.message, error: err },
+      { status: 401 }
+    );
+  }
+
+  if (phoneNumber.startsWith('+1')) {
+    phoneNumber = phoneNumber.substring(2);
+  }
+
+  try {
+    const txs = await callNexus(
+      'finance/transactions/token/txid,contracts.id,contracts.reference,contracts.amount,contracts.to.address',
+      {
+        address: tokenAddress,
+        limit: 1,
+        where: `results.contracts.OP=DEBIT AND results.contracts.reference=checksum(\`${phoneNumber}\`);`,
+      }
+    );
+
+    const transaction = txs[0];
+    const choices = await Promise.all(
+      transaction.contracts
+        .sort((a: any, b: any) => b.amount - a.amount)
+        .map((contract: any) =>
+          callNexus('finance/get/account/address,First,Last,Party,Website', {
+            address: contract.to.address,
+          })
+        )
+    );
+    const vote = {
+      txid: transaction.txid,
+      choices,
+      contractIds: transaction.contracts.map((contract: any) => contract.id),
+    };
+    return Response.json({ vote });
+  } catch (err: any) {
+    console.error(err);
+    return Response.json(
+      { message: err?.message, error: err },
+      { status: 500 }
+    );
+  }
 }
