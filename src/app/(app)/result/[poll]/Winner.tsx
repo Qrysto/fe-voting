@@ -3,7 +3,7 @@ import { Candidate, RCVResult } from '@/types';
 import Image from 'next/image';
 import { Card } from '@/components/ui/card';
 import CandidateImage from '@/components/CandidateImage';
-import { partyColor } from '@/lib/utils';
+import { cn, partyColor } from '@/lib/utils';
 import crownImg from './crown.png';
 
 export default function Winner({
@@ -31,29 +31,36 @@ export default function Winner({
   }
 
   return (
-    <Card className="mt-2 flex items-center px-4 py-[18px]">
+    <Card className="mt-2 flex items-center px-3 py-4 sm:px-4 sm:py-[18px]">
       <CandidateImage
         candidate={winner}
         size={60}
         className="shrink-0 grow-0"
       />
-      <div className="shrink grow px-4">
+      <div className="min-w-0 shrink grow px-3 sm:px-4">
         <div>
-          <span className="text-2xl font-bold text-darkBlue">
+          <span className="text-xl font-bold text-darkBlue sm:text-2xl">
             {`${winner.First} ${winner.Last}`}
           </span>
         </div>
-        <div className={`text-base font-bold uppercase ${oswald.className}`}>
-          <span className={partyColor(winner.Party)}>{winner.Party}</span>
+        <div
+          className={cn(
+            'text-sm font-bold uppercase sm:text-base',
+            oswald.className
+          )}
+        >
+          <span className={cn('mr-3 inline-block', partyColor(winner.Party))}>
+            {winner.Party}
+          </span>
           {winner.Website === 'NONE' ? (
-            <span className="ml-3 text-gray underline underline-offset-2">
+            <span className="text-gray underline underline-offset-2">
               Website
             </span>
           ) : (
             <a
               href={winner.Website}
               target="_blank"
-              className="ml-3 text-blue underline underline-offset-2"
+              className="text-blue underline underline-offset-2"
             >
               Website
             </a>
@@ -63,7 +70,10 @@ export default function Winner({
       <div className="flex shrink-0 grow-0 flex-col items-center">
         <Image src={crownImg} width={48} height={48} alt="" />
         <div
-          className={`text-center uppercase text-orange ${oswald.className}`}
+          className={cn(
+            'text-center text-[13px] uppercase text-orange sm:text-base',
+            oswald.className
+          )}
         >
           {final ? 'Winner' : 'Current Winner'}
         </div>
