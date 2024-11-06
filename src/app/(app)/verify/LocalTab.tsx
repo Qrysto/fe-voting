@@ -17,26 +17,11 @@ import {
   ExternalLink,
 } from '@/components/ui/typo';
 
-export default function TempLocalTab({
+export default function LocalTab({
   poll: { countryCode, tokenAddress },
 }: {
   poll: any;
 }) {
-  return (
-    <TabsContent value="local" className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Setup instructions</CardTitle>
-          <CardDescription>
-            <div className="italic">Coming soon...</div>
-          </CardDescription>
-        </CardHeader>
-      </Card>
-    </TabsContent>
-  );
-}
-
-function LocalTab({ poll: { countryCode, tokenAddress } }: { poll: any }) {
   return (
     <TabsContent value="local" className="space-y-6">
       <Card>
@@ -69,8 +54,13 @@ function LocalTab({ poll: { countryCode, tokenAddress } }: { poll: any }) {
             <strong>Step 1:</strong> Download and install the latest Nexus
             Wallet desktop app on your computer.
           </p>
+          <p className="mb-4 font-bold">
+            Nexus Wallet v3.1.4 or later is required. Currently, Nexus Wallet
+            v3.1.4 is only available for MacOS and Linux. Windows version is
+            coming soon.
+          </p>
           <BigButton
-            href="https://nexus.io/wallet"
+            href="https://github.com/Nexusoft/NexusInterface/releases/tag/v3.1.4"
             target="_blank"
             primary
             className="mt-2"
