@@ -23,7 +23,7 @@ export const txCountKVKey = 'poll4TxCount';
 
 export const rcvResultKVKey = 'Poll4RCVResult';
 
-export const endTime = 1730912340000; // 2024 Nov 5th, 11:59pm ET
+export const endTime = 1730869140000; // 2024 Nov 5th, 11:59pm ET
 
 export const endTimeString = (
   <span>
