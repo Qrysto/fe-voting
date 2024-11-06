@@ -50,21 +50,21 @@ export default function HomePage() {
           <br />
           October debate?
         </div>
-        {pollEnded ? (
-          <Link
-            href={`/result/${pollId}`}
-            className={`block h-12 w-44 rounded-md text-center leading-[48px] ${oswald.className} bg-lightBlue font-bold uppercase text-blue active:bg-lightBlue/90`}
-          >
-            See Result
-          </Link>
-        ) : (
+        {/* {pollEnded ? ( */}
+        <Link
+          href={`/result/${pollId}`}
+          className={`block h-12 w-44 rounded-md text-center leading-[48px] ${oswald.className} bg-lightBlue font-bold uppercase text-blue active:bg-lightBlue/90`}
+        >
+          See Result
+        </Link>
+        {/* ) : (
           <Link
             href="/vote"
             className={`block h-12 w-44 rounded-md text-center leading-[48px] ${oswald.className} bg-lightBlue font-bold uppercase text-blue active:bg-lightBlue/90`}
           >
             Vote now
           </Link>
-        )}
+        )} */}
 
         <div className="mt-8">
           <ResultLinksDrawer />
