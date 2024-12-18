@@ -55,12 +55,10 @@ export default function LocalTab({
             Wallet desktop app on your computer.
           </p>
           <p className="mb-4 font-bold">
-            Nexus Wallet v3.1.4 or later is required. Currently, Nexus Wallet
-            v3.1.4 is only available for MacOS and Linux. Windows version is
-            coming soon.
+            Nexus Wallet v3.1.4 or later is required.
           </p>
           <BigButton
-            href="https://github.com/Nexusoft/NexusInterface/releases/tag/v3.1.4"
+            href="https://nexus.io/wallet"
             target="_blank"
             primary
             className="mt-2"
